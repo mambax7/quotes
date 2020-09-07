@@ -40,7 +40,7 @@ $moduleDirNameUpper = mb_strtoupper($moduleDirName);
 $db      = \XoopsDatabaseFactory::getDatabaseConnection();
 $helper  = Helper::getInstance();
 $utility = new Utility();
-//$configurator = new \XoopsModules\Mtools\Common\Configurator();
+//$configurator = new \XoopsModules\Mtools\Common\Configurator($helper->path());
 
 $helper->loadLanguage('common');
 

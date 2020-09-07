@@ -23,7 +23,9 @@ namespace XoopsModules\Quotes;
  * @license         GPL 2.0 or later
  */
 
-use XoopsModules\Quotes;
+use XoopsModules\Quotes\{
+    Helper
+};
 
 $moduleDirName = basename(dirname(__DIR__));
 
@@ -42,12 +44,12 @@ class AuthorHandler extends \XoopsPersistableObjectHandler
     /**
      * Constructor
      * @param null|\XoopsDatabase              $db
-     * @param null|\XoopsModules\Quotes\Helper $helper
+     * @param null|Helper $helper
      */
 
     public function __construct(\XoopsDatabase $db = null, $helper = null)
     {
-        /** @var \XoopsModules\Quotes\Helper $this ->helper */
+        /** @var Helper $this ->helper */
         $this->helper = $helper;
         parent::__construct($db, 'quotes_author', Author::class, 'id', 'name');
     }

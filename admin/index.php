@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 use XoopsModules\Quotes;
 use XoopsModules\Mtools\Common;
+/** @var Helper $helper */
 
 require __DIR__ . '/admin_header.php';
 xoops_cp_header();
@@ -52,7 +53,7 @@ $adminObject->addInfoBoxLine(sprintf(AM_QUOTES_THEREARE_AUTHOR, $totalAuthor));
 $adminObject->addConfigBoxLine('');
 $redirectFile = $_SERVER['SCRIPT_NAME'];
 
-$configurator  = new Common\Configurator();
+$configurator  = new Common\Configurator($helper->path());
 $uploadFolders = $configurator->uploadFolders;
 
 foreach (array_keys($uploadFolders) as $i) {

@@ -13,6 +13,9 @@
  * @link            https://xoops.org
  * @license         GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
+
+/** @var Helper $helper */
+
 require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 
 $moduleDirName      = basename(dirname(__DIR__));
@@ -51,7 +54,7 @@ $module_list[0]  = _AM_SYSTEM_BLOCKS_ALLPAGES;
 ksort($module_list);
 $mod_select->addOptionArray($module_list);
 $form->addElement($mod_select);
-$form->addElement(new \XoopsFormText(_AM_TITLE, 'btitle', 50, 255, $block['title']), false);
+$form->addElement(new \XoopsFormText(_AM_SYSTEM_BLOCKS_TITLE, 'btitle', 50, 255, $block['title']), false);
 if ($block['is_custom']) {
     $textarea = new \XoopsFormDhtmlTextArea(_AM_SYSTEM_BLOCKS_CONTENT, 'bcontent', $block['content'], 15, 70);
     $textarea->setDescription('<span style="font-size:x-small;font-weight:bold;">' . _AM_SYSTEM_BLOCKS_USEFULTAGS . '</span><br><span style="font-size:x-small;font-weight:normal;">' . sprintf(_AM_BLOCKTAG1, '{X_SITEURL}', XOOPS_URL . '/') . '</span>');

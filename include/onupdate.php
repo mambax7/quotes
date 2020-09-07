@@ -21,7 +21,13 @@ declare(strict_types=1);
  * @license         GPL 2.0 or later
  */
 
-use XoopsModules\Quotes;
+use XoopsModules\Mtools;
+use XoopsModules\Quotes\{Helper,
+    Utility
+};
+/** @var Helper $helper */
+/** @var Utility $utility */
+
 
 if ((!defined('XOOPS_ROOT_PATH')) || !$GLOBALS['xoopsUser'] instanceof \XoopsUser
     || !$GLOBALS['xoopsUser']->isAdmin()) {
@@ -29,6 +35,7 @@ if ((!defined('XOOPS_ROOT_PATH')) || !$GLOBALS['xoopsUser'] instanceof \XoopsUse
 }
 
 require dirname(__DIR__) . '/preloads/autoloader.php';
+require_once XOOPS_ROOT_PATH . '/modules/mtools/preloads/autoloader.php';
 
 /**
  * @param string $tablename
@@ -51,16 +58,14 @@ function tableExists($tablename)
  */
 function xoops_module_pre_update_quotes(\XoopsModule $module)
 {
-    // /** @var \XoopsModules\Quotes\Helper $helper */
-    //$helper       = \XoopsModules\Quotes\Helper::getInstance();
-    /** @var \XoopsModules\Quotes\Utility $utility */
-    $utility = new \XoopsModules\Quotes\Utility();
+    $helper       = Helper::getInstance();
+    $utility = new Utility();
 
     $xoopsSuccess = $utility::checkVerXoops($module);
     $phpSuccess   = $utility::checkVerPhp($module);
 
-    /** @var \XoopsModules\Mtools\Common\Configurator $configurator */
-    $configurator = new \XoopsModules\Mtools\Common\Configurator();
+    /** @var Mtools\Common\Configurator $configurator */
+    $configurator = new Mtools\Common\Configurator($helper->path());
 
     //create upload folders
     $uploadFolders = $configurator->uploadFolders;
@@ -87,11 +92,11 @@ function xoops_module_update_quotes(\XoopsModule $module, $previousVersion = nul
     $moduleDirName = basename(dirname(__DIR__));
     //$moduleDirNameUpper = mb_strtoupper($moduleDirName);
 
-    /** @var Quotes\Helper $helper */ /** @var Quotes\Utility $utility */
+    $helper       = Helper::getInstance();
+    $utility      = new Utility();
+
     /** @var Mtools\Common\Configurator $configurator */
-    $helper       = Quotes\Helper::getInstance();
-    $utility      = new Quotes\Utility();
-    $configurator = new Mtools\Common\Configurator();
+    $configurator = new Mtools\Common\Configurator($helper->path());
     $helper->loadLanguage('common');
 
     if ($previousVersion < 240) {

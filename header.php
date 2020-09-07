@@ -39,7 +39,7 @@ $moduleDirName = basename(__DIR__);
 
 $helper       = Helper::getInstance();
 $utility      = new Utility();
-$configurator = new Mtools\Common\Configurator();
+$configurator = new Mtools\Common\Configurator($helper->path());
 $copyright    = $configurator->modCopyright;
 
 $modulePath = XOOPS_ROOT_PATH . '/modules/' . $moduleDirName;

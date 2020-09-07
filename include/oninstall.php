@@ -21,10 +21,16 @@ declare(strict_types=1);
  * @license         GPL 2.0 or later
  */
 
-use XoopsModules\Quotes;
-use XoopsModules\Mtools\Common;
+use XoopsModules\Mtools;
+use XoopsModules\Quotes\{
+    Helper,
+    Utility
+};
+/** @var Helper $helper */
+/** @var Utility $utility */
 
 require dirname(__DIR__) . '/preloads/autoloader.php';
+require_once XOOPS_ROOT_PATH . '/modules/mtools/preloads/autoloader.php';
 
 /**
  * Prepares system prior to attempting to install module
@@ -34,8 +40,9 @@ require dirname(__DIR__) . '/preloads/autoloader.php';
  */
 function xoops_module_pre_install_quotes(\XoopsModule $module)
 {
-    /** @var \XoopsModules\Quotes\Utility $utility */
-    $utility = new \XoopsModules\Quotes\Utility();
+    $dir = dirname(__DIR__);
+    $utility = new Utility();
+    $helper       = Helper::getInstance();
 
     //check for minimum XOOPS version
     $xoopsSuccess = $utility::checkVerXoops($module);
@@ -44,8 +51,8 @@ function xoops_module_pre_install_quotes(\XoopsModule $module)
     $phpSuccess = $utility::checkVerPhp($module);
 
     if ($xoopsSuccess && $phpSuccess) {
-        /** @var \XoopsModules\Mtools\Common\Configurator $configurator */
-        $configurator = new \XoopsModules\Mtools\Common\Configurator();
+        /** @var Mtools\Common\Configurator $configurator */
+        $configurator = new Mtools\Common\Configurator($dir);
 
         //create upload folders
         $uploadFolders = $configurator->uploadFolders;
@@ -71,12 +78,12 @@ function xoops_module_pre_install_quotes(\XoopsModule $module)
 function xoops_module_install_quotes(\XoopsModule $module)
 {
     $moduleDirName = basename(dirname(__DIR__));
+    $dir = dirname(__DIR__);
+    $helper       = Helper::getInstance();
+    $utility      = new Utility();
 
-    /** @var \XoopsModules\Quotes\Helper $helper */ /** @var \XoopsModules\Quotes\Utility $utility */
-    /** @var Common\Configurator $configurator */
-    $helper       = \XoopsModules\Quotes\Helper::getInstance();
-    $utility      = new \XoopsModules\Quotes\Utility();
-    $configurator = new \XoopsModules\Mtools\Common\Configurator();
+    /** @var Mtools\Common\Configurator $configurator */
+    $configurator = new Mtools\Common\Configurator($dir);
 
     // Load language files
     $helper->loadLanguage('admin');

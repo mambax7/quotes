@@ -38,6 +38,7 @@ require dirname(__DIR__) . '/include/common.php';
 
 require dirname(__DIR__) . '/preloads/autoloader.php';
 
+
 $moduleDirName = basename(dirname(__DIR__));
 
 $helper      = Helper::getInstance();
@@ -46,8 +47,8 @@ $adminObject = Admin::getInstance();
 
 $db = \XoopsDatabaseFactory::getDatabaseConnection();
 
-$pathIcon16    = \Xmf\Module\Admin::iconUrl('', 16);
-$pathIcon32    = \Xmf\Module\Admin::iconUrl('', 32);
+$pathIcon16    = Admin::iconUrl('', 16);
+$pathIcon32    = Admin::iconUrl('', 32);
 $pathModIcon32 = $helper->getConfig('modicons32');
 
 /** @var \XoopsPersistableObjectHandler $quoteHandler */

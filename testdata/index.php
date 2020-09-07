@@ -22,10 +22,12 @@ declare(strict_types=1);
  */
 
 use \Xmf\Request;
-use XoopsModules\Quotes\{Helper,
+use XoopsModules\Quotes\{
+    Helper,
     Utility
 };
 use XoopsModules\Mtools;
+/** @var Helper $helper */
 
 require_once dirname(dirname(dirname(__DIR__))) . '/include/cp_header.php';
 require dirname(__DIR__) . '/preloads/autoloader.php';
@@ -65,10 +67,10 @@ function loadSampleData()
 
     $moduleDirName      = basename(dirname(__DIR__));
     $moduleDirNameUpper = mb_strtoupper($moduleDirName);
-
     $utility      = new Utility();
-    $configurator = new Mtools\Common\Configurator();
-    $helper       = Helper::getInstance();
+
+    $helper = Helper::getInstance();
+    $configurator = new Mtools\Common\Configurator($helper->path());
 
     //        $tables = \Xmf\Module\Helper::getHelper($moduleDirName)->getModule()->getInfo('tables');
     $tables = $helper->getModule()->getInfo('tables');

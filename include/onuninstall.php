@@ -21,7 +21,13 @@ declare(strict_types=1);
  * @license         GPL 2.0 or later
  */
 
-use XoopsModules\Quotes;
+use XoopsModules\Mtools;
+use XoopsModules\Quotes\{
+    Helper,
+    Utility
+};
+/** @var Helper $helper */
+/** @var Utility $utility */
 
 /**
  * Prepares system prior to attempting to uninstall module
@@ -48,11 +54,9 @@ function xoops_module_uninstall_quotes(\XoopsModule $module)
     //$moduleDirName = basename(dirname(__DIR__));
     //$moduleDirNameUpper = mb_strtoupper($moduleDirName); //$capsDirName
 
-    /** @var \XoopsModules\Quotes\Helper $helper */
-    /** @var \XoopsModules\Quotes\Utility $utility */
-    $helper = \XoopsModules\Quotes\Helper::getInstance();
-    //$utility      = new \XoopsModules\Quotes\Utility();
-    //    $configurator = new \XoopsModules\Mtools\Common\Configurator();
+    $helper = Helper::getInstance();
+    //$utility      = new Utility();
+    //    $configurator = new Mtools\Common\Configurator($helper->path());
 
     // Load language files
     $helper->loadLanguage('admin');

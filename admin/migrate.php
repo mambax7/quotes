@@ -22,7 +22,11 @@ declare(strict_types=1);
  */
 
 use Xmf\Request;
+use Xmf\Module\Admin;
 use XoopsModules\Quotes;
+use XoopsModules\Mtools;
+/** @var Admin $adminObject */
+/** @var Helper $helper */
 
 require_once __DIR__ . '/admin_header.php';
 xoops_cp_header();
@@ -44,7 +48,7 @@ echo <<<EOF
 EOF;
 
 /** @var Mtools\Common\Configurator $configurator */
-$configurator = new Mtools\Common\Configurator();
+$configurator = new Mtools\Common\Configurator($helper->path());
 
 /** @var \XoopsModules\Mtools\Common\Migrate $migrator */
 $migrator = new \XoopsModules\Mtools\Common\Migrate($configurator);
