@@ -185,9 +185,8 @@ $modversion['config'][] = [
 /** @var \XoopsMemberHandler $memberHandler */
 $memberHandler = xoops_getHandler('member');
 $xoopsGroups   = $memberHandler->getGroupList();
-foreach ($xoopsGroups as $key => $group) {
-    $groups[$group] = $key;
-}
+$groups = array_flip($xoopsGroups);
+
 $modversion['config'][] = [
     'name'        => 'groups',
     'title'       => 'MI_QUOTES_GROUPS',
@@ -204,9 +203,8 @@ $criteria->add(new \Criteria ('group_type', 'Admin'));
 /** @var \XoopsMemberHandler $memberHandler */
 $memberHandler    = xoops_getHandler('member');
 $adminXoopsGroups = $memberHandler->getGroupList($criteria);
-foreach ($adminXoopsGroups as $key => $adminGroup) {
-    $admin_groups[$adminGroup] = $key;
-}
+$admin_groups = array_flip($adminXoopsGroups);
+
 $modversion['config'][] = [
     'name'        => 'admin_groups',
     'title'       => 'MI_QUOTES_ADMINGROUPS',
