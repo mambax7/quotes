@@ -26,7 +26,7 @@ use XoopsModules\Quotes;
 
 require dirname(dirname(__DIR__)) . '/mainfile.php';
 //require XOOPS_ROOT_PATH.'/modules/quotes/class/author.php';
-$com_itemid = \Xmf\Request::getInt('com_itemid', 0);
+$com_itemid = Request::getInt('com_itemid', 0);
 if ($com_itemid > 0) {
     /** @var \XoopsPersistableObjectHandler $authorHandler */
     $authorHandler = $helper->getHandler('Author');

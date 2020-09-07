@@ -26,7 +26,7 @@ use Xmf\Request;
 
 require __DIR__ . '/header.php';
 
-$op = \Xmf\Request::getCmd('op', 'list');
+$op = Request::getCmd('op', 'list');
 
 if ('edit' !== $op) {
     if ('view' === $op) {
@@ -39,7 +39,7 @@ require_once XOOPS_ROOT_PATH . '/header.php';
 
 global $xoTheme;
 
-$start = \Xmf\Request::getInt('start', 0);
+$start = Request::getInt('start', 0);
 // Define Stylesheet
 /** @var xos_opal_Theme $xoTheme */
 $xoTheme->addStylesheet($stylesheet);
@@ -61,7 +61,7 @@ $criteria->setStart($start);
 $authorCount = $authorHandler->getCount($criteria);
 $authorArray = $authorHandler->getAll($criteria);
 
-$id = \Xmf\Request::getInt('id', 0, 'GET');
+$id = Request::getInt('id', 0, 'GET');
 
 switch ($op) {
     case 'edit':

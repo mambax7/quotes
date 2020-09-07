@@ -82,7 +82,6 @@ function xoops_module_install_quotes(\XoopsModule $module)
     $helper       = Helper::getInstance();
     $utility      = new Utility();
 
-    /** @var Mtools\Common\Configurator $configurator */
     $configurator = new Mtools\Common\Configurator($dir);
 
     // Load language files

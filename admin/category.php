@@ -27,12 +27,11 @@ use Xmf\Request;
 require __DIR__ . '/admin_header.php';
 xoops_cp_header();
 //It recovered the value of argument op in URL$
-$op    = \Xmf\Request::getString('op', 'list');
-$order = \Xmf\Request::getString('order', 'desc');
-$sort  = \Xmf\Request::getString('sort', '');
+$op    = Request::getString('op', 'list');
+$order = Request::getString('order', 'desc');
+$sort  = Request::getString('sort', '');
 
 $adminObject->displayNavigation(basename(__FILE__));
-/** @var \Xmf\Module\Helper\Permission $permHelper */
 $permHelper = new Permission();
 $uploadDir  = XOOPS_UPLOAD_PATH . '/quotes/category/';
 $uploadUrl  = XOOPS_UPLOAD_URL . '/quotes/category/';
@@ -51,7 +50,7 @@ switch ($op) {
         if (!$GLOBALS['xoopsSecurity']->check()) {
             redirect_header('category.php', 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
         }
-        if (0 !== \Xmf\Request::getInt('id', 0)) {
+        if (0 !== Request::getInt('id', 0)) {
             $categoryObject = $categoryHandler->get(Request::getInt('id', 0));
         } else {
             $categoryObject = $categoryHandler->create();
@@ -84,14 +83,14 @@ switch ($op) {
 
         $categoryObject->setVar('weight', Request::getVar('weight', ''));
         $categoryObject->setVar('color', Request::getVar('color', ''));
-        $categoryObject->setVar('online', ((1 == \Xmf\Request::getInt('online', 0)) ? '1' : '0'));
+        $categoryObject->setVar('online', ((1 == Request::getInt('online', 0)) ? '1' : '0'));
         //Permissions
         //===============================================================
 
         $mid = $GLOBALS['xoopsModule']->mid();
         /** @var \XoopsGroupPermHandler $grouppermHandler */
         $grouppermHandler = xoops_getHandler('groupperm');
-        $id               = \Xmf\Request::getInt('id', 0);
+        $id               = Request::getInt('id', 0);
 
         /**
          * @param $myArray
@@ -143,7 +142,7 @@ switch ($op) {
         //setPermissions for View items
         $permissionGroup   = 'groupsRead';
         $permissionName    = 'quotes_view';
-        $permissionArray   = \Xmf\Request::getArray($permissionGroup, '');
+        $permissionArray   = Request::getArray($permissionGroup, '');
         $permissionArray[] = XOOPS_GROUP_ADMIN;
         //setPermissions($permissionArray, $permissionGroup, $id, $grouppermHandler, $permissionName, $mid);
         $permHelper->savePermissionForItem($permissionName, $id, $permissionArray);
@@ -151,7 +150,7 @@ switch ($op) {
         //setPermissions for Submit items
         $permissionGroup   = 'groupsSubmit';
         $permissionName    = 'quotes_submit';
-        $permissionArray   = \Xmf\Request::getArray($permissionGroup, '');
+        $permissionArray   = Request::getArray($permissionGroup, '');
         $permissionArray[] = XOOPS_GROUP_ADMIN;
         //setPermissions($permissionArray, $permissionGroup, $id, $grouppermHandler, $permissionName, $mid);
         $permHelper->savePermissionForItem($permissionName, $id, $permissionArray);
@@ -159,7 +158,7 @@ switch ($op) {
         //setPermissions for Approve items
         $permissionGroup   = 'groupsModeration';
         $permissionName    = 'quotes_approve';
-        $permissionArray   = \Xmf\Request::getArray($permissionGroup, '');
+        $permissionArray   = Request::getArray($permissionGroup, '');
         $permissionArray[] = XOOPS_GROUP_ADMIN;
         //setPermissions($permissionArray, $permissionGroup, $id, $grouppermHandler, $permissionName, $mid);
         $permHelper->savePermissionForItem($permissionName, $id, $permissionArray);
@@ -224,7 +223,7 @@ switch ($op) {
 
     case 'delete':
         $categoryObject = $categoryHandler->get(Request::getString('id', ''));
-        if (1 == \Xmf\Request::getInt('ok', 0)) {
+        if (1 == Request::getInt('ok', 0)) {
             if (!$GLOBALS['xoopsSecurity']->check()) {
                 redirect_header('category.php', 3, implode(', ', $GLOBALS['xoopsSecurity']->getErrors()));
             }
@@ -240,7 +239,7 @@ switch ($op) {
 
     case 'clone':
 
-        $id_field = \Xmf\Request::getString('id', '');
+        $id_field = Request::getString('id', '');
 
         if ($utility::cloneRecord('quotes_category', 'id', $id_field)) {
             redirect_header('category.php', 3, AM_QUOTES_CLONED_OK);
@@ -253,7 +252,7 @@ switch ($op) {
     default:
         $adminObject->addItemButton(AM_QUOTES_ADD_CATEGORY, 'category.php?op=new', 'add');
         $adminObject->displayButton('left');
-        $start                   = \Xmf\Request::getInt('start', 0);
+        $start                   = Request::getInt('start', 0);
         $categoryPaginationLimit = $helper->getConfig('userpager');
 
         $criteria = new \CriteriaCompo();

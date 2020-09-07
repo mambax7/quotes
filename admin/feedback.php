@@ -33,7 +33,7 @@ $adminObject = Admin::getInstance();
 $feedback = new Mtools\Common\ModuleFeedback();
 
 // It recovered the value of argument op in URL$
-$op                 = \Xmf\Request::getString('op', 'list');
+$op                 = Request::getString('op', 'list');
 $moduleDirName      = $GLOBALS['xoopsModule']->getVar('dirname');
 $moduleDirNameUpper = mb_strtoupper($moduleDirName);
 xoops_loadLanguage('feedback', $moduleDirName);
@@ -60,11 +60,11 @@ switch ($op) {
 
         $GLOBALS['xoopsTpl']->assign('navigation', $adminObject->displayNavigation('feedback.php'));
 
-        $your_name  = \Xmf\Request::getString('your_name', '');
-        $your_site  = \Xmf\Request::getString('your_site', '');
-        $your_mail  = \Xmf\Request::getString('your_mail', '');
-        $fb_type    = \Xmf\Request::getString('fb_type', '');
-        $fb_content = \Xmf\Request::getText('fb_content', '');
+        $your_name  = Request::getString('your_name', '');
+        $your_site  = Request::getString('your_site', '');
+        $your_mail  = Request::getString('your_mail', '');
+        $fb_type    = Request::getString('fb_type', '');
+        $fb_content = Request::getText('fb_content', '');
         $fb_content = str_replace(
             [
                 '
