@@ -15,7 +15,7 @@
 
 use Xmf\Module\Admin;
 use Xmf\Request;
-use XoopsModules\Quote\{
+use XoopsModules\Quotes\{
     Helper
 };
 
