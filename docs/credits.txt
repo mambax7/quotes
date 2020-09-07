@@ -1,0 +1,6 @@
+CREDITS
+=============
+
+Originally created by Michael Beck (aka Mamba): https://github.com/mambax7
+
+
