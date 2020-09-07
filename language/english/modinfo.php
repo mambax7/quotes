@@ -99,7 +99,7 @@ define('MI_QUOTES_FILE_APPROVE_NOTIFY_DESC', 'Allow Facebook comments in the for
 define('MI_QUOTES_FILE_APPROVE_NOTIFY_SUBJECT', 'Allow Facebook comments in the form');
 
 // Help
-define('MI_QUOTES_DIRNAME', basename(dirname(dirname(__DIR__))));
+define('MI_QUOTES_DIRNAME', basename(dirname(__DIR__, 2)));
 define('MI_QUOTES_HELP_HEADER', __DIR__ . '/help/helpheader.tpl');
 define('MI_QUOTES_BACK_2_ADMIN', 'Back to Administration of ');
 define('MI_QUOTES_OVERVIEW', 'Overview');

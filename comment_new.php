@@ -24,7 +24,7 @@ declare(strict_types=1);
 use Xmf\Request;
 use XoopsModules\Quotes;
 
-require dirname(dirname(__DIR__)) . '/mainfile.php';
+require dirname(__DIR__, 2) . '/mainfile.php';
 //require XOOPS_ROOT_PATH.'/modules/quotes/class/author.php';
 $com_itemid = Request::getInt('com_itemid', 0);
 if ($com_itemid > 0) {
