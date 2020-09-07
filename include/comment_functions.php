@@ -19,6 +19,10 @@ declare(strict_types=1);
  * @copyright       {@link https://xoops.org/ XOOPS Project}
  * @license         GPL 2.0 or later
  */
+
+use XoopsModules\Quotes\Helper;
+/** @var Helper $helper */
+
 /**
  * CommentsUpdate
  *
@@ -28,8 +32,7 @@ declare(strict_types=1);
  */
 function quotesCommentsUpdate($itemId, $commentCount)
 {
-    /** @var \XoopsModules\Quotes\Helper $helper */
-    $helper = \XoopsModules\Quotes\Helper::getInstance();
+    $helper = Helper::getInstance();
     /** @var \XoopsPersistableObjectHandler $helper ->getHandler('Author') */
     if (!$helper->getHandler('Author')->updateAll('comments', (int)$commentCount, new \Criteria('lid', (int)$itemId))) {
         return false;

@@ -22,11 +22,13 @@ declare(strict_types=1);
  */
 
 use Xmf\Module\Admin;
+use Xmf\Request;
+/** @var Admin $adminObject */
 
 require __DIR__ . '/admin_header.php';
 xoops_cp_header();
 require XOOPS_ROOT_PATH . '/class/xoopsform/grouppermform.php';
-if ('' != \Xmf\Request::getString('submit', '')) {
+if ('' != Request::getString('submit', '')) {
     redirect_header(XOOPS_URL . '/modules/' . $GLOBALS['xoopsModule']->dirname() . '/admin/permissions.php', 1, AM_QUOTES_PERMISSIONS_GPERMUPDATED);
 }
 // Check admin have access to this page
@@ -37,7 +39,7 @@ if (count ( array_intersect ( $group, $groups ) ) <= 0) {
 }*/
 $adminObject->displayNavigation(basename(__FILE__));
 
-$permission                = \Xmf\Request::getInt('permission', 1, 'POST');
+$permission                = Request::getInt('permission', 1, 'POST');
 $selected                  = ['', '', '', '',];
 $selected[$permission - 1] = ' selected';
 

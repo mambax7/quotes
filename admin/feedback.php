@@ -21,15 +21,16 @@ declare(strict_types=1);
  * @license         GPL 2.0 or later
  */
 
+use Xmf\Module\Admin;
 use Xmf\Request;
 use XoopsModules\Quotes;
-use XoopsModules\Mtools\Common;
+use XoopsModules\Mtools;
 
 require __DIR__ . '/admin_header.php';
 
-$adminObject = \Xmf\Module\Admin::getInstance();
+$adminObject = Admin::getInstance();
 
-$feedback = new \XoopsModules\Mtools\Common\ModuleFeedback();
+$feedback = new Mtools\Common\ModuleFeedback();
 
 // It recovered the value of argument op in URL$
 $op                 = \Xmf\Request::getString('op', 'list');

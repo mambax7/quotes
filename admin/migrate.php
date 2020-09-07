@@ -51,12 +51,12 @@ EOF;
 $configurator = new Mtools\Common\Configurator($helper->path());
 
 /** @var \XoopsModules\Mtools\Common\Migrate $migrator */
-$migrator = new \XoopsModules\Mtools\Common\Migrate($configurator);
+$migrator = new Mtools\Common\Migrate($configurator);
 
-$op        = \Xmf\Request::getCmd('op', 'show');
-$opShow    = \Xmf\Request::getCmd('show', null, 'POST');
-$opMigrate = \Xmf\Request::getCmd('migrate', null, 'POST');
-$opSchema  = \Xmf\Request::getCmd('schema', null, 'POST');
+$op        = Request::getCmd('op', 'show');
+$opShow    = Request::getCmd('show', null, 'POST');
+$opMigrate = Request::getCmd('migrate', null, 'POST');
+$opSchema  = Request::getCmd('schema', null, 'POST');
 $op        = !empty($opShow) ? 'show' : $op;
 $op        = !empty($opMigrate) ? 'migrate' : $op;
 $op        = !empty($opSchema) ? 'schema' : $op;

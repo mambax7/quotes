@@ -21,6 +21,7 @@ declare(strict_types=1);
  * @license         GPL 2.0 or later
  */
 
+use Xmf\Module\Admin;
 use XoopsModules\Quotes;
 use XoopsModules\Quotes\Helper;
 
@@ -35,12 +36,12 @@ $helper->loadLanguage('common');
 $helper->loadLanguage('feedback');
 
 // get path to icons
-$pathIcon32 = \Xmf\Module\Admin::menuIconPath('');
+$pathIcon32 = Admin::menuIconPath('');
 if (is_object($helper->getModule())) {
     $pathModIcon32 = $helper->getConfig('modicons32');
 }
 
-$adminObject = \Xmf\Module\Admin::getInstance();
+$adminObject = Admin::getInstance();
 
 $adminmenu[] = [
     'title' => MI_QUOTES_ADMENU1,

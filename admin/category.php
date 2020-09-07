@@ -21,6 +21,7 @@ declare(strict_types=1);
  * @license         GPL 2.0 or later
  */
 
+use Xmf\Module\Helper\Permission;
 use Xmf\Request;
 
 require __DIR__ . '/admin_header.php';
@@ -32,7 +33,7 @@ $sort  = \Xmf\Request::getString('sort', '');
 
 $adminObject->displayNavigation(basename(__FILE__));
 /** @var \Xmf\Module\Helper\Permission $permHelper */
-$permHelper = new \Xmf\Module\Helper\Permission();
+$permHelper = new Permission();
 $uploadDir  = XOOPS_UPLOAD_PATH . '/quotes/category/';
 $uploadUrl  = XOOPS_UPLOAD_URL . '/quotes/category/';
 
