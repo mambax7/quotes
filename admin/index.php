@@ -21,9 +21,26 @@ declare(strict_types=1);
  * @license         GPL 2.0 or later
  */
 
-use XoopsModules\Quotes;
-use XoopsModules\Mtools\Common;
+use Xmf\Module\Admin;
+use Xmf\Request;
+use Xmf\Yaml;
+use XoopsModules\Mtools\{
+    Common,
+    Common\Configurator,
+    Common\TestdataButtons,
+//    Helper,
+//    Utility
+};
+use XoopsModules\Quotes\{
+    Helper,
+    Utility
+};
+
+
+
+/** @var Admin $adminObject */
 /** @var Helper $helper */
+/** @var Utility $utility */
 
 require __DIR__ . '/admin_header.php';
 xoops_cp_header();
@@ -35,7 +52,6 @@ $totalQuote = $quoteHandler->getCount();
 /** @var \XoopsPersistableObjectHandler $categoryHandler */
 $totalCategory = $categoryHandler->getCount();
 //count "total Author"
-/** @var \XoopsPersistableObjectHandler $authorHandler */
 $totalAuthor = $authorHandler->getCount();
 // InfoBox Statistics
 $adminObject->addInfoBox(AM_QUOTES_STATISTICS);
@@ -53,7 +69,7 @@ $adminObject->addInfoBoxLine(sprintf(AM_QUOTES_THEREARE_AUTHOR, $totalAuthor));
 $adminObject->addConfigBoxLine('');
 $redirectFile = $_SERVER['SCRIPT_NAME'];
 
-$configurator  = new Common\Configurator($helper->path());
+$configurator  = new Configurator($helper->path());
 $uploadFolders = $configurator->uploadFolders;
 
 foreach (array_keys($uploadFolders) as $i) {
@@ -69,65 +85,24 @@ $adminObject->displayNavigation(basename(__FILE__));
 //    $adminObject->addItemButton($newRelease[0], $newRelease[1], 'download', 'style="color : Red"');
 //}
 
-//------------- Test Data ----------------------------
-
+//------------- Test Data Buttons ----------------------------
 if ($helper->getConfig('displaySampleButton')) {
-    $yamlFile            = dirname(__DIR__) . '/config/admin.yml';
-    $config              = loadAdminConfig($yamlFile);
-    $displaySampleButton = $config['displaySampleButton'];
-
-    if (1 == $displaySampleButton) {
-        xoops_loadLanguage('admin/modulesadmin', 'system');
-        require_once dirname(__DIR__) . '/testdata/index.php';
-
-        $adminObject->addItemButton(constant('CO_' . $moduleDirNameUpper . '_' . 'ADD_SAMPLEDATA'), $helper->url('testdata/index.php?op=load'), 'add');
-        $adminObject->addItemButton(constant('CO_' . $moduleDirNameUpper . '_' . 'SAVE_SAMPLEDATA'), $helper->url('testdata/index.php?op=save'), 'add');
-        //    $adminObject->addItemButton(constant('CO_' . $moduleDirNameUpper . '_' . 'EXPORT_SCHEMA'), $helper->url( 'testdata/index.php?op=exportschema'), 'add');
-        $adminObject->addItemButton(constant('CO_' . $moduleDirNameUpper . '_' . 'HIDE_SAMPLEDATA_BUTTONS'), '?op=hide_buttons', 'delete');
-    } else {
-        $adminObject->addItemButton(constant('CO_' . $moduleDirNameUpper . '_' . 'SHOW_SAMPLEDATA_BUTTONS'), '?op=show_buttons', 'add');
-        $displaySampleButton = $config['displaySampleButton'];
-    }
-    $adminObject->displayButton('left', '');;
+    TestdataButtons::loadButtonConfig($adminObject, $helper);
+    $adminObject->displayButton('left', '');
 }
-
-//------------- End Test Data ----------------------------
-
-$adminObject->displayIndex();
-
-function loadAdminConfig($yamlFile)
-{
-    $config = \Xmf\Yaml::readWrapped($yamlFile); // work with phpmyadmin YAML dumps
-    return $config;
-}
-
-function hideButtons($yamlFile)
-{
-    $app                        = [];
-    $app['displaySampleButton'] = 0;
-    \Xmf\Yaml::save($app, $yamlFile);
-    redirect_header('index.php', 0, '');
-}
-
-function showButtons($yamlFile)
-{
-    $app                        = [];
-    $app['displaySampleButton'] = 1;
-    \Xmf\Yaml::save($app, $yamlFile);
-    redirect_header('index.php', 0, '');
-}
-
-$op = \Xmf\Request::getString('op', 0, 'GET');
-
+$op = Request::getString('op', 0, 'GET');
 switch ($op) {
     case 'hide_buttons':
-        hideButtons($yamlFile);
+        TestdataButtons::hideButtons($helper);
         break;
     case 'show_buttons':
-        showButtons($yamlFile);
+        TestdataButtons::showButtons($helper);
         break;
 }
+//------------- End Test Data Buttons ----------------------------
 
+
+$adminObject->displayIndex();
 echo $utility::getServerStats();
 
 //codeDump(__FILE__);

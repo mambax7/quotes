@@ -14,6 +14,9 @@
  * @license         GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 
+use XoopsModules\Quotes\{
+    Helper
+};
 /** @var Helper $helper */
 
 require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
@@ -21,6 +24,7 @@ require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 $moduleDirName      = basename(dirname(__DIR__));
 $moduleDirNameUpper = mb_strtoupper($moduleDirName); //$capsDirName
 
+$helper = Helper::getInstance();
 $helper->loadLanguage('blocksadmin');
 
 $form = new \XoopsThemeForm($block['form_title'], 'blockform', 'blocksadmin.php', 'post', true);

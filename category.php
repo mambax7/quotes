@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 use XoopsModules\Quotes;
 use Xmf\Request;
+/** @var Admin $adminObject */
+/** @var Helper $helper */
 
 require __DIR__ . '/header.php';
 

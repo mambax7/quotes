@@ -33,7 +33,7 @@ use XoopsModules\Quotes\Helper;
 function quotesCommentsUpdate($itemId, $commentCount)
 {
     $helper = Helper::getInstance();
-    /** @var \XoopsPersistableObjectHandler $helper ->getHandler('Author') */
+    /** @var \XoopsPersistableObjectHandler $helper->getHandler('Author') */
     if (!$helper->getHandler('Author')->updateAll('comments', (int)$commentCount, new \Criteria('lid', (int)$itemId))) {
         return false;
     }

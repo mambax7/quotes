@@ -51,7 +51,6 @@ function xoops_module_pre_install_quotes(\XoopsModule $module)
     $phpSuccess = $utility::checkVerPhp($module);
 
     if ($xoopsSuccess && $phpSuccess) {
-        /** @var Mtools\Common\Configurator $configurator */
         $configurator = new Mtools\Common\Configurator($dir);
 
         //create upload folders

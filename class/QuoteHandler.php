@@ -23,31 +23,31 @@ namespace XoopsModules\Quotes;
  * @license         GPL 2.0 or later
  */
 
-use XoopsModules\Quotes;
+use Xmf\Module\Helper\Permission;
+use XoopsModules\Quotes\{Helper
+};
+
+/** @var Helper $helper */
 
 $moduleDirName = basename(dirname(__DIR__));
 
-$permHelper = new \Xmf\Module\Helper\Permission();
+$permHelper = new Permission();
 
 /**
  * Class QuoteHandler
  */
 class QuoteHandler extends \XoopsPersistableObjectHandler
 {
-    /**
-     * @var Helper
-     */
     public $helper;
 
     /**
      * Constructor
-     * @param null|\XoopsDatabase              $db
-     * @param null|\XoopsModules\Quotes\Helper $helper
+     * @param null|\XoopsDatabase $db
+     * @param null|Helper         $helper
      */
 
     public function __construct(\XoopsDatabase $db = null, $helper = null)
     {
-        /** @var \XoopsModules\Quotes\Helper $this ->helper */
         $this->helper = $helper;
         parent::__construct($db, 'quotes_quote', Quote::class, 'id', 'quote');
     }

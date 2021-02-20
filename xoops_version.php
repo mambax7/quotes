@@ -23,9 +23,9 @@ $moduleDirName      = basename(__DIR__);
 $moduleDirNameUpper = mb_strtoupper($moduleDirName);
 
 $modversion = [
-    'version'             => 1.0,
+    'version'             => 1.1,
     'module_status'       => 'Beta 1',
-    'release_date'        => '2020/09/05',
+    'release_date'        => '2021/02/19',
     'name'                => MI_QUOTES_NAME,
     'description'         => MI_QUOTES_DESC,
     'release'             => '2017-12-29',

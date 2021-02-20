@@ -18,6 +18,8 @@ use Xmf\Request;
 use XoopsModules\Quotes\{
     Helper
 };
+/** @var Admin $adminObject */
+/** @var Helper $helper */
 
 require __DIR__ . '/admin_header.php';
 
@@ -25,6 +27,8 @@ $moduleDirName = basename(dirname(__DIR__));
 $moduleDirNameUpper = mb_strtoupper($moduleDirName); //$capsDirName
 
 $helper->loadLanguage('blocksadmin');
+
+$xoopsDB = \XoopsDatabaseFactory::getDatabaseConnection();
 
 if (!is_object($GLOBALS['xoopsUser']) || !is_object($xoopsModule)
     || !$GLOBALS['xoopsUser']->isAdmin($xoopsModule->mid())) {
@@ -43,7 +47,7 @@ if ($GLOBALS['xoopsUser']->isAdmin($xoopsModule->mid())) {
         if ('edit' === $_GET['op'] || 'delete' === $_GET['op'] || 'delete_ok' === $_GET['op'] || 'clone' === $_GET['op']
             || 'edit' === $_GET['op']) {
             $op  = $_GET['op'];
-            $bid = \Xmf\Request::getInt('bid', 0, 'GET');
+            $bid = Request::getInt('bid', 0, 'GET');
         }
     */
 
@@ -58,7 +62,7 @@ if ($GLOBALS['xoopsUser']->isAdmin($xoopsModule->mid())) {
         require_once XOOPS_ROOT_PATH . '/class/xoopslists.php';
         $moduleDirName = basename(dirname(__DIR__));
         $moduleDirNameUpper = mb_strtoupper($moduleDirName); //$capsDirName
-        $db = \XoopsDatabaseFactory::getDatabaseConnection();
+        $xoopsDB = \XoopsDatabaseFactory::getDatabaseConnection();
         xoops_loadLanguage('admin', 'system');
         xoops_loadLanguage('admin/blocksadmin', 'system');
         xoops_loadLanguage('admin/groups', 'system');
@@ -125,10 +129,10 @@ if ($GLOBALS['xoopsUser']->isAdmin($xoopsModule->mid())) {
         ];
         foreach ($blockArray as $i) {
             $groupsPerms = $grouppermHandler->getGroupIds('block_read', $i->getVar('bid'));
-            $sql = 'SELECT module_id FROM ' . $db->prefix('block_module_link') . ' WHERE block_id=' . $i->getVar('bid');
-            $result = $db->query($sql);
+            $sql = 'SELECT module_id FROM ' . $xoopsDB->prefix('block_module_link') . ' WHERE block_id=' . $i->getVar('bid');
+            $result = $xoopsDB->query($sql);
             $modules = [];
-            while (false !== ($row = $db->fetchArray($result))) {
+            while (false !== ($row = $xoopsDB->fetchArray($result))) {
                 $modules[] = (int)$row['module_id'];
             }
 
@@ -301,11 +305,11 @@ if ($GLOBALS['xoopsUser']->isAdmin($xoopsModule->mid())) {
 
         //        mpu_adm_menu();
         $myblock = new \XoopsBlock($bid);
-        $db = \XoopsDatabaseFactory::getDatabaseConnection();
-        $sql = 'SELECT module_id FROM ' . $db->prefix('block_module_link') . ' WHERE block_id=' . (int)$bid;
-        $result = $db->query($sql);
+        $xoopsDB = \XoopsDatabaseFactory::getDatabaseConnection();
+        $sql = 'SELECT module_id FROM ' . $xoopsDB->prefix('block_module_link') . ' WHERE block_id=' . (int)$bid;
+        $result = $xoopsDB->query($sql);
         $modules = [];
-        while (false !== ($row = $db->fetchArray($result))) {
+        while (false !== ($row = $xoopsDB->fetchArray($result))) {
             $modules[] = (int)$row['module_id'];
         }
         $isCustom = ('C' === $myblock->getVar('block_type') || 'E' === $myblock->getVar('block_type'));
@@ -393,28 +397,29 @@ if ($GLOBALS['xoopsUser']->isAdmin($xoopsModule->mid())) {
                 $tplfileHandler->insert($tplclone);
             }
         }
-        $db = \XoopsDatabaseFactory::getDatabaseConnection();
+        $xoopsDB = \XoopsDatabaseFactory::getDatabaseConnection();
         foreach ($bmodule as $bmid) {
-            $sql = 'INSERT INTO ' . $db->prefix('block_module_link') . ' (block_id, module_id) VALUES (' . $newid . ', ' . $bmid . ')';
-            $db->query($sql);
+            $sql = 'INSERT INTO ' . $xoopsDB->prefix('block_module_link') . ' (block_id, module_id) VALUES (' . $newid . ', ' . $bmid . ')';
+            $xoopsDB->query($sql);
         }
         $groups = &$GLOBALS['xoopsUser']->getGroups();
         foreach ($groups as $iValue) {
-            $sql = 'INSERT INTO ' . $db->prefix('group_permission') . ' (gperm_groupid, gperm_itemid, gperm_modid, gperm_name) VALUES (' . $iValue . ', ' . $newid . ", 1, 'block_read')";
-            $db->query($sql);
+            $sql = 'INSERT INTO ' . $xoopsDB->prefix('group_permission') . ' (gperm_groupid, gperm_itemid, gperm_modid, gperm_name) VALUES (' . $iValue . ', ' . $newid . ", 1, 'block_read')";
+            $xoopsDB->query($sql);
         }
         redirect_header('blocksadmin.php?op=listar', 1, _AM_DBUPDATED);
     }
 
     /**
-     * @param int               $bid
-     * @param string            $title
-     * @param int               $weight
-     * @param bool              $visible
-     * @param string            $side
-     * @param int               $bcachetime
+     * @param int    $bid
+     * @param string $title
+     * @param int    $weight
+     * @param bool   $visible
+     * @param string $side
+     * @param int    $bcachetime
+     * @param int    $bmodule
      */
-    function setOrder($bid, $title, $weight, $visible, $side, $bcachetime)
+    function setOrder($bid, $title, $weight, $visible, $side, $bcachetime, $bmodule)
     {
         $myblock = new \XoopsBlock($bid);
         $myblock->setVar('title', $title);
@@ -442,11 +447,11 @@ if ($GLOBALS['xoopsUser']->isAdmin($xoopsModule->mid())) {
         xoops_loadLanguage('admin/groups', 'system');
         //        mpu_adm_menu();
         $myblock = new \XoopsBlock($bid);
-        $db = \XoopsDatabaseFactory::getDatabaseConnection();
-        $sql = 'SELECT module_id FROM ' . $db->prefix('block_module_link') . ' WHERE block_id=' . (int)$bid;
-        $result = $db->query($sql);
+        $xoopsDB = \XoopsDatabaseFactory::getDatabaseConnection();
+        $sql = 'SELECT module_id FROM ' . $xoopsDB->prefix('block_module_link') . ' WHERE block_id=' . (int)$bid;
+        $result = $xoopsDB->query($sql);
         $modules = [];
-        while (false !== ($row = $db->fetchArray($result))) {
+        while (false !== ($row = $xoopsDB->fetchArray($result))) {
             $modules[] = (int)$row['module_id'];
         }
         $isCustom = ('C' === $myblock->getVar('block_type') || 'E' === $myblock->getVar('block_type'));
@@ -490,6 +495,7 @@ if ($GLOBALS['xoopsUser']->isAdmin($xoopsModule->mid())) {
      */
     function updateBlock($bid, $btitle, $bside, $bweight, $bvisible, $bcachetime, $bmodule, $options, $groups)
     {
+        $xoopsDB = \XoopsDatabaseFactory::getDatabase();
         $myblock = new XoopsBlock($bid);
         $myblock->setVar('title', $btitle);
         $myblock->setVar('weight', $bweight);

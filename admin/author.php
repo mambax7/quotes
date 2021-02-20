@@ -21,6 +21,8 @@ declare(strict_types=1);
  * @license         GPL 2.0 or later
  */
 
+use Xmf\Module\Admin;
+use Xmf\Module\Helper\Permission;
 use Xmf\Request;
 use XoopsModules\Quotes\{Helper,
     Utility
@@ -29,20 +31,20 @@ use XoopsModules\Quotes\{Helper,
 /** @var Admin $adminObject */
 /** @var Helper $helper */
 /** @var Utility $utility */
+/** @var \XoopsModules\Quotes\AuthorHandler $authorHandler */
 
 require __DIR__ . '/admin_header.php';
 xoops_cp_header();
 //It recovered the value of argument op in URL$
-$op    = \Xmf\Request::getString('op', 'list');
-$order = \Xmf\Request::getString('order', 'desc');
-$sort  = \Xmf\Request::getString('sort', '');
+$op    = Request::getString('op', 'list');
+$order = Request::getString('order', 'desc');
+$sort  = Request::getString('sort', '');
 
 $helper  = Helper::getInstance();
 $utility = new Utility();
 
 $adminObject->displayNavigation(basename(__FILE__));
-/** @var \Xmf\Module\Helper\Permission $permHelper */
-$permHelper = new \Xmf\Module\Helper\Permission();
+$permHelper = new Permission();
 $uploadDir  = XOOPS_UPLOAD_PATH . '/quotes/author/';
 $uploadUrl  = XOOPS_UPLOAD_URL . '/quotes/author/';
 
@@ -60,7 +62,7 @@ switch ($op) {
         if (!$GLOBALS['xoopsSecurity']->check()) {
             redirect_header('author.php', 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
         }
-        if (0 !== \Xmf\Request::getInt('id', 0)) {
+        if (0 !== Request::getInt('id', 0)) {
             $authorObject = $authorHandler->get(Request::getInt('id', 0));
         } else {
             $authorObject = $authorHandler->create();
@@ -117,7 +119,7 @@ switch ($op) {
 
     case 'delete':
         $authorObject = $authorHandler->get(Request::getString('id', ''));
-        if (1 == \Xmf\Request::getInt('ok', 0)) {
+        if (1 == Request::getInt('ok', 0)) {
             if (!$GLOBALS['xoopsSecurity']->check()) {
                 redirect_header('author.php', 3, implode(', ', $GLOBALS['xoopsSecurity']->getErrors()));
             }
@@ -133,7 +135,7 @@ switch ($op) {
 
     case 'clone':
 
-        $id_field = \Xmf\Request::getString('id', '');
+        $id_field = Request::getString('id', '');
 
         if ($utility::cloneRecord('quotes_author', 'id', $id_field)) {
             redirect_header('author.php', 3, AM_QUOTES_CLONED_OK);
@@ -146,7 +148,7 @@ switch ($op) {
     default:
         $adminObject->addItemButton(AM_QUOTES_ADD_AUTHOR, 'author.php?op=new', 'add');
         $adminObject->displayButton('left');
-        $start                 = \Xmf\Request::getInt('start', 0);
+        $start                 = Request::getInt('start', 0);
         $authorPaginationLimit = $helper->getConfig('userpager');
 
         $criteria = new \CriteriaCompo();

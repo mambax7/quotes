@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 use Xmf\Request;
 use Xmf\Module\Admin;
-use XoopsModules\Quotes;
+use XoopsModules\Quotes\{
+    Helper
+};
 use XoopsModules\Mtools;
 /** @var Admin $adminObject */
 /** @var Helper $helper */
@@ -47,10 +49,8 @@ echo <<<EOF
 </form>
 EOF;
 
-/** @var Mtools\Common\Configurator $configurator */
 $configurator = new Mtools\Common\Configurator($helper->path());
 
-/** @var Mtools\Common\Migrate $migrator */
 $migrator = new Mtools\Common\Migrate($configurator);
 
 $op        = Request::getCmd('op', 'show');

@@ -21,6 +21,8 @@ declare(strict_types=1);
  * @license         GPL 2.0 or later
  */
 
+use Xmf\Module\Admin;
+use Xmf\Module\Helper\Permission;
 use Xmf\Request;
 use XoopsModules\Quotes\{Helper,
     Utility
@@ -39,8 +41,7 @@ $order = Request::getString('order', 'desc');
 $sort  = Request::getString('sort', '');
 
 $adminObject->displayNavigation(basename(__FILE__));
-/** @var \Xmf\Module\Helper\Permission $permHelper */
-$permHelper = new \Xmf\Module\Helper\Permission();
+$permHelper = new Permission();
 $uploadDir  = XOOPS_UPLOAD_PATH . '/quotes/quote/';
 $uploadUrl  = XOOPS_UPLOAD_URL . '/quotes/quote/';
 

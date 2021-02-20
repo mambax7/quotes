@@ -27,9 +27,13 @@ use XoopsModules\Quotes\{
     Helper
 };
 
+/** @var Helper $helper */
+
+use Xmf\Module\Helper\Permission;
+
 $moduleDirName = basename(dirname(__DIR__));
 
-$permHelper = new \Xmf\Module\Helper\Permission();
+$permHelper = new Permission();
 
 /**
  * Class AuthorHandler
@@ -43,13 +47,12 @@ class AuthorHandler extends \XoopsPersistableObjectHandler
 
     /**
      * Constructor
-     * @param null|\XoopsDatabase              $db
-     * @param null|Helper $helper
+     * @param null|\XoopsDatabase $db
+     * @param null|Helper         $helper
      */
 
     public function __construct(\XoopsDatabase $db = null, $helper = null)
     {
-        /** @var Helper $this ->helper */
         $this->helper = $helper;
         parent::__construct($db, 'quotes_author', Author::class, 'id', 'name');
     }

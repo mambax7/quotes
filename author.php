@@ -21,8 +21,14 @@ declare(strict_types=1);
  * @license         GPL 2.0 or later
  */
 
-use XoopsModules\Quotes;
+use XoopsModules\Quotes\{
+    Helper,
+    Utility
+};
 use Xmf\Request;
+
+/** @var Helper $helper */
+/** @var Utility $utility */
 
 require __DIR__ . '/header.php';
 

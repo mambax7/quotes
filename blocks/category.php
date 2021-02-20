@@ -27,7 +27,7 @@ use XoopsModules\Quotes\Helper;
 /**
  * @param $options
  *
- * @return array
+ * @return array|false
  */
 function showQuotesCategory($options)
 {
@@ -82,7 +82,6 @@ function editQuotesCategory($options)
     $form .= "<input name='options[1]' size='5' maxlength='255' value='" . $options[1] . "' type='text' >&nbsp;<br>";
     $form .= MB_QUOTES_TITLELENGTH . " : <input name='options[2]' size='5' maxlength='255' value='" . $options[2] . "' type='text' ><br><br>";
 
-    /** @var \XoopsModules\Quotes\Helper $helper */
     $helper = \XoopsModules\Quotes\Helper::getInstance();
 
     /** @var \XoopsPersistableObjectHandler $categoryHandler */

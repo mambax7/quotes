@@ -165,7 +165,7 @@ switch ($op) {
 
         /*
                     //Form quotes_view
-                    $arr_quotes_view = \Xmf\Request::getArray('cat_gperms_read');
+                    $arr_quotes_view = Request::getArray('cat_gperms_read');
                     if ($id > 0) {
                         $sql
                             =

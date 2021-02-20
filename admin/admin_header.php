@@ -31,8 +31,8 @@ use XoopsModules\Quotes\{Helper,
 /** @var Helper $helper */
 /** @var Utility $utility */
 
-require dirname(dirname(dirname(__DIR__))) . '/include/cp_header.php';
-require dirname(dirname(dirname(__DIR__))) . '/class/xoopsformloader.php';
+require dirname(__DIR__, 3) . '/include/cp_header.php';
+require dirname(__DIR__, 3) . '/class/xoopsformloader.php';
 
 require dirname(__DIR__) . '/include/common.php';
 

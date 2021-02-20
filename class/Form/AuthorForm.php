@@ -23,6 +23,7 @@ namespace XoopsModules\Quotes\Form;
  * @license         GPL 2.0 or later
  */
 
+use Xmf\Module\Helper\Permission;
 use Xmf\Request;
 use XoopsModules\Quotes;
 
@@ -30,7 +31,7 @@ require_once dirname(__DIR__, 2) . '/include/common.php';
 
 $moduleDirName = basename(dirname(__DIR__, 2));
 //$helper = Quotes\Helper::getInstance();
-$permHelper = new \Xmf\Module\Helper\Permission();
+$permHelper = new Permission();
 
 xoops_load('XoopsFormLoader');
 
@@ -52,7 +53,7 @@ class AuthorForm extends \XoopsThemeForm
         $this->helper       = $target->helper;
         $this->targetObject = $target;
 
-        $title = $this->targetObject->isNew() ? sprintf(AM_QUOTES_AUTHOR_ADD) : sprintf(AM_QUOTES_AUTHOR_EDIT);
+        $title = $this->targetObject->isNew() ? AM_QUOTES_AUTHOR_ADD : AM_QUOTES_AUTHOR_EDIT;
         parent::__construct($title, 'form', xoops_getenv('SCRIPT_NAME'), 'post', true);
         $this->setExtra('enctype="multipart/form-data"');
 
@@ -97,7 +98,7 @@ class AuthorForm extends \XoopsThemeForm
         $imageselect = new \XoopsFormSelect($imgpath, 'photo', $photo);
         $imageArray  = \XoopsLists::getImgListAsArray(XOOPS_ROOT_PATH . $uploadDir);
         foreach ($imageArray as $image) {
-            $imageselect->addOption((string)$image, $image);
+            $imageselect->addOption($image, $image);
         }
         $imageselect->setExtra("onchange='showImgSelected(\"image_photo\", \"photo\", \"" . $uploadDir . '", "", "' . XOOPS_URL . "\")'");
         $imgtray->addElement($imageselect);

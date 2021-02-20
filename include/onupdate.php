@@ -64,7 +64,6 @@ function xoops_module_pre_update_quotes(\XoopsModule $module)
     $xoopsSuccess = $utility::checkVerXoops($module);
     $phpSuccess   = $utility::checkVerPhp($module);
 
-    /** @var Mtools\Common\Configurator $configurator */
     $configurator = new Mtools\Common\Configurator($helper->path());
 
     //create upload folders
@@ -95,7 +94,6 @@ function xoops_module_update_quotes(\XoopsModule $module, $previousVersion = nul
     $helper       = Helper::getInstance();
     $utility      = new Utility();
 
-    /** @var Mtools\Common\Configurator $configurator */
     $configurator = new Mtools\Common\Configurator($helper->path());
     $helper->loadLanguage('common');
 

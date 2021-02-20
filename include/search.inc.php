@@ -27,7 +27,7 @@ declare(strict_types=1);
  * @param $limit
  * @param $offset
  * @param $userid
- * @return array|bool
+ * @return array
  */
 function quotes_search($queryarray, $andor, $limit, $offset, $userid)
 {

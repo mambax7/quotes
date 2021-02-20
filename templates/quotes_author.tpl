@@ -53,6 +53,6 @@
     </table>
 </div>
 <div id="pagenav"><{$pagenav}></div>
-<{$commentsnav}> <{$lang_notice}>
-<{if $comment_mode == "flat"}> <{include file="db:system_comments_flat.tpl"}> <{elseif $comment_mode == "thread"}> <{include file="db:system_comments_thread.tpl"}> <{elseif $comment_mode == "nest"}> <{include file="db:system_comments_nest.tpl"}> <{/if}>
+<{$commentsnav|default:''}> <{$lang_notice|default:''}>
+<{if $comment_mode|default:'' == "flat"}> <{include file="db:system_comments_flat.tpl"}> <{elseif $comment_mode|default:'' == "thread"}> <{include file="db:system_comments_thread.tpl"}> <{elseif $comment_mode|default:'' == "nest"}> <{include file="db:system_comments_nest.tpl"}> <{/if}>
 <{include file="db:quotes_footer.tpl"}>

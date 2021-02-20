@@ -21,6 +21,9 @@ declare(strict_types=1);
  * @license         GPL 2.0 or later
  */
 
+use Xmf\Module\Admin;
+/** @var Admin $adminObject */
+
 require_once __DIR__ . '/admin_header.php';
 xoops_cp_header();
 

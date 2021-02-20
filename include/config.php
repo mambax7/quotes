@@ -17,10 +17,11 @@ use Xmf\Module\Admin;
 /**
  * Module: Quotes
  *
- * @category        Module
+ * @return object
  * @author          XOOPS Development Team <https://xoops.org>
  * @copyright       {@link https://xoops.org/ XOOPS Project}
  * @license         GPL 2.0 or later
+ * @category        Module
  */
 function getConfig()
 {
