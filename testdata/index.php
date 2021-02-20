@@ -25,7 +25,7 @@ use Xmf\Request;
 use XoopsModules\Quotes\{Helper,
     Utility
 };
-use XoopsModules\Mtools\Common\SampleData;
+use XoopsModules\Mtools\Common\TestdataSample;
 
 /** @var Helper $helper */
 
@@ -35,22 +35,42 @@ require dirname(__DIR__) . '/preloads/autoloader.php';
 $op = Request::getCmd('op', '');
 
 $helper = Helper::getInstance();
+$moduleDirNameUpper =  mb_strtoupper($helper->getDirname());
 // Load language files
 $helper->loadLanguage('common');
-$sampleData = new SampleData($helper);
+$testdataSample = new TestdataSample($helper);
 
 switch ($op) {
     case 'load':
-        $sampleData->loadData();
+        if (Request::hasVar('ok', 'REQUEST') && 1 === Request::getInt('ok', 0)) {
+            if (!$GLOBALS['xoopsSecurity']->check()) {
+                redirect_header($helper->url('admin/index.php'), 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
+            }
+            $testdataSample->loadData();
+        } else {
+            xoops_cp_header();
+            xoops_confirm(['ok' => 1, 'op' => 'load'], 'index.php', constant('CO_' . $moduleDirNameUpper . '_' . 'LOAD_SAMPLEDATA_CONFIRM'), constant('CO_' . $moduleDirNameUpper . '_' . 'CONFIRM'), true);
+            xoops_cp_footer();
+        }
         break;
     case 'save':
-        $sampleData->saveData();
+        $testdataSample->saveData();
         break;
     case 'clear':
-        $sampleData->clearData();
+//        $testdataSample->clearData();
+        if (Request::hasVar('ok', 'REQUEST') && 1 === Request::getInt('ok', 0)) {
+            if (!$GLOBALS['xoopsSecurity']->check()) {
+                redirect_header($helper->url('admin/index.php'), 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
+            }
+            $testdataSample->clearData();
+        } else {
+            xoops_cp_header();
+            xoops_confirm(['ok' => 1, 'op' => 'clear'], 'index.php', constant('CO_' . $moduleDirNameUpper . '_' . 'CLEAR_SAMPLEDATA_CONFIRM'), constant('CO_' . $moduleDirNameUpper . '_' . 'CONFIRM'), true);
+            xoops_cp_footer();
+        }
         break;
 //    case 'exportschema':
-//        $sampleData->exportShema();
+//        $testdataSample->exportShema();
 //        break;
 }
 

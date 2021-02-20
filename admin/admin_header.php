@@ -22,7 +22,9 @@ declare(strict_types=1);
  */
 
 use Xmf\Module\Admin;
-use XoopsModules\Mtools;
+use XoopsModules\Mtools\{
+    Helper as mtHelper
+};
 use XoopsModules\Quotes\{Helper,
     Utility
 };
@@ -35,13 +37,19 @@ require dirname(__DIR__, 3) . '/include/cp_header.php';
 require dirname(__DIR__, 3) . '/class/xoopsformloader.php';
 
 require dirname(__DIR__) . '/include/common.php';
-
 require dirname(__DIR__) . '/preloads/autoloader.php';
+
+
+$helper = Helper::getInstance();
+
+//TODO check on mTools if installed and active
+if (!class_exists(mtHelper::class)) {
+    redirect_header(XOOPS_URL . '/admin.php', 1, 'You need to install mTools');
+}
 
 
 $moduleDirName = basename(dirname(__DIR__));
 
-$helper      = Helper::getInstance();
 $utility     = new Utility();
 $adminObject = Admin::getInstance();
 
