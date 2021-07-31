@@ -17,15 +17,14 @@ use Xmf\Module\Admin;
 /**
  * Module: Quotes
  *
- * @return object
+ * @category        Module
  * @author          XOOPS Development Team <https://xoops.org>
  * @copyright       {@link https://xoops.org/ XOOPS Project}
  * @license         GPL 2.0 or later
- * @category        Module
  */
 function getConfig()
 {
-    $moduleDirName      = basename(dirname(__DIR__));
+    $moduleDirName      = \basename(\dirname(__DIR__));
     $moduleDirNameUpper = mb_strtoupper($moduleDirName);
 
     //Configurator

@@ -19,6 +19,6 @@ declare(strict_types=1);
  * @copyright       {@link https://xoops.org/ XOOPS Project}
  * @license         GPL 2.0 or later
  */
-require dirname(__DIR__, 2) . '/mainfile.php';
+require_once \dirname(__DIR__, 2) . '/mainfile.php';
 require __DIR__ . '/header.php';
 require XOOPS_ROOT_PATH . '/include/comment_delete.php';

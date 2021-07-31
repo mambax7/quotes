@@ -29,7 +29,7 @@ use XoopsModules\Quotes\{Helper
 
 /** @var Helper $helper */
 
-$moduleDirName = basename(dirname(__DIR__));
+$moduleDirName = \basename(\dirname(__DIR__));
 
 $permHelper = new Permission();
 

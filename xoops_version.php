@@ -92,22 +92,24 @@ $modversion['comments']['callbackFile']        = 'include/comment_functions.php'
 $modversion['comments']['callback']['approve'] = 'quotesCommentsApprove';
 $modversion['comments']['callback']['update']  = 'quotesCommentsUpdate';
 //  ------------------- Templates -----------------------------//
-$modversion['templates'][] = ['file' => 'quotes_header.tpl', 'description' => ''];
-$modversion['templates'][] = ['file' => 'quotes_index.tpl', 'description' => ''];
-$modversion['templates'][] = ['file' => 'quotes_quote.tpl', 'description' => ''];
+$modversion['templates'] = [
+    ['file' => 'quotes_header.tpl', 'description' => ''],
+    ['file' => 'quotes_index.tpl', 'description' => ''],
+    ['file' => 'quotes_quote.tpl', 'description' => ''],
 
-$modversion['templates'][] = ['file' => 'quotes_quote_list0.tpl', 'description' => ''];
-$modversion['templates'][] = ['file' => 'quotes_category.tpl', 'description' => ''];
+    ['file' => 'quotes_quote_list0.tpl', 'description' => ''],
+    ['file' => 'quotes_category.tpl', 'description' => ''],
 
-$modversion['templates'][] = ['file' => 'quotes_category_list0.tpl', 'description' => ''];
-$modversion['templates'][] = ['file' => 'quotes_author.tpl', 'description' => ''];
+    ['file' => 'quotes_category_list0.tpl', 'description' => ''],
+    ['file' => 'quotes_author.tpl', 'description' => ''],
 
-$modversion['templates'][] = ['file' => 'quotes_author_list0.tpl', 'description' => ''];
-$modversion['templates'][] = ['file' => 'quotes_footer.tpl', 'description' => ''];
+    ['file' => 'quotes_author_list0.tpl', 'description' => ''],
+    ['file' => 'quotes_footer.tpl', 'description' => ''],
 
-$modversion['templates'][] = ['file' => 'admin/quotes_admin_about.tpl', 'description' => ''];
-$modversion['templates'][] = ['file' => 'admin/quotes_admin_help.tpl', 'description' => ''];
-$modversion['templates'][] = ['file' => 'admin/quotes_admin_author.tpl', 'description' => ''];
+    ['file' => 'admin/quotes_admin_about.tpl', 'description' => ''],
+    ['file' => 'admin/quotes_admin_help.tpl', 'description' => ''],
+    ['file' => 'admin/quotes_admin_author.tpl', 'description' => ''],
+];
 
 // ------------------- Help files ------------------- //
 $modversion['help']        = 'page=help';

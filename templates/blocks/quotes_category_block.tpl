@@ -10,16 +10,16 @@
         <th><{$smarty.const.MB_QUOTES_ONLINE}></th>
     </tr>
     <{foreach item=category from=$block}>
-        <tr class = "<{cycle values = 'even,odd'}>">
+        <tr class="<{cycle values = 'even,odd'}>">
             <td>
-            <{$category.id}>
-            <{$category.pid}>
-            <{$category.title}>
-            <{$category.description}>
-            <{$category.image}>
-            <{$category.weight}>
-            <{$category.color}>
-            <{$category.online}>
+                <{$category.id}>
+                <{$category.pid}>
+                <{$category.title}>
+                <{$category.description}>
+                <{$category.image}>
+                <{$category.weight}>
+                <{$category.color}>
+                <{$category.online}>
             </td>
         </tr>
     <{/foreach}>

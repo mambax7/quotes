@@ -87,7 +87,7 @@ switch ($op) {
         $categoryHandler = $helper->getHandler('Category');
 
         $quote['cid']       = $categoryHandler->get($quoteObject->getVar('cid'))->getVar('title');
-        $quote['author_id'] = $authorHandler->get($quoteObject->getVar('author_id'))->getVar('title');
+        $quote['author_id'] = $authorHandler->get($quoteObject->getVar('author_id'))->getVar('name');
         $quote['quote']     = $quoteObject->getVar('quote');
         $quote['online']    = $quoteObject->getVar('online');
         $quote['created']   = formatTimestamp($quoteObject->getVar('created'), 's');

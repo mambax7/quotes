@@ -23,9 +23,9 @@ namespace XoopsModules\Quotes;
  * @license         GPL 2.0 or later
  */
 
-use Xmf\Module\Helper\Permission;
 use XoopsModules\Quotes;
 use XoopsModules\Quotes\Form;
+use Xmf\Module\Helper\Permission;
 
 //$permHelper = new \Xmf\Module\Helper\Permission();
 
@@ -39,6 +39,7 @@ class Category extends \XoopsObject
     /**
      * Constructor
      *
+     * @param null
      */
     public function __construct()
     {
@@ -63,7 +64,7 @@ class Category extends \XoopsObject
      * @param null
      * @return Quotes\Form\CategoryForm
      */
-    public function getForm(): Form\CategoryForm
+    public function getForm()
     {
         $form = new Form\CategoryForm($this);
         return $form;
@@ -72,7 +73,7 @@ class Category extends \XoopsObject
     /**
      * @return array|null
      */
-    public function getGroupsRead(): ?array
+    public function getGroupsRead()
     {
         //$permHelper = new \Xmf\Module\Helper\Permission();
         return $this->permHelper->getGroupsForItem('sbcolumns_read', $this->getVar('id'));
@@ -81,7 +82,7 @@ class Category extends \XoopsObject
     /**
      * @return array|null
      */
-    public function getGroupsSubmit(): ?array
+    public function getGroupsSubmit()
     {
         //$permHelper = new \Xmf\Module\Helper\Permission();
         return $this->permHelper->getGroupsForItem('sbcolumns_submit', $this->getVar('id'));
@@ -90,7 +91,7 @@ class Category extends \XoopsObject
     /**
      * @return array|null
      */
-    public function getGroupsModeration(): ?array
+    public function getGroupsModeration()
     {
         //$permHelper = new \Xmf\Module\Helper\Permission();
         return $this->permHelper->getGroupsForItem('sbcolumns_moderation', $this->getVar('id'));

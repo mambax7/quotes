@@ -29,7 +29,7 @@ class QuotesCorePreload extends \XoopsPreloadItem
     /**
      * @param $args
      */
-    public static function eventCoreIncludeCommonEnd($args): void
+    public static function eventCoreIncludeCommonEnd($args)
     {
         require __DIR__ . '/autoloader.php';
     }

@@ -9,15 +9,15 @@
         <th><{$smarty.const.MB_QUOTES_UPDATED}></th>
     </tr>
     <{foreach item=quote from=$block}>
-        <tr class = "<{cycle values = 'even,odd'}>">
+        <tr class="<{cycle values = 'even,odd'}>">
             <td>
-            <{$quote.id}>
-            <{$quote.cid}>
-            <{$quote.author_id}>
-            <{$quote.quote}>
-            <{$quote.online}>
-            <{$quote.created}>
-            <{$quote.updated}>
+                <{$quote.id}>
+                <{$quote.cid}>
+                <{$quote.author_id}>
+                <{$quote.quote}>
+                <{$quote.online}>
+                <{$quote.created}>
+                <{$quote.updated}>
             </td>
         </tr>
     <{/foreach}>

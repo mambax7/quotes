@@ -23,15 +23,14 @@ namespace XoopsModules\Quotes;
  * @license         GPL 2.0 or later
  */
 
+use Xmf\Module\Helper\Permission;
 use XoopsModules\Quotes\{
     Helper
 };
 
 /** @var Helper $helper */
 
-use Xmf\Module\Helper\Permission;
-
-$moduleDirName = basename(dirname(__DIR__));
+$moduleDirName = \basename(\dirname(__DIR__));
 
 $permHelper = new Permission();
 

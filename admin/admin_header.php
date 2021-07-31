@@ -34,7 +34,7 @@ use XoopsModules\Quotes\{Helper,
 /** @var Utility $utility */
 
 require dirname(__DIR__, 3) . '/include/cp_header.php';
-require dirname(__DIR__, 3) . '/class/xoopsformloader.php';
+require_once dirname(__DIR__, 3) . '/class/xoopsformloader.php';
 
 require dirname(__DIR__) . '/include/common.php';
 require dirname(__DIR__) . '/preloads/autoloader.php';
@@ -48,7 +48,7 @@ if (!class_exists(mtHelper::class)) {
 }
 
 
-$moduleDirName = basename(dirname(__DIR__));
+$moduleDirName = \basename(\dirname(__DIR__));
 
 $utility     = new Utility();
 $adminObject = Admin::getInstance();

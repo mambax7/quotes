@@ -42,7 +42,7 @@ use XoopsModules\Quotes\{
 /** @var Helper $helper */
 /** @var Utility $utility */
 
-require __DIR__ . '/admin_header.php';
+require_once __DIR__ . '/admin_header.php';
 xoops_cp_header();
 $adminObject = \Xmf\Module\Admin::getInstance();
 //count "total Quote"
@@ -106,4 +106,4 @@ $adminObject->displayIndex();
 echo $utility::getServerStats();
 
 //codeDump(__FILE__);
-require __DIR__ . '/admin_footer.php';
+require_once __DIR__ . '/admin_footer.php';

@@ -32,7 +32,7 @@ use Xmf\Language;
  */
 function quotes_notify_iteminfo($category, $item_id)
 {
-    $moduleDirName = basename(dirname(__DIR__));
+    $moduleDirName = \basename(\dirname(__DIR__));
 
     if (empty($GLOBALS['xoopsModule']) || 'quotes' !== $GLOBALS['xoopsModule']->getVar('dirname')) {
         /** @var \XoopsModuleHandler $moduleHandler */

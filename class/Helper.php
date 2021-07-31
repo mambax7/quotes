@@ -37,7 +37,7 @@ class Helper extends \Xmf\Module\Helper
     public function __construct($debug = false)
     {
         $this->debug   = $debug;
-        $moduleDirName = basename(dirname(__DIR__));
+        $moduleDirName = \basename(\dirname(__DIR__));
         parent::__construct($moduleDirName);
     }
 
@@ -45,7 +45,7 @@ class Helper extends \Xmf\Module\Helper
      * @param bool $debug
      * @return \XoopsModules\Quotes\Helper
      */
-    public static function getInstance($debug = false): Helper
+    public static function getInstance($debug = false)
     {
         static $instance;
         if (null === $instance) {
@@ -57,7 +57,7 @@ class Helper extends \Xmf\Module\Helper
     /**
      * @return string
      */
-    public function getDirname(): string
+    public function getDirname()
     {
         return $this->dirname;
     }

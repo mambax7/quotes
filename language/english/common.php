@@ -19,7 +19,7 @@ declare(strict_types=1);
  * @copyright       {@link https://xoops.org/ XOOPS Project}
  * @license         GPL 2.0 or later
  */
-$moduleDirName      = basename(dirname(__DIR__, 2));
+$moduleDirName      = \basename(\dirname(__DIR__, 2));
 $moduleDirNameUpper = mb_strtoupper($moduleDirName);
 
 // General
@@ -75,10 +75,10 @@ define('CO_' . $moduleDirNameUpper . '_SUPPORT', 'Support');
 //Sample Data
 define('CO_' . $moduleDirNameUpper . '_' . 'LOAD_SAMPLEDATA', 'Import Sample Data (will delete ALL current data)');
 define('CO_' . $moduleDirNameUpper . '_' . 'LOAD_SAMPLEDATA_CONFIRM', 'Are you sure to Import Sample Data? (It will delete ALL current data)');
-define('CO_' . $moduleDirNameUpper . '_' . 'LOAD_SAMPLEDATA_SUCCESS', 'Sample Date saved successfully');
+define('CO_' . $moduleDirNameUpper . '_' . 'LOAD_SAMPLEDATA_SUCCESS', 'Sample Date imported  successfully');
 define('CO_' . $moduleDirNameUpper . '_' . 'SAVE_SAMPLEDATA', 'Export Tables to YAML');
 define('CO_' . $moduleDirNameUpper . '_' . 'SAVE_SAMPLEDATA_SUCCESS', 'Export Tables to YAML successfully');
-define('CO_' . $moduleDirNameUpper . '_' . 'CLEAR_SAMPLEDATA', 'Clear the Sample Data');
+define('CO_' . $moduleDirNameUpper . '_' . 'CLEAR_SAMPLEDATA', 'Clear Sample Data');
 define('CO_' . $moduleDirNameUpper . '_' . 'CLEAR_SAMPLEDATA_OK', 'The Sample Data has been cleared');
 define('CO_' . $moduleDirNameUpper . '_' . 'CLEAR_SAMPLEDATA_CONFIRM', 'Are you sure to Clear Sample Data? (It will delete ALL current data)');
 define('CO_' . $moduleDirNameUpper . '_' . 'EXPORT_SCHEMA', 'Export DB Schema to YAML');
@@ -116,8 +116,10 @@ define('CO_' . $moduleDirNameUpper . '_' . 'BLOCKS_EDITBLOCK', 'Edit a block');
 define('CO_' . $moduleDirNameUpper . '_' . 'BLOCKS_CLONEBLOCK', 'Clone a block');
 
 //myblocksadmin
-define('CO_' . $moduleDirNameUpper . '_' . 'AGDS', 'Admin Groups');
-define('CO_' . $moduleDirNameUpper . '_' . 'BCACHETIME', 'Cache Time');
+\define('CO_' . $moduleDirNameUpper . '_' . 'AGDS', 'Admin Groups');
+\define('CO_' . $moduleDirNameUpper . '_' . 'BCACHETIME', 'Cache Time');
+\define('CO_' . $moduleDirNameUpper . '_' . 'BLOCKS_ADMIN', 'Blocks Admin');
+\define('CO_' . $moduleDirNameUpper . '_' . 'UPDATE_SUCCESS', 'Update successful');
 
 //Template Admin
 define('CO_' . $moduleDirNameUpper . '_' . 'TPLSETS', 'Template Management');

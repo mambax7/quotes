@@ -27,9 +27,9 @@ use Xmf\Module\Helper\Permission;
 use Xmf\Request;
 use XoopsModules\Quotes;
 
-require_once dirname(__DIR__, 2) . '/include/common.php';
+require_once \dirname(__DIR__, 2) . '/include/common.php';
 
-$moduleDirName = basename(dirname(__DIR__, 2));
+$moduleDirName = \basename(\dirname(__DIR__, 2));
 //$helper = Quotes\Helper::getInstance();
 $permHelper = new Permission();
 

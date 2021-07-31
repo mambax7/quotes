@@ -29,7 +29,7 @@ use XoopsModules\Mtools\Common\TestdataSample;
 
 /** @var Helper $helper */
 
-require_once dirname(__DIR__, 3) . '/include/cp_header.php';
+require dirname(__DIR__, 3) . '/include/cp_header.php';
 require dirname(__DIR__) . '/preloads/autoloader.php';
 
 $op = Request::getCmd('op', '');
@@ -57,7 +57,6 @@ switch ($op) {
         $testdataSample->saveData();
         break;
     case 'clear':
-//        $testdataSample->clearData();
         if (Request::hasVar('ok', 'REQUEST') && 1 === Request::getInt('ok', 0)) {
             if (!$GLOBALS['xoopsSecurity']->check()) {
                 redirect_header($helper->url('admin/index.php'), 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
@@ -69,9 +68,7 @@ switch ($op) {
             xoops_cp_footer();
         }
         break;
-//    case 'exportschema':
+    case 'exportschema':
 //        $testdataSample->exportShema();
-//        break;
+        break;
 }
-
-

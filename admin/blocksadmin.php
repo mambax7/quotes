@@ -22,7 +22,7 @@ use XoopsModules\Mtools\{Common\Blocksadmin,
 /** @var Admin $adminObject */
 /** @var Helper $helper */
 
-require __DIR__ . '/admin_header.php';
+require_once __DIR__ . '/admin_header.php';
 //xoops_cp_header();
 
 $moduleDirName      = $helper->getDirname();
@@ -70,7 +70,7 @@ if ($GLOBALS['xoopsUser']->isAdmin($xoopsModule->mid())) {
 
 //    if ('order' === $op) {
 //        if (!$GLOBALS['xoopsSecurity']->check()) {
-//            redirect_header($_SERVER['PHP_SELF'], 3, implode('<br>', $GLOBALS['xoopsSecurity']->getErrors()));
+//            redirect_header($_SERVER['SCRIPT_NAME'], 3, implode('<br>', $GLOBALS['xoopsSecurity']->getErrors()));
 //        }
 //        foreach (array_keys($bid) as $i) {
 //            if ($oldtitle[$i] != $title[$i] || $oldweight[$i] != $weight[$i] || $oldvisible[$i] != $visible[$i]
@@ -100,7 +100,7 @@ if ($GLOBALS['xoopsUser']->isAdmin($xoopsModule->mid())) {
 //                }
 //            }
 //        }
-//        redirect_header($_SERVER['PHP_SELF'], 1, constant('CO_' . $moduleDirNameUpper . '_' . 'UPDATE_SUCCESS'));
+//        redirect_header($_SERVER['SCRIPT_NAME'], 1, constant('CO_' . $moduleDirNameUpper . '_' . 'UPDATE_SUCCESS'));
 //    }
 
     if ('clone' === $op) {
@@ -136,4 +136,4 @@ if ($GLOBALS['xoopsUser']->isAdmin($xoopsModule->mid())) {
     echo constant('CO_' . $moduleDirNameUpper . '_' . 'ERROR403');
 }
 
-require __DIR__ . '/admin_footer.php';
+require_once __DIR__ . '/admin_footer.php';

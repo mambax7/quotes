@@ -32,7 +32,7 @@ use XoopsModules\Quotes\{Helper,
 /** @var Helper $helper */
 /** @var Utility $utility */
 
-require __DIR__ . '/admin_header.php';
+require_once __DIR__ . '/admin_header.php';
 xoops_cp_header();
 
 //It recovered the value of argument op in URL$
@@ -182,7 +182,7 @@ switch ($op) {
 
                 $selectorauthor_id = $utility::selectSorting(AM_QUOTES_QUOTE_AUTHOR_ID, 'author_id', $helper);
                 $GLOBALS['xoopsTpl']->assign('selectorauthor_id', $selectorauthor_id);
-                $quoteArray['author_id'] = $authorHandler->get($quoteTempArray[$i]->getVar('author_id'))->getVar('title');
+                $quoteArray['author_id'] = $authorHandler->get($quoteTempArray[$i]->getVar('author_id'))->getVar('name');
 
                 $GLOBALS['xoopsTpl']->assign('selectorquote', AM_QUOTES_QUOTE_QUOTE);
                 $quoteArray['quote'] = $quoteTempArray[$i]->getVar('quote');
@@ -246,4 +246,4 @@ switch ($op) {
 
         break;
 }
-require __DIR__ . '/admin_footer.php';
+require_once __DIR__ . '/admin_footer.php';

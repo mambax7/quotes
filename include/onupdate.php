@@ -38,18 +38,6 @@ require dirname(__DIR__) . '/preloads/autoloader.php';
 require_once XOOPS_ROOT_PATH . '/modules/mtools/preloads/autoloader.php';
 
 /**
- * @param string $tablename
- *
- * @return bool
- */
-function tableExists($tablename)
-{
-    $result = $GLOBALS['xoopsDB']->queryF("SHOW TABLES LIKE '$tablename'");
-
-    return ($GLOBALS['xoopsDB']->getRowsNum($result) > 0);
-}
-
-/**
  *
  * Prepares system prior to attempting to install module
  * @param \XoopsModule $module {@link XoopsModule}
@@ -88,7 +76,7 @@ function xoops_module_pre_update_quotes(\XoopsModule $module)
 
 function xoops_module_update_quotes(\XoopsModule $module, $previousVersion = null)
 {
-    $moduleDirName = basename(dirname(__DIR__));
+    $moduleDirName = \basename(\dirname(__DIR__));
     //$moduleDirNameUpper = mb_strtoupper($moduleDirName);
 
     $helper       = Helper::getInstance();

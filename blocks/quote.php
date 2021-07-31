@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 use XoopsModules\Quotes;
 use XoopsModules\Quotes\Helper;
+    /** @var \XoopsModules\Quotes\Helper $helper */
 
 /**
  * @param $options
@@ -32,7 +33,7 @@ use XoopsModules\Quotes\Helper;
 function showQuotesQuote($options)
 {
     // require dirname(__DIR__) . '/class/quote.php';
-    ///  $moduleDirName = basename(dirname(__DIR__));
+    ///  $moduleDirName = \basename(\dirname(__DIR__));
     //$myts = \MyTextSanitizer::getInstance();
 
     $block      = [];
@@ -75,7 +76,7 @@ function showQuotesQuote($options)
 function editQuotesQuote($options)
 {
     //require dirname(__DIR__) . '/class/quote.php';
-    // $moduleDirName = basename(dirname(__DIR__));
+    // $moduleDirName = \basename(\dirname(__DIR__));
 
     $form = MB_QUOTES_DISPLAY;
     $form .= "<input type='hidden' name='options[0]' value='" . $options[0] . "' >";

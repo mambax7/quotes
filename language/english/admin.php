@@ -118,7 +118,7 @@ define('AM_QUOTES_PERMSET', 'The permission has been set');
 define('AM_QUOTES_PERMNOTSET', 'The permission can not be set');
 define('AM_QUOTES_VIDEO_EXPIREWARNING', 'The publishing date is after expiration date!!!');
 //Sample Data
-define('AM_QUOTES_ADD_SAMPLEDATA', 'Import Sample Data (will delete ALL current data)');
+define('AM_QUOTES_LOAD_SAMPLEDATA', 'Import Sample Data (will delete ALL current data)');
 define('AM_QUOTES_SAMPLEDATA_SUCCESS', 'Sample Date uploaded successfully');
 
 define('AM_QUOTES_MAINTAINEDBY', 'is maintained by the');

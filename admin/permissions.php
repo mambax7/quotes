@@ -25,7 +25,7 @@ use Xmf\Module\Admin;
 use Xmf\Request;
 /** @var Admin $adminObject */
 
-require __DIR__ . '/admin_header.php';
+require_once __DIR__ . '/admin_header.php';
 xoops_cp_header();
 require XOOPS_ROOT_PATH . '/class/xoopsform/grouppermform.php';
 if ('' != Request::getString('submit', '')) {
@@ -115,4 +115,4 @@ if (1 == $permission) {
     }
 }
 unset($permform);
-require __DIR__ . '/admin_footer.php';
+require_once __DIR__ . '/admin_footer.php';

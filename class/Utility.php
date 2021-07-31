@@ -26,6 +26,7 @@ namespace XoopsModules\Quotes;
 use Xmf\Request;
 use XoopsModules\Quotes;
 use XoopsModules\Mtools;
+use XoopsModules\Quotes\Constants;
 
 require_once XOOPS_ROOT_PATH . '/modules/mtools/preloads/autoloader.php';
 

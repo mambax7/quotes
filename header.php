@@ -29,7 +29,7 @@ use XoopsModules\Mtools;
 /** @var Utility $utility */
 /** @var Helper $helper */
 
-require dirname(__DIR__, 2) . '/mainfile.php';
+require_once \dirname(__DIR__, 2) . '/mainfile.php';
 
 //require XOOPS_ROOT_PATH . '/header.php';
 

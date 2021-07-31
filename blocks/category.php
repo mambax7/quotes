@@ -32,7 +32,7 @@ use XoopsModules\Quotes\Helper;
 function showQuotesCategory($options)
 {
     // require dirname(__DIR__) . '/class/category.php';
-    ///  $moduleDirName = basename(dirname(__DIR__));
+    ///  $moduleDirName = \basename(\dirname(__DIR__));
     //$myts = \MyTextSanitizer::getInstance();
 
     $block         = [];
@@ -75,7 +75,7 @@ function showQuotesCategory($options)
 function editQuotesCategory($options)
 {
     //require dirname(__DIR__) . '/class/category.php';
-    // $moduleDirName = basename(dirname(__DIR__));
+    // $moduleDirName = \basename(\dirname(__DIR__));
 
     $form = MB_QUOTES_DISPLAY;
     $form .= "<input type='hidden' name='options[0]' value='" . $options[0] . "' >";

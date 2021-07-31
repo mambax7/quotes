@@ -26,7 +26,7 @@ use Xmf\Request;
 use XoopsModules\Quotes;
 use XoopsModules\Mtools;
 
-require __DIR__ . '/admin_header.php';
+require_once __DIR__ . '/admin_header.php';
 
 $adminObject = Admin::getInstance();
 
@@ -47,7 +47,8 @@ switch ($op) {
         $feedback->name  = $GLOBALS['xoopsUser']->getVar('name');
         $feedback->email = $GLOBALS['xoopsUser']->getVar('email');
         $feedback->site  = XOOPS_URL;
-    $form = $feedback->getFormFeedback();
+        /** @var \XoopsThemeForm $form */
+        $form = $feedback->getFormFeedback();
         echo $form->render();
         break;
 
@@ -104,4 +105,4 @@ switch ($op) {
 
         break;
 }
-require __DIR__ . '/admin_footer.php';
+require_once __DIR__ . '/admin_footer.php';
