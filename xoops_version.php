@@ -43,8 +43,8 @@ $modversion = [
 
     'manual'              => 'Installation.txt',
     'manual_file'         => XOOPS_URL . "/modules/{$moduleDirName}/docs/link to manual file",
-    'min_php'             => '5.5',
-    'min_xoops'           => '2.5.9',
+    'min_php'             => '7.3',
+    'min_xoops'           => '2.5.10',
     'min_admin'           => '1.2',
     'min_db'              => ['mysql' => '5.5'],
     'image'               => 'assets/images/logoModule.png',

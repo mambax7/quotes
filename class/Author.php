@@ -47,13 +47,13 @@ class Author extends \XoopsObject
         //        $this->helper = Quotes\Helper::getInstance();
         $this->permHelper = new Permission();
 
-        $this->initVar('id', XOBJ_DTYPE_INT);
-        $this->initVar('name', XOBJ_DTYPE_TXTBOX);
-        $this->initVar('country', XOBJ_DTYPE_TXTBOX);
-        $this->initVar('bio', XOBJ_DTYPE_OTHER);
-        $this->initVar('photo', XOBJ_DTYPE_TXTBOX);
-        $this->initVar('created', XOBJ_DTYPE_INT);
-        $this->initVar('updated', XOBJ_DTYPE_INT);
+        $this->initVar('id', \XOBJ_DTYPE_INT);
+        $this->initVar('name', \XOBJ_DTYPE_TXTBOX);
+        $this->initVar('country', \XOBJ_DTYPE_TXTBOX);
+        $this->initVar('bio', \XOBJ_DTYPE_OTHER);
+        $this->initVar('photo', \XOBJ_DTYPE_TXTBOX);
+        $this->initVar('created', \XOBJ_DTYPE_INT);
+        $this->initVar('updated', \XOBJ_DTYPE_INT);
     }
 
     /**

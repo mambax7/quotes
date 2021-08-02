@@ -32,7 +32,7 @@ use XoopsModules\Quotes\Helper;
  */
 function showQuotesAuthor($options)
 {
-    // require dirname(__DIR__) . '/class/author.php';
+    // require \dirname(__DIR__) . '/class/author.php';
     ///  $moduleDirName = \basename(\dirname(__DIR__));
     //$myts = \MyTextSanitizer::getInstance();
 
@@ -75,7 +75,7 @@ function showQuotesAuthor($options)
  */
 function editQuotesAuthor($options)
 {
-    //require dirname(__DIR__) . '/class/author.php';
+    //require \dirname(__DIR__) . '/class/author.php';
     // $moduleDirName = \basename(\dirname(__DIR__));
 
     $form = MB_QUOTES_DISPLAY;

@@ -4,7 +4,6 @@
  * of supporting developers from this source code or any supporting source code
  * which is considered copyrighted (c) material of the original comment or credit authors.
  *
- * PHP version 5
  *
  * @category        Module
  * @author          XOOPS Development Team
@@ -15,18 +14,19 @@
 
 use Xmf\Module\Admin;
 use Xmf\Request;
-use XoopsModules\Mtools\{Common\Blocksadmin,
+use XoopsModules\Mtools\{
+    Common\Blocksadmin,
     Helper
 };
 
 /** @var Admin $adminObject */
 /** @var Helper $helper */
 
-require_once __DIR__ . '/admin_header.php';
-//xoops_cp_header();
+require __DIR__ . '/admin_header.php';
+xoops_cp_header();
 
 $moduleDirName      = $helper->getDirname();
-$moduleDirNameUpper = mb_strtoupper($moduleDirName); //$capsDirName
+$moduleDirNameUpper = \mb_strtoupper($moduleDirName);
 
 /** @var \XoopsMySQLDatabase $xoopsDB */
 $xoopsDB = \XoopsDatabaseFactory::getDatabaseConnection();
@@ -37,7 +37,7 @@ if (!is_object($GLOBALS['xoopsUser']) || !is_object($xoopsModule)
     exit(constant('CO_' . $moduleDirNameUpper . '_' . 'ERROR403'));
 }
 if ($GLOBALS['xoopsUser']->isAdmin($xoopsModule->mid())) {
-    require_once XOOPS_ROOT_PATH . '/class/xoopsblock.php';
+    require_once XOOPS_ROOT_PATH . '/kernel/block.php';
     $op = 'list';
     if (isset($_POST)) {
         foreach ($_POST as $k => $v) {
@@ -61,7 +61,7 @@ if ($GLOBALS['xoopsUser']->isAdmin($xoopsModule->mid())) {
     //==================================================
 
     if ('list' === $op) {
-        xoops_cp_header();
+//        xoops_cp_header();
         //        mpu_adm_menu();
         $blocksadmin->listBlocks();
         require_once __DIR__ . '/admin_footer.php';
@@ -115,7 +115,7 @@ if ($GLOBALS['xoopsUser']->isAdmin($xoopsModule->mid())) {
 //            }
             $blocksadmin->deleteBlock($bid);
         } else {
-            xoops_cp_header();
+//            xoops_cp_header();
             xoops_confirm(['ok' => 1, 'op' => 'delete', 'bid' => $bid], 'blocksadmin.php', constant('CO_' . $moduleDirNameUpper . '_' . 'DELETE_BLOCK_CONFIRM'), constant('CO_' . $moduleDirNameUpper . '_' . 'CONFIRM'), true);
             xoops_cp_footer();
         }
@@ -136,4 +136,4 @@ if ($GLOBALS['xoopsUser']->isAdmin($xoopsModule->mid())) {
     echo constant('CO_' . $moduleDirNameUpper . '_' . 'ERROR403');
 }
 
-require_once __DIR__ . '/admin_footer.php';
+require __DIR__ . '/admin_footer.php';

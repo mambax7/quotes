@@ -48,13 +48,13 @@ class Quote extends \XoopsObject
         //        $this->helper = Quotes\Helper::getInstance();
         $this->permHelper = new Permission();
 
-        $this->initVar('id', XOBJ_DTYPE_INT);
-        $this->initVar('cid', XOBJ_DTYPE_INT);
-        $this->initVar('author_id', XOBJ_DTYPE_INT);
-        $this->initVar('quote', XOBJ_DTYPE_OTHER);
-        $this->initVar('online', XOBJ_DTYPE_INT);
-        $this->initVar('created', XOBJ_DTYPE_INT);
-        $this->initVar('updated', XOBJ_DTYPE_INT);
+        $this->initVar('id', \XOBJ_DTYPE_INT);
+        $this->initVar('cid', \XOBJ_DTYPE_INT);
+        $this->initVar('author_id', \XOBJ_DTYPE_INT);
+        $this->initVar('quote', \XOBJ_DTYPE_OTHER);
+        $this->initVar('online', \XOBJ_DTYPE_INT);
+        $this->initVar('created', \XOBJ_DTYPE_INT);
+        $this->initVar('updated', \XOBJ_DTYPE_INT);
     }
 
     /**

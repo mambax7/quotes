@@ -31,7 +31,7 @@ use XoopsModules\Quotes\{Helper,
 /** @var Utility $utility */
 /** @var Helper $helper */
 
-require dirname(__DIR__) . '/preloads/autoloader.php';
+require \dirname(__DIR__) . '/preloads/autoloader.php';
 
 $moduleDirName      = \basename(\dirname(__DIR__));
 $moduleDirNameUpper = mb_strtoupper($moduleDirName);
@@ -79,13 +79,13 @@ if (!defined($moduleDirNameUpper . '_CONSTANTS_DEFINED')) {
 //define option du module
 //define($moduleDirNameUpper. '_DISPLAY_CAT', $helper->getConfig('$mod_name_cat_display', 'none'));
 
-//require dirname(__DIR__) . '/include/seo_functions.php';
-//require dirname(__DIR__) . '/class/PageNav.php';
+//require \dirname(__DIR__) . '/include/seo_functions.php';
+//require \dirname(__DIR__) . '/class/PageNav.php';
 
 //require XOOPS_ROOT_PATH . '/class/tree.php';
 
-//require dirname(__DIR__) . '/class/Tree.php';
-//require dirname(__DIR__) . '/class/FormSelect.php';
+//require \dirname(__DIR__) . '/class/Tree.php';
+//require \dirname(__DIR__) . '/class/FormSelect.php';
 
 // Load only if module is installed
 //if (is_object($helper->getModule())) {

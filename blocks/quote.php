@@ -32,7 +32,7 @@ use XoopsModules\Quotes\Helper;
  */
 function showQuotesQuote($options)
 {
-    // require dirname(__DIR__) . '/class/quote.php';
+    // require \dirname(__DIR__) . '/class/quote.php';
     ///  $moduleDirName = \basename(\dirname(__DIR__));
     //$myts = \MyTextSanitizer::getInstance();
 
@@ -75,7 +75,7 @@ function showQuotesQuote($options)
  */
 function editQuotesQuote($options)
 {
-    //require dirname(__DIR__) . '/class/quote.php';
+    //require \dirname(__DIR__) . '/class/quote.php';
     // $moduleDirName = \basename(\dirname(__DIR__));
 
     $form = MB_QUOTES_DISPLAY;

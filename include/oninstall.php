@@ -29,7 +29,7 @@ use XoopsModules\Quotes\{
 /** @var Helper $helper */
 /** @var Utility $utility */
 
-require dirname(__DIR__) . '/preloads/autoloader.php';
+require \dirname(__DIR__) . '/preloads/autoloader.php';
 require_once XOOPS_ROOT_PATH . '/modules/mtools/preloads/autoloader.php';
 
 /**
@@ -40,7 +40,7 @@ require_once XOOPS_ROOT_PATH . '/modules/mtools/preloads/autoloader.php';
  */
 function xoops_module_pre_install_quotes(\XoopsModule $module)
 {
-    $dir = dirname(__DIR__);
+    $dir = \dirname(__DIR__);
     $utility = new Utility();
     $helper       = Helper::getInstance();
 
@@ -78,7 +78,7 @@ function xoops_module_pre_install_quotes(\XoopsModule $module)
 function xoops_module_install_quotes(\XoopsModule $module)
 {
     $moduleDirName = \basename(\dirname(__DIR__));
-    $dir = dirname(__DIR__);
+    $dir = \dirname(__DIR__);
     $helper       = Helper::getInstance();
     $utility      = new Utility();
 
@@ -110,7 +110,7 @@ function xoops_module_install_quotes(\XoopsModule $module)
     }
     //  ---  COPY blank.png FILES ---------------
     if (count($configurator->copyBlankFiles) > 0) {
-        $file = dirname(__DIR__) . '/assets/images/blank.png';
+        $file = \dirname(__DIR__) . '/assets/images/blank.png';
         foreach (array_keys($configurator->copyBlankFiles) as $i) {
             $dest = $configurator->copyBlankFiles[$i] . '/blank.png';
             $utility::copyFile($file, $dest);
@@ -119,7 +119,7 @@ function xoops_module_install_quotes(\XoopsModule $module)
 
     //  ---  COPY test folder files ---------------
     if (count($configurator->copyTestFolders) > 0) {
-        //        $file = dirname(__DIR__) . '/testdata/images/';
+        //        $file = \dirname(__DIR__) . '/testdata/images/';
         foreach (array_keys($configurator->copyTestFolders) as $i) {
             $src  = $configurator->copyTestFolders[$i][0];
             $dest = $configurator->copyTestFolders[$i][1];
