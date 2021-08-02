@@ -24,7 +24,8 @@ declare(strict_types=1);
 use Xmf\Module\Admin;
 use Xmf\Module\Helper\Permission;
 use Xmf\Request;
-use XoopsModules\Quotes\{Helper,
+use XoopsModules\Quotes\{
+    Helper,
     Utility
 };
 

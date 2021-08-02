@@ -23,7 +23,8 @@ declare(strict_types=1);
 
 use XoopsModules\Quotes;
 use XoopsModules\Quotes\Helper;
-    /** @var \XoopsModules\Quotes\Helper $helper */
+
+/** @var \XoopsModules\Quotes\Helper $helper */
 
 /**
  * @param $options

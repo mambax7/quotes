@@ -26,6 +26,7 @@ use XoopsModules\Quotes\{
     Helper,
     Utility
 };
+
 /** @var Helper $helper */
 /** @var Utility $utility */
 

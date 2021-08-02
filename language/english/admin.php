@@ -123,7 +123,6 @@ define('AM_QUOTES_SAMPLEDATA_SUCCESS', 'Sample Date uploaded successfully');
 
 define('AM_QUOTES_MAINTAINEDBY', 'is maintained by the');
 
-
 define('_AM_QUOTES_ERROR_SYSTEMCANT', 'Cannot delete system block(s)');
 define('_AM_QUOTES_ERROR_MODULECANT', 'Cannot delete module block(s)');
 define('_AM_QUOTES_CLONEBLOCK', 'Clone Block');

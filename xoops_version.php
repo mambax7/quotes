@@ -187,7 +187,7 @@ $modversion['config'][] = [
 /** @var \XoopsMemberHandler $memberHandler */
 $memberHandler = xoops_getHandler('member');
 $xoopsGroups   = $memberHandler->getGroupList();
-$groups = array_flip($xoopsGroups);
+$groups        = array_flip($xoopsGroups);
 
 $modversion['config'][] = [
     'name'        => 'groups',
@@ -205,7 +205,7 @@ $criteria->add(new \Criteria ('group_type', 'Admin'));
 /** @var \XoopsMemberHandler $memberHandler */
 $memberHandler    = xoops_getHandler('member');
 $adminXoopsGroups = $memberHandler->getGroupList($criteria);
-$admin_groups = array_flip($adminXoopsGroups);
+$admin_groups     = array_flip($adminXoopsGroups);
 
 $modversion['config'][] = [
     'name'        => 'admin_groups',

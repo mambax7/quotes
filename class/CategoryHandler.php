@@ -24,9 +24,6 @@ namespace XoopsModules\Quotes;
  */
 
 use Xmf\Module\Helper\Permission;
-use XoopsModules\Quotes\{
-    Helper
-};
 
 /** @var Helper $helper */
 
@@ -43,8 +40,8 @@ class CategoryHandler extends \XoopsPersistableObjectHandler
 
     /**
      * Constructor
-     * @param null|\XoopsDatabase              $db
-     * @param null|Helper $helper
+     * @param null|\XoopsDatabase $db
+     * @param null|Helper         $helper
      */
 
     public function __construct(\XoopsDatabase $db = null, $helper = null)

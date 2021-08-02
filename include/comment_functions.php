@@ -11,6 +11,7 @@ declare(strict_types=1);
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 */
+
 /**
  * Module: Quotes
  *
@@ -21,6 +22,7 @@ declare(strict_types=1);
  */
 
 use XoopsModules\Quotes\Helper;
+
 /** @var Helper $helper */
 
 /**
@@ -33,7 +35,7 @@ use XoopsModules\Quotes\Helper;
 function quotesCommentsUpdate($itemId, $commentCount)
 {
     $helper = Helper::getInstance();
-    /** @var \XoopsPersistableObjectHandler $helper->getHandler('Author') */
+    /** @var \XoopsPersistableObjectHandler $helper- >getHandler('Author') */
     if (!$helper->getHandler('Author')->updateAll('comments', (int)$commentCount, new \Criteria('lid', (int)$itemId))) {
         return false;
     }

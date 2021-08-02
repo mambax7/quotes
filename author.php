@@ -21,12 +21,16 @@ declare(strict_types=1);
  * @license         GPL 2.0 or later
  */
 
+use Xmf\Request;
 use XoopsModules\Quotes\{
+    Author,
+    AuthorHandler,
     Helper,
     Utility
 };
-use Xmf\Request;
 
+/** @var Author $authorObject */
+/** @var AuthorHandler $authorHandler */
 /** @var Helper $helper */
 /** @var Utility $utility */
 
@@ -53,7 +57,6 @@ $xoTheme->addStylesheet($stylesheet);
 $db = \XoopsDatabaseFactory::getDatabaseConnection();
 
 // Get Handler
-/** @var \XoopsPersistableObjectHandler $authorHandler */
 $authorHandler = $helper->getHandler('Author');
 
 $authorPaginationLimit = $helper->getConfig('userpager');
@@ -90,7 +93,8 @@ switch ($op) {
         $criteria->setStart($start);
         $author['id']      = $authorObject->getVar('id');
         $author['name']    = $authorObject->getVar('name');
-        $author['country'] = strip_tags(\XoopsLists::getCountryList()[$authorObject->getVar('country')]);
+        $country = $authorObject->getVar('country');
+        $author['country'] = strip_tags(\XoopsLists::getCountryList()["$country"]);
         $author['bio']     = $authorObject->getVar('bio');
         $author['photo']   = $authorObject->getVar('photo');
         $author['created'] = formatTimestamp($authorObject->getVar('created'), 's');

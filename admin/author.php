@@ -24,7 +24,8 @@ declare(strict_types=1);
 use Xmf\Module\Admin;
 use Xmf\Module\Helper\Permission;
 use Xmf\Request;
-use XoopsModules\Quotes\{Helper,
+use XoopsModules\Quotes\{
+    Helper,
     AuthorHandler,
     Utility
 };
@@ -138,7 +139,7 @@ switch ($op) {
 
         $id_field = Request::getString('id', '');
 
-        if ($utility::cloneRecord('quotes_author', 'id', $id_field)) {
+        if ($utility::cloneRecord('quotes_author', 'id', (int)$id_field)) {
             redirect_header('author.php', 3, AM_QUOTES_CLONED_OK);
         } else {
             redirect_header('author.php', 3, AM_QUOTES_CLONED_FAILED);

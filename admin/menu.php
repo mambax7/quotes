@@ -25,6 +25,7 @@ use Xmf\Module\Admin;
 use XoopsModules\Quotes\{
     Helper
 };
+
 /** @var Helper $helper */
 
 require \dirname(__DIR__) . '/preloads/autoloader.php';
@@ -37,12 +38,11 @@ $helper->loadLanguage('common');
 $helper->loadLanguage('feedback');
 
 // get path to icons
-$pathIcon32 = Admin::menuIconPath('');
-$pathModIcon32 = XOOPS_URL .   '/modules/' . $moduleDirName . '/assets/images/icons/32/';
+$pathIcon32    = Admin::menuIconPath('');
+$pathModIcon32 = XOOPS_URL . '/modules/' . $moduleDirName . '/assets/images/icons/32/';
 if (is_object($helper->getModule()) && false !== $helper->getModule()->getInfo('modicons32')) {
     $pathModIcon32 = $helper->url($helper->getModule()->getInfo('modicons32'));
 }
-
 
 $adminObject = Admin::getInstance();
 

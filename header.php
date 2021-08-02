@@ -21,7 +21,8 @@ declare(strict_types=1);
  * @license         GPL 2.0 or later
  */
 
-use XoopsModules\Quotes\{Helper,
+use XoopsModules\Quotes\{
+    Helper,
     Utility
 };
 use XoopsModules\Mtools;

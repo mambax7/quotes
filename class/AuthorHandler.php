@@ -24,9 +24,6 @@ namespace XoopsModules\Quotes;
  */
 
 use Xmf\Module\Helper\Permission;
-use XoopsModules\Quotes\{
-    Helper
-};
 
 /** @var Helper $helper */
 

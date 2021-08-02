@@ -22,12 +22,13 @@ declare(strict_types=1);
  */
 
 use XoopsModules\Mtools;
-use XoopsModules\Quotes\{Helper,
+use XoopsModules\Quotes\{
+    Helper,
     Utility
 };
+
 /** @var Helper $helper */
 /** @var Utility $utility */
-
 
 if ((!defined('XOOPS_ROOT_PATH')) || !$GLOBALS['xoopsUser'] instanceof \XoopsUser
     || !$GLOBALS['xoopsUser']->isAdmin()) {
@@ -46,7 +47,7 @@ require_once XOOPS_ROOT_PATH . '/modules/mtools/preloads/autoloader.php';
  */
 function xoops_module_pre_update_quotes(\XoopsModule $module)
 {
-    $helper       = Helper::getInstance();
+    $helper  = Helper::getInstance();
     $utility = new Utility();
 
     $xoopsSuccess = $utility::checkVerXoops($module);
@@ -79,8 +80,8 @@ function xoops_module_update_quotes(\XoopsModule $module, $previousVersion = nul
     $moduleDirName = \basename(\dirname(__DIR__));
     //$moduleDirNameUpper = mb_strtoupper($moduleDirName);
 
-    $helper       = Helper::getInstance();
-    $utility      = new Utility();
+    $helper  = Helper::getInstance();
+    $utility = new Utility();
 
     $configurator = new Mtools\Common\Configurator($helper->path());
     $helper->loadLanguage('common');
@@ -94,13 +95,10 @@ function xoops_module_update_quotes(\XoopsModule $module, $previousVersion = nul
                     //$templateList = array_diff(scandir($templateFolder, SCANDIR_SORT_NONE), ['..', '.',]);
                     $temp = scandir($templateFolder, SCANDIR_SORT_NONE);
                     if (false !== $temp) {
-                        $templateList = array_diff(
-                            $temp,
-                            [
-                                '..',
-                                '.',
-                            ]
-                        );
+                        $templateList = array_diff($temp, [
+                                                            '..',
+                                                            '.',
+                                                        ]);
 
                         foreach ($templateList as $k => $v) {
                             $fileInfo = new SplFileInfo($templateFolder . $v);

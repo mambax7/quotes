@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 use Xmf\Module\Admin;
 use Xmf\Request;
+
 /** @var Admin $adminObject */
 
 require_once __DIR__ . '/admin_header.php';

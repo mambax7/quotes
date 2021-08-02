@@ -21,13 +21,22 @@ declare(strict_types=1);
  * @license         GPL 2.0 or later
  */
 
-use XoopsModules\Quotes;
 use Xmf\Request;
+use XoopsModules\Quotes\{
+    Category,
+    CategoryHandler,
+    Helper,
+    Utility
+};
+
+/** @var Category $categoryObject */
+/** @var CategoryHandler $categoryHandler */
 /** @var Admin $adminObject */
 /** @var Helper $helper */
 
 require __DIR__ . '/header.php';
 
+$utility      = new Utility();
 $op = Request::getCmd('op', 'list');
 
 if ('edit' !== $op) {
@@ -49,7 +58,6 @@ $xoTheme->addStylesheet($stylesheet);
 $db = \XoopsDatabaseFactory::getDatabaseConnection();
 
 // Get Handler
-/** @var \XoopsPersistableObjectHandler $categoryHandler */
 $categoryHandler = $helper->getHandler('Category');
 
 $categoryPaginationLimit = $helper->getConfig('userpager');

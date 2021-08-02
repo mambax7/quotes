@@ -29,7 +29,7 @@ $moduleDirName      = $helper->getDirname();
 $moduleDirNameUpper = \mb_strtoupper($moduleDirName);
 
 /** @var \XoopsMySQLDatabase $xoopsDB */
-$xoopsDB = \XoopsDatabaseFactory::getDatabaseConnection();
+$xoopsDB     = \XoopsDatabaseFactory::getDatabaseConnection();
 $blocksadmin = new Blocksadmin($xoopsDB, $helper);
 
 if (!is_object($GLOBALS['xoopsUser']) || !is_object($xoopsModule)
@@ -55,67 +55,66 @@ if ($GLOBALS['xoopsUser']->isAdmin($xoopsModule->mid())) {
 
     $op = Request::getString('op', $op);
     if (in_array($op, ['edit', 'delete', 'delete_ok', 'clone'])) {
-        $bid = Request::getInt('bid', 0 );
+        $bid = Request::getInt('bid', 0);
     }
 
     //==================================================
 
     if ('list' === $op) {
-//        xoops_cp_header();
+        //        xoops_cp_header();
         //        mpu_adm_menu();
         $blocksadmin->listBlocks();
         require_once __DIR__ . '/admin_footer.php';
         exit();
     }
 
-//    if ('order' === $op) {
-//        if (!$GLOBALS['xoopsSecurity']->check()) {
-//            redirect_header($_SERVER['SCRIPT_NAME'], 3, implode('<br>', $GLOBALS['xoopsSecurity']->getErrors()));
-//        }
-//        foreach (array_keys($bid) as $i) {
-//            if ($oldtitle[$i] != $title[$i] || $oldweight[$i] != $weight[$i] || $oldvisible[$i] != $visible[$i]
-//                || $oldside[$i] != $side[$i]
-//                || $oldbcachetime[$i] != $bcachetime[$i]) {
-//                setOrder($bid[$i], $title[$i], $weight[$i], $visible[$i], $side[$i], $bcachetime[$i], $bmodule[$i]);
-//            }
-//            if (!empty($bmodule[$i]) && count($bmodule[$i]) > 0) {
-//                $sql = sprintf('DELETE FROM `%s` WHERE block_id = %u', $xoopsDB->prefix('block_module_link'), $bid[$i]);
-//                $xoopsDB->query($sql);
-//                if (in_array(0, $bmodule[$i])) {
-//                    $sql = sprintf('INSERT INTO `%s` (block_id, module_id) VALUES (%u, %d)', $xoopsDB->prefix('block_module_link'), $bid[$i], 0);
-//                    $xoopsDB->query($sql);
-//                } else {
-//                    foreach ($bmodule[$i] as $bmid) {
-//                        $sql = sprintf('INSERT INTO `%s` (block_id, module_id) VALUES (%u, %d)', $xoopsDB->prefix('block_module_link'), $bid[$i], (int)$bmid);
-//                        $xoopsDB->query($sql);
-//                    }
-//                }
-//            }
-//            $sql = sprintf('DELETE FROM `%s` WHERE gperm_itemid = %u', $xoopsDB->prefix('group_permission'), $bid[$i]);
-//            $xoopsDB->query($sql);
-//            if (!empty($groups[$i])) {
-//                foreach ($groups[$i] as $grp) {
-//                    $sql = sprintf("INSERT INTO `%s` (gperm_groupid, gperm_itemid, gperm_modid, gperm_name) VALUES (%u, %u, 1, 'block_read')", $xoopsDB->prefix('group_permission'), $grp, $bid[$i]);
-//                    $xoopsDB->query($sql);
-//                }
-//            }
-//        }
-//        redirect_header($_SERVER['SCRIPT_NAME'], 1, constant('CO_' . $moduleDirNameUpper . '_' . 'UPDATE_SUCCESS'));
-//    }
+    //    if ('order' === $op) {
+    //        if (!$GLOBALS['xoopsSecurity']->check()) {
+    //            redirect_header($_SERVER['SCRIPT_NAME'], 3, implode('<br>', $GLOBALS['xoopsSecurity']->getErrors()));
+    //        }
+    //        foreach (array_keys($bid) as $i) {
+    //            if ($oldtitle[$i] != $title[$i] || $oldweight[$i] != $weight[$i] || $oldvisible[$i] != $visible[$i]
+    //                || $oldside[$i] != $side[$i]
+    //                || $oldbcachetime[$i] != $bcachetime[$i]) {
+    //                setOrder($bid[$i], $title[$i], $weight[$i], $visible[$i], $side[$i], $bcachetime[$i], $bmodule[$i]);
+    //            }
+    //            if (!empty($bmodule[$i]) && count($bmodule[$i]) > 0) {
+    //                $sql = sprintf('DELETE FROM `%s` WHERE block_id = %u', $xoopsDB->prefix('block_module_link'), $bid[$i]);
+    //                $xoopsDB->query($sql);
+    //                if (in_array(0, $bmodule[$i])) {
+    //                    $sql = sprintf('INSERT INTO `%s` (block_id, module_id) VALUES (%u, %d)', $xoopsDB->prefix('block_module_link'), $bid[$i], 0);
+    //                    $xoopsDB->query($sql);
+    //                } else {
+    //                    foreach ($bmodule[$i] as $bmid) {
+    //                        $sql = sprintf('INSERT INTO `%s` (block_id, module_id) VALUES (%u, %d)', $xoopsDB->prefix('block_module_link'), $bid[$i], (int)$bmid);
+    //                        $xoopsDB->query($sql);
+    //                    }
+    //                }
+    //            }
+    //            $sql = sprintf('DELETE FROM `%s` WHERE gperm_itemid = %u', $xoopsDB->prefix('group_permission'), $bid[$i]);
+    //            $xoopsDB->query($sql);
+    //            if (!empty($groups[$i])) {
+    //                foreach ($groups[$i] as $grp) {
+    //                    $sql = sprintf("INSERT INTO `%s` (gperm_groupid, gperm_itemid, gperm_modid, gperm_name) VALUES (%u, %u, 1, 'block_read')", $xoopsDB->prefix('group_permission'), $grp, $bid[$i]);
+    //                    $xoopsDB->query($sql);
+    //                }
+    //            }
+    //        }
+    //        redirect_header($_SERVER['SCRIPT_NAME'], 1, constant('CO_' . $moduleDirNameUpper . '_' . 'UPDATE_SUCCESS'));
+    //    }
 
     if ('clone' === $op) {
         $blocksadmin->cloneBlock($bid);
     }
 
     if ('delete' === $op) {
-
         if (Request::hasVar('ok', 'REQUEST') && 1 === Request::getInt('ok', 0)) {
-//            if (!$GLOBALS['xoopsSecurity']->check()) {
-//                redirect_header($helper->url('admin/blocksadmin.php'), 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
-//            }
+            //            if (!$GLOBALS['xoopsSecurity']->check()) {
+            //                redirect_header($helper->url('admin/blocksadmin.php'), 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
+            //            }
             $blocksadmin->deleteBlock($bid);
         } else {
-//            xoops_cp_header();
+            //            xoops_cp_header();
             xoops_confirm(['ok' => 1, 'op' => 'delete', 'bid' => $bid], 'blocksadmin.php', constant('CO_' . $moduleDirNameUpper . '_' . 'DELETE_BLOCK_CONFIRM'), constant('CO_' . $moduleDirNameUpper . '_' . 'CONFIRM'), true);
             xoops_cp_footer();
         }

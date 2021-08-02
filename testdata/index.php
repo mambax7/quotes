@@ -22,7 +22,8 @@ declare(strict_types=1);
  */
 
 use Xmf\Request;
-use XoopsModules\Quotes\{Helper,
+use XoopsModules\Quotes\{
+    Helper,
     Utility
 };
 use XoopsModules\Mtools\Common\TestdataSample;
@@ -34,8 +35,8 @@ require \dirname(__DIR__) . '/preloads/autoloader.php';
 
 $op = Request::getCmd('op', '');
 
-$helper = Helper::getInstance();
-$moduleDirNameUpper =  mb_strtoupper($helper->getDirname());
+$helper             = Helper::getInstance();
+$moduleDirNameUpper = mb_strtoupper($helper->getDirname());
 // Load language files
 $helper->loadLanguage('common');
 $testdataSample = new TestdataSample($helper);
@@ -69,6 +70,6 @@ switch ($op) {
         }
         break;
     case 'exportschema':
-//        $testdataSample->exportShema();
+        //        $testdataSample->exportShema();
         break;
 }

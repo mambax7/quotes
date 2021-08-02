@@ -23,7 +23,8 @@ declare(strict_types=1);
 
 use Xmf\Request;
 use Xmf\Module\Admin;
-use XoopsModules\Quotes\{Helper,
+use XoopsModules\Quotes\{
+    Helper,
     Utility
 };
 

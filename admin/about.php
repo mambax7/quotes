@@ -12,6 +12,7 @@ declare(strict_types=1);
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 */
+
 /**
  * Module: Quotes
  *
@@ -22,6 +23,7 @@ declare(strict_types=1);
  */
 
 use Xmf\Module\Admin;
+
 /** @var Admin $adminObject */
 
 require_once __DIR__ . '/admin_header.php';

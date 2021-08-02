@@ -27,16 +27,13 @@ use Xmf\Yaml;
 use XoopsModules\Mtools\{
     Common,
     Common\Configurator,
-    Common\TestdataButtons,
-//    Helper,
-//    Utility
+    Common\TestdataButtons, //    Helper,
+    //    Utility
 };
 use XoopsModules\Quotes\{
     Helper,
     Utility
 };
-
-
 
 /** @var Admin $adminObject */
 /** @var Helper $helper */
@@ -100,7 +97,6 @@ switch ($op) {
         break;
 }
 //------------- End Test Data Buttons ----------------------------
-
 
 $adminObject->displayIndex();
 echo $utility::getServerStats();

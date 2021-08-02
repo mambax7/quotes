@@ -21,8 +21,22 @@ declare(strict_types=1);
  * @license         GPL 2.0 or later
  */
 
-use XoopsModules\Quotes;
+
 use Xmf\Request;
+use XoopsModules\Quotes\{
+    AuthorHandler,
+    CategoryHandler,
+    Quote,
+    QuoteHandler,
+    Helper,
+    Utility
+};
+
+/** @var Quote $quoteObject */
+/** @var QuoteHandler $quoteHandler */
+/** @var AuthorHandler $authorHandler */
+/** @var CategoryHandler $categoryHandler */
+/** @var Helper $helper */
 
 require __DIR__ . '/header.php';
 
@@ -47,7 +61,6 @@ $xoTheme->addStylesheet($stylesheet);
 $db = \XoopsDatabaseFactory::getDatabaseConnection();
 
 // Get Handler
-/** @var \XoopsPersistableObjectHandler $quoteHandler */
 $quoteHandler = $helper->getHandler('Quote');
 
 $quotePaginationLimit = $helper->getConfig('userpager');
@@ -83,7 +96,6 @@ switch ($op) {
         $criteria->setLimit($quotePaginationLimit);
         $criteria->setStart($start);
         $quote['id'] = $quoteObject->getVar('id');
-        /** @var \XoopsPersistableObjectHandler $categoryHandler */
         $categoryHandler = $helper->getHandler('Category');
 
         $quote['cid']       = $categoryHandler->get($quoteObject->getVar('cid'))->getVar('title');
@@ -116,7 +128,6 @@ switch ($op) {
             $GLOBALS['xoopsTpl']->assign('quote', []);
             foreach (array_keys($quoteArray) as $i) {
                 $quote['id'] = $quoteArray[$i]->getVar('id');
-                /** @var \XoopsPersistableObjectHandler $categoryHandler */
                 $categoryHandler = $helper->getHandler('Category');
 
                 $quote['cid']       = $categoryHandler->get($quoteArray[$i]->getVar('cid'))->getVar('title');

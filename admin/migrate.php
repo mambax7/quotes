@@ -27,6 +27,7 @@ use XoopsModules\Quotes\{
     Helper
 };
 use XoopsModules\Mtools;
+
 /** @var Admin $adminObject */
 /** @var Helper $helper */
 
