@@ -1,0 +1,190 @@
+-
+    conf_id: '35173'
+    conf_catid: '0'
+    conf_name: notification_events
+    conf_title: _NOT_CONFIG_EVENTS
+    conf_value: 'a:2:{i:0;s:12:"file-approve";i:1;s:13:"file-bookmark";}'
+    conf_desc: _NOT_CONFIG_EVENTSDSC
+    conf_formtype: select_multi
+    conf_valuetype: array
+    conf_order: '18'
+-
+    conf_id: '35172'
+    conf_catid: '0'
+    conf_name: notification_enabled
+    conf_title: _NOT_CONFIG_ENABLE
+    conf_value: '3'
+    conf_desc: _NOT_CONFIG_ENABLEDSC
+    conf_formtype: select
+    conf_valuetype: int
+    conf_order: '17'
+-
+    conf_id: '35170'
+    conf_catid: '0'
+    conf_name: com_rule
+    conf_title: _CM_COMRULES
+    conf_value: '1'
+    conf_desc: ''
+    conf_formtype: select
+    conf_valuetype: int
+    conf_order: '15'
+-
+    conf_id: '35171'
+    conf_catid: '0'
+    conf_name: com_anonpost
+    conf_title: _CM_COMANONPOST
+    conf_value: '0'
+    conf_desc: ''
+    conf_formtype: yesno
+    conf_valuetype: int
+    conf_order: '16'
+-
+    conf_id: '35169'
+    conf_catid: '0'
+    conf_name: displayDeveloperTools
+    conf_title: CO_QUOTE_SHOW_DEV_TOOLS
+    conf_value: '0'
+    conf_desc: CO_QUOTE_SHOW_DEV_TOOLS_DESC
+    conf_formtype: yesno
+    conf_valuetype: int
+    conf_order: '14'
+-
+    conf_id: '35168'
+    conf_catid: '0'
+    conf_name: displaySampleButton
+    conf_title: CO_QUOTE_SHOW_SAMPLE_BUTTON
+    conf_value: '1'
+    conf_desc: CO_QUOTE_SHOW_SAMPLE_BUTTON_DESC
+    conf_formtype: yesno
+    conf_valuetype: int
+    conf_order: '13'
+-
+    conf_id: '35167'
+    conf_catid: '0'
+    conf_name: truncatelength
+    conf_title: CO_QUOTE_TRUNCATE_LENGTH
+    conf_value: '100'
+    conf_desc: CO_QUOTE_TRUNCATE_LENGTH_DESC
+    conf_formtype: textbox
+    conf_valuetype: int
+    conf_order: '12'
+-
+    conf_id: '35166'
+    conf_catid: '0'
+    conf_name: fbcomments
+    conf_title: MI_QUOTE_FBCOMMENTS
+    conf_value: '0'
+    conf_desc: MI_QUOTE_FBCOMMENTS_DESC
+    conf_formtype: yesno
+    conf_valuetype: int
+    conf_order: '11'
+-
+    conf_id: '35165'
+    conf_catid: '0'
+    conf_name: bookmarks
+    conf_title: MI_QUOTE_BOOKMARKS
+    conf_value: '0'
+    conf_desc: MI_QUOTE_BOOKMARKS_DESC
+    conf_formtype: yesno
+    conf_valuetype: int
+    conf_order: '10'
+-
+    conf_id: '35164'
+    conf_catid: '0'
+    conf_name: advertise
+    conf_title: MI_QUOTE_ADVERTISE
+    conf_value: ''
+    conf_desc: MI_QUOTE_ADVERTISE_DESC
+    conf_formtype: textarea
+    conf_valuetype: text
+    conf_order: '9'
+-
+    conf_id: '35163'
+    conf_catid: '0'
+    conf_name: userpager
+    conf_title: MI_QUOTE_USERPAGER
+    conf_value: '10'
+    conf_desc: MI_QUOTE_USERPAGER_DESC
+    conf_formtype: textbox
+    conf_valuetype: int
+    conf_order: '8'
+-
+    conf_id: '35162'
+    conf_catid: '0'
+    conf_name: adminpager
+    conf_title: MI_QUOTE_ADMINPAGER
+    conf_value: '10'
+    conf_desc: MI_QUOTE_ADMINPAGER_DESC
+    conf_formtype: textbox
+    conf_valuetype: int
+    conf_order: '7'
+-
+    conf_id: '35161'
+    conf_catid: '0'
+    conf_name: mimetypes
+    conf_title: MI_QUOTE_MIMETYPES
+    conf_value: 'a:4:{i:0;s:9:"image/gif";i:1;s:10:"image/jpeg";i:2;s:9:"image/jpg";i:3;s:9:"image/png";}'
+    conf_desc: MI_QUOTE_MIMETYPES_DESC
+    conf_formtype: select_multi
+    conf_valuetype: array
+    conf_order: '6'
+-
+    conf_id: '35160'
+    conf_catid: '0'
+    conf_name: maxsize
+    conf_title: MI_QUOTE_MAXSIZE
+    conf_value: '5000000'
+    conf_desc: MI_QUOTE_MAXSIZE_DESC
+    conf_formtype: textbox
+    conf_valuetype: int
+    conf_order: '5'
+-
+    conf_id: '35159'
+    conf_catid: '0'
+    conf_name: keywords
+    conf_title: MI_QUOTE_KEYWORDS
+    conf_value: 'quote,quote, category, author'
+    conf_desc: MI_QUOTE_KEYWORDS_DESC
+    conf_formtype: textbox
+    conf_valuetype: text
+    conf_order: '4'
+-
+    conf_id: '35158'
+    conf_catid: '0'
+    conf_name: admin_groups
+    conf_title: MI_QUOTE_ADMINGROUPS
+    conf_value: 'a:1:{s:10:"Webmasters";i:1;}'
+    conf_desc: MI_QUOTE_ADMINGROUPS_DESC
+    conf_formtype: select_multi
+    conf_valuetype: array
+    conf_order: '3'
+-
+    conf_id: '35157'
+    conf_catid: '0'
+    conf_name: groups
+    conf_title: MI_QUOTE_GROUPS
+    conf_value: 'a:3:{s:10:"Webmasters";i:1;s:16:"Registered Users";i:2;s:15:"Anonymous Users";i:3;}'
+    conf_desc: MI_QUOTE_GROUPS_DESC
+    conf_formtype: select_multi
+    conf_valuetype: array
+    conf_order: '2'
+-
+    conf_id: '35156'
+    conf_catid: '0'
+    conf_name: quoteEditorUser
+    conf_title: MI_QUOTE_EDITOR_USER
+    conf_value: dhtmltextarea
+    conf_desc: MI_QUOTE_EDITOR_DESC_USER
+    conf_formtype: select
+    conf_valuetype: text
+    conf_order: '1'
+-
+    conf_id: '35155'
+    conf_catid: '0'
+    conf_name: quoteEditorAdmin
+    conf_title: MI_QUOTE_EDITOR_ADMIN
+    conf_value: tinymce
+    conf_desc: MI_QUOTE_EDITOR_DESC_ADMIN
+    conf_formtype: select
+    conf_valuetype: text
+    conf_order: '0'

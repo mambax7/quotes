@@ -1,0 +1,162 @@
+-
+    -
+        confop_id: '57291'
+        confop_name: 'Allow Facebook comments in the form : Bookmark'
+        confop_value: file-bookmark
+        conf_id: '35173'
+-
+    -
+        confop_id: '57290'
+        confop_name: 'Allow Facebook comments in the form : Allow Facebook comments in the form'
+        confop_value: file-approve
+        conf_id: '35173'
+-
+    -
+        confop_id: '57289'
+        confop_name: _NOT_CONFIG_ENABLEBOTH
+        confop_value: '3'
+        conf_id: '35172'
+-
+    -
+        confop_id: '57288'
+        confop_name: _NOT_CONFIG_ENABLEINLINE
+        confop_value: '2'
+        conf_id: '35172'
+-
+    -
+        confop_id: '57287'
+        confop_name: _NOT_CONFIG_ENABLEBLOCK
+        confop_value: '1'
+        conf_id: '35172'
+-
+    -
+        confop_id: '57286'
+        confop_name: _NOT_CONFIG_DISABLE
+        confop_value: '0'
+        conf_id: '35172'
+-
+    -
+        confop_id: '57285'
+        confop_name: _CM_COMAPPROVEADMIN
+        confop_value: '3'
+        conf_id: '35170'
+-
+    -
+        confop_id: '57284'
+        confop_name: _CM_COMAPPROVEUSER
+        confop_value: '2'
+        conf_id: '35170'
+-
+    -
+        confop_id: '57283'
+        confop_name: _CM_COMAPPROVEALL
+        confop_value: '1'
+        conf_id: '35170'
+-
+    -
+        confop_id: '57282'
+        confop_name: _CM_COMNOCOM
+        confop_value: '0'
+        conf_id: '35170'
+-
+    -
+        confop_id: '57281'
+        confop_name: png
+        confop_value: image/png
+        conf_id: '35161'
+-
+    -
+        confop_id: '57280'
+        confop_name: jpe
+        confop_value: image/jpe
+        conf_id: '35161'
+-
+    -
+        confop_id: '57279'
+        confop_name: jpg
+        confop_value: image/jpg
+        conf_id: '35161'
+-
+    -
+        confop_id: '57278'
+        confop_name: jpeg
+        confop_value: image/jpeg
+        conf_id: '35161'
+-
+    -
+        confop_id: '57277'
+        confop_name: pjpeg
+        confop_value: image/pjpeg
+        conf_id: '35161'
+-
+    -
+        confop_id: '57276'
+        confop_name: gif
+        confop_value: image/gif
+        conf_id: '35161'
+-
+    -
+        confop_id: '57275'
+        confop_name: bmp
+        confop_value: image/bmp
+        conf_id: '35161'
+-
+    -
+        confop_id: '57274'
+        confop_name: Webmasters
+        confop_value: '1'
+        conf_id: '35158'
+-
+    -
+        confop_id: '57273'
+        confop_name: 'Anonymous Users'
+        confop_value: '3'
+        conf_id: '35157'
+-
+    -
+        confop_id: '57272'
+        confop_name: 'Registered Users'
+        confop_value: '2'
+        conf_id: '35157'
+-
+    -
+        confop_id: '57271'
+        confop_name: Webmasters
+        confop_value: '1'
+        conf_id: '35157'
+-
+    -
+        confop_id: '57270'
+        confop_name: TinyMCE
+        confop_value: tinymce
+        conf_id: '35156'
+-
+    -
+        confop_id: '57269'
+        confop_name: 'DHTML Form with xCode'
+        confop_value: dhtmltextarea
+        conf_id: '35156'
+-
+    -
+        confop_id: '57268'
+        confop_name: 'Plain Text'
+        confop_value: textarea
+        conf_id: '35156'
+-
+    -
+        confop_id: '57267'
+        confop_name: TinyMCE
+        confop_value: tinymce
+        conf_id: '35155'
+-
+    -
+        confop_id: '57266'
+        confop_name: 'DHTML Form with xCode'
+        confop_value: dhtmltextarea
+        conf_id: '35155'
+-
+    -
+        confop_id: '57265'
+        confop_name: 'Plain Text'
+        confop_value: textarea
+        conf_id: '35155'

@@ -1,0 +1,195 @@
+PhpUnitGen 5.0.0
+
+Starting process using default config.
+
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE.......W...E.W.....    (50 / 112)
+..WWWWEWW.E....WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE.EE    (100 / 112)
+EEEEEEEEEEEE                                          (112 / 112)
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/admin/about.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/admin/admin_footer.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/admin/admin_header.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/admin/author.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/admin/authors.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/admin/blockform.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/admin/blocksadmin.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/admin/category.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/admin/feedback.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/admin/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/admin/menu.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/admin/migrate.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/admin/permissions.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/admin/quote.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/admin/quotes.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/assets/css/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/assets/images/icons/16/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/assets/images/icons/32/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/assets/images/icons/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/assets/images/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/assets/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/assets/js/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/author.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/authors.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/blocks/author.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/blocks/authors.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/blocks/category.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/blocks/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/blocks/quote.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/blocks/quotes.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/category.php: code must contains exactly one class/interface/trait, found 0
+
+Warning with /C:/wamp64/www/2511smarty4b/modules/quote/class/Common/Configurator.php: cannot generate tests, file is an interface/anonymous class or does not contain any public method
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/class/Common/index.php: code must contains exactly one class/interface/trait, found 0
+
+Warning with /C:/wamp64/www/2511smarty4b/modules/quote/class/Common/Migrate.php: cannot generate tests, file is an interface/anonymous class or does not contain any public method
+
+Warning with /C:/wamp64/www/2511smarty4b/modules/quote/class/Constants.php: cannot generate tests, file is an interface/anonymous class or does not contain any public method
+
+Warning with /C:/wamp64/www/2511smarty4b/modules/quote/class/Form/AuthorForm.php: cannot generate tests, file is an interface/anonymous class or does not contain any public method
+
+Warning with /C:/wamp64/www/2511smarty4b/modules/quote/class/Form/AuthorsForm.php: cannot generate tests, file is an interface/anonymous class or does not contain any public method
+
+Warning with /C:/wamp64/www/2511smarty4b/modules/quote/class/Form/CategoryForm.php: cannot generate tests, file is an interface/anonymous class or does not contain any public method
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/class/Form/index.php: code must contains exactly one class/interface/trait, found 0
+
+Warning with /C:/wamp64/www/2511smarty4b/modules/quote/class/Form/QuoteForm.php: cannot generate tests, file is an interface/anonymous class or does not contain any public method
+
+Warning with /C:/wamp64/www/2511smarty4b/modules/quote/class/Form/QuotesForm.php: cannot generate tests, file is an interface/anonymous class or does not contain any public method
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/class/index.php: code must contains exactly one class/interface/trait, found 0
+
+Warning with /C:/wamp64/www/2511smarty4b/modules/quote/class/Utility.php: cannot generate tests, file is an interface/anonymous class or does not contain any public method
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/comment_delete.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/comment_edit.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/comment_new.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/comment_post.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/comment_reply.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/config/config.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/config/icons.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/config/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/config/paths.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/docs/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/header.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/include/comment_functions.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/include/common.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/include/config.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/include/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/include/notification.inc.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/include/oninstall.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/include/onuninstall.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/include/onupdate.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/include/search.inc.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/language/english/admin.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/language/english/blocks.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/language/english/common.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/language/english/feedback.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/language/english/help/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/language/english/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/language/english/main.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/language/english/modinfo.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/language/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/preloads/autoloader.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/quote.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/quotes.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/sql/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/templates/admin/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/templates/blocks/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/templates/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/testdata/english/Exports-2020-06-21-03-47-14/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/testdata/english/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/testdata/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/testdata/uploads/images/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/testdata/uploads/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/testdata/uploads/thumbs/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/tests/index.php: code must contains exactly one class/interface/trait, found 0
+
+Error with /C:/wamp64/www/2511smarty4b/modules/quote/xoops_version.php: code must contains exactly one class/interface/trait, found 0
+
+Increase verbosity to see errors dump.
+
+Generation is finished!
+
+112 source(s) identified
+24 success(es)
+9 warning(s)
+79 error(s)
+
+Execution time: 2.446 s
+Memory usage: 32.00 MB
