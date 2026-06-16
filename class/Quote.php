@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace XoopsModules\Quote;
+namespace XoopsModules\Quotes;
 
 /*
  You may not change or alter any portion of this comment or credits
@@ -13,15 +13,16 @@ namespace XoopsModules\Quote;
 */
 
 /**
- * Module: Quote
+ * Module: Quotes
  *
  * @category        Module
  * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
+ * @copyright       2000-2026 XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 
-use XoopsModules\Quote;
+use Xmf\Module\Helper\Permission;
+use XoopsModules\Quotes;
 
 //$permHelper = new \Xmf\Module\Helper\Permission();
 
@@ -33,12 +34,12 @@ class Quote extends \XoopsObject
     private $id;
     private $cid;
     private $author_id;
-//    private $quote;
+    private $quote;
     private $online;
     private $created;
     private $updated;
 
-    public $helper;
+    public  $helper;
     public $permHelper;
 
     /**
@@ -47,9 +48,9 @@ class Quote extends \XoopsObject
      */
     public function __construct()
     {
-        // /** @var Quote\Helper $helper */
-        //        $this->helper = Quote\Helper::getInstance();
-        $this->permHelper = new \Xmf\Module\Helper\Permission();
+        // /** @var Quotes\Helper $helper */
+        //        $this->helper = Quotes\Helper::getInstance();
+        $this->permHelper = new Permission();
 
         $this->initVar('id', \XOBJ_DTYPE_INT);
         $this->initVar('cid', \XOBJ_DTYPE_INT);
@@ -63,7 +64,7 @@ class Quote extends \XoopsObject
     /**
      * Get form
      *
-     * @return Quote\Form\QuoteForm
+     * @return Quotes\Form\QuoteForm
      */
     public function getForm()
     {

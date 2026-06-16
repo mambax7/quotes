@@ -11,24 +11,27 @@
 */
 
 /**
- * Module: Quote
+ * Module: Quotes
  *
  * @category        Module
  * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
+ * @copyright       2000-2026 XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 
-use XoopsModules\Quote;
+use Xmf\Module\Admin;
+use Xmf\Request;
+use XoopsModules\Mtools;
+use XoopsModules\Quotes;
 
 require_once __DIR__ . '/admin_header.php';
 
-$adminObject = \Xmf\Module\Admin::getInstance();
+$adminObject = Admin::getInstance();
 
-$feedback = new \XoopsModules\Quote\Common\ModuleFeedback();
+$feedback = new Mtools\Common\ModuleFeedback();
 
 // It recovered the value of argument op in URL$
-$op                 = \Xmf\Request::getString('op', 'list');
+$op                 = Request::getString('op', 'list', 'REQUEST');
 $moduleDirName      = $GLOBALS['xoopsModule']->getVar('dirname');
 $moduleDirNameUpper = \mb_strtoupper((string) $moduleDirName);
 xoops_loadLanguage('feedback', $moduleDirName);
@@ -54,26 +57,23 @@ switch ($op) {
 
         $GLOBALS['xoopsTpl']->assign('navigation', $adminObject->displayNavigation('feedback.php'));
 
-        $your_name  = \Xmf\Request::getString('your_name', '');
-        $your_site  = \Xmf\Request::getString('your_site', '');
-        $your_mail  = \Xmf\Request::getString('your_mail', '');
-        $fb_type    = \Xmf\Request::getString('fb_type', '');
-        $fb_content = \Xmf\Request::getText('fb_content', '');
-        $fb_content = str_replace([
-                                      '
-',
-                                      '
-',
-                                      '
-',
-                                  ], '<br>', $fb_content); //clean line break from dhtmltextarea
+        $your_name  = Request::getString('your_name', '', 'POST');
+        $your_site  = Request::getString('your_site', '', 'POST');
+        $your_mail  = Request::getString('your_mail', '', 'POST');
+        $fb_type    = Request::getString('fb_type', '', 'POST');
+        $fb_content = Request::getText('fb_content', '', 'POST');
+        $fb_content = str_replace(
+            ['', '', ''],
+            '<br>',
+            $fb_content
+        ); //clean line break from dhtmltextarea
 
-        $title       = constant('CO_' . $moduleDirNameUpper . '_' . 'FB_SEND_FOR') . $GLOBALS['xoopsModule']->getVar('dirname');
-        $body        = constant('CO_' . $moduleDirNameUpper . '_' . 'FB_NAME') . ': ' . $your_name . '<br>';
-        $body        .= constant('CO_' . $moduleDirNameUpper . '_' . 'FB_MAIL') . ': ' . $your_mail . '<br>';
-        $body        .= constant('CO_' . $moduleDirNameUpper . '_' . 'FB_SITE') . ': ' . $your_site . '<br>';
-        $body        .= constant('CO_' . $moduleDirNameUpper . '_' . 'FB_TYPE') . ': ' . $fb_type . '<br><br>';
-        $body        .= constant('CO_' . $moduleDirNameUpper . '_' . 'FB_TYPE_CONTENT') . ':<br>';
+        $title       = constant('_CO_QUOTES_FB_SEND_FOR') . $GLOBALS['xoopsModule']->getVar('dirname');
+        $body        = constant('_CO_QUOTES_FB_NAME') . ': ' . $your_name . '<br>';
+        $body        .= constant('_CO_QUOTES_FB_MAIL') . ': ' . $your_mail . '<br>';
+        $body        .= constant('_CO_QUOTES_FB_SITE') . ': ' . $your_site . '<br>';
+        $body        .= constant('_CO_QUOTES_FB_TYPE') . ': ' . $fb_type . '<br><br>';
+        $body        .= constant('_CO_QUOTES_FB_TYPE_CONTENT') . ':<br>';
         $body        .= $fb_content;
         $xoopsMailer = xoops_getMailer();
         $xoopsMailer->useMail();
@@ -85,7 +85,7 @@ switch ($op) {
         $xoopsMailer->setBody($body);
         $ret = $xoopsMailer->send();
         if ($ret) {
-            redirect_header('index.php', 3, constant('CO_' . $moduleDirNameUpper . '_' . 'FB_SEND_SUCCESS'));
+            redirect_header('index.php', 3, constant('_CO_QUOTES_FB_SEND_SUCCESS'));
         }
 
         // show form with content again
@@ -95,7 +95,7 @@ switch ($op) {
         $feedback->type    = $fb_type;
         $feedback->content = $fb_content;
         echo '<div align="center" style="width: 80%; padding: 10px; border: 2px solid #ff0000; color: #ff0000; margin-right:auto;margin-left:auto;">
-            <h3>' . constant('CO_' . $moduleDirNameUpper . '_' . 'FB_SEND_ERROR') . '</h3>
+            <h3>' . constant('_CO_QUOTES_FB_SEND_ERROR') . '</h3>
             </div>';
         $form = $feedback->getFormFeedback();
         echo $form->render();

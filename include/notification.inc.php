@@ -11,11 +11,11 @@
 */
 
 /**
- * Module: Quote
+ * Module: Quotes
  *
  * @category        Module
  * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
+ * @copyright       2000-2026 XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 
@@ -27,14 +27,14 @@ use Xmf\Language;
  * @param $category
  * @param $item_id
  */
-function quote_notify_iteminfo($category, $item_id)
+function quotes_notify_iteminfo($category, $item_id)
 {
     $moduleDirName = \basename(\dirname(__DIR__));
 
-    if (empty($GLOBALS['xoopsModule']) || 'quote' !== $GLOBALS['xoopsModule']->getVar('dirname')) {
+    if (empty($GLOBALS['xoopsModule']) || 'quotes' !== $GLOBALS['xoopsModule']->getVar('dirname')) {
         /** @var \XoopsModuleHandler $moduleHandler */
         $moduleHandler = xoops_getHandler('module');
-        $module        = $moduleHandler->getByDirname('quote');
+        $module        = $moduleHandler->getByDirname('quotes');
         /** @var \XoopsConfigHandler \$configHandler */
         $configHandler = xoops_getHandler('config');
         $config        = $configHandler->getConfigsByCat(0, $module->getVar('mid'));
@@ -54,22 +54,34 @@ function quote_notify_iteminfo($category, $item_id)
 
     if ('category' === $category) {
         // Assume we have a valid category id
-        $sql           = 'SELECT _title FROM ' . $GLOBALS['xoopsDB']->prefix('quote_cat') . ' WHERE _cid = ' . $item_id;
-        $result        = $GLOBALS['xoopsDB']->query($sql); // TODO: error check
-        $resultArrayay = (($GLOBALS['xoopsDB']->isResultSet($result) && ($result instanceof \mysqli_result)) ? $GLOBALS['xoopsDB']->fetchArray($result) : false);
-        $item['name']  = $resultArrayay['_title'];
-        $item['url']   = XOOPS_URL . '/modules/' . $module->getVar('dirname') . '/cat_view.php?_cid=' . $item_id;
+        $sql    = 'SELECT title FROM ' . $GLOBALS['xoopsDB']->prefix('quotes_category') . ' WHERE id = ' . (int)$item_id;
+        $result = $GLOBALS['xoopsDB']->query($sql);
+        if (!$GLOBALS['xoopsDB']->isResultSet($result) || !($result instanceof \mysqli_result)) {
+            return null;
+        }
+        $row = (($GLOBALS['xoopsDB']->isResultSet($result) && ($result instanceof \mysqli_result)) ? $GLOBALS['xoopsDB']->fetchArray($result) : false);
+        if (false === $row) {
+            return null;
+        }
+        $item['name'] = $row['title'];
+        $item['url']  = XOOPS_URL . '/modules/' . $module->getVar('dirname') . '/category.php?op=view&id=' . (int)$item_id;
 
         return $item;
     }
 
-    if ('' == $category) {
+    if ('file' === $category) {
         // Assume we have a valid link id
-        $sql           = 'SELECT _cid, _title FROM ' . $GLOBALS['xoopsDB']->prefix('quote_category') . ' WHERE _lid = ' . $item_id;
-        $result        = $GLOBALS['xoopsDB']->query($sql); // TODO: error check
-        $resultArrayay = (($GLOBALS['xoopsDB']->isResultSet($result) && ($result instanceof \mysqli_result)) ? $GLOBALS['xoopsDB']->fetchArray($result) : false);
-        $item['name']  = $resultArrayay['title'];
-        $item['url']   = XOOPS_URL . '/modules/' . $module->getVar('dirname') . '/quote_visit.php?_cid=' . $resultArrayay['_cid'] . '&amp;_lid=' . $item_id;
+        $sql    = 'SELECT id, quote FROM ' . $GLOBALS['xoopsDB']->prefix('quotes_quote') . ' WHERE id = ' . (int)$item_id;
+        $result = $GLOBALS['xoopsDB']->query($sql);
+        if (!$GLOBALS['xoopsDB']->isResultSet($result) || !($result instanceof \mysqli_result)) {
+            return null;
+        }
+        $row = (($GLOBALS['xoopsDB']->isResultSet($result) && ($result instanceof \mysqli_result)) ? $GLOBALS['xoopsDB']->fetchArray($result) : false);
+        if (false === $row) {
+            return null;
+        }
+        $item['name'] = $row['quote'];
+        $item['url']  = XOOPS_URL . '/modules/' . $module->getVar('dirname') . '/quote.php?op=view&id=' . (int)$row['id'];
 
         return $item;
     }

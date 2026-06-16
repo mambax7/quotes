@@ -11,18 +11,21 @@
 */
 
 /**
- * Module: Quote
+ * Module: Quotes
  *
  * @category        Module
  * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
+ * @copyright       2000-2026 XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 
-use XoopsModules\Quote;
-use XoopsModules\Quote\Common;
+use XoopsModules\Mtools;
+use XoopsModules\Quotes\Helper;
+use XoopsModules\Quotes\Utility;
 
-require \dirname(__DIR__) . '/preloads/autoloader.php';
+/** @var Helper $helper */
+/** @var Utility $utility */
+require \dirname(__DIR__) . '/bootstrap.php';
 
 /**
  * Prepares system prior to attempting to install module
@@ -30,10 +33,18 @@ require \dirname(__DIR__) . '/preloads/autoloader.php';
  *
  * @return bool true if ready to install, false if not
  */
-function xoops_module_pre_install_quote(\XoopsModule $module)
+function xoops_module_pre_install_quotes(\XoopsModule $module)
 {
-    /** @var \XoopsModules\Quote\Utility $utility */
-    $utility = new \XoopsModules\Quote\Utility();
+    $mtoolsDependencyError = quotes_mtools_dependency_error();
+    if ('' !== $mtoolsDependencyError) {
+        $module->setErrors($mtoolsDependencyError);
+
+        return false;
+    }
+
+    $dir     = \dirname(__DIR__);
+    $utility = new Utility();
+    $helper  = Helper::getInstance();
 
     //check for minimum XOOPS version
     $xoopsSuccess = $utility::checkVerXoops($module);
@@ -42,8 +53,8 @@ function xoops_module_pre_install_quote(\XoopsModule $module)
     $phpSuccess = $utility::checkVerPhp($module);
 
     if ($xoopsSuccess && $phpSuccess) {
-        /** @var \XoopsModules\Quote\Common\Configurator $configurator */
-        $configurator = new \XoopsModules\Quote\Common\Configurator();
+        /** @var Mtools\Common\Configurator $configurator */
+        $configurator = new Mtools\Common\Configurator($dir);
 
         //create upload folders
         $uploadFolders = $configurator->uploadFolders;
@@ -66,16 +77,21 @@ function xoops_module_pre_install_quote(\XoopsModule $module)
  *
  * @return bool true if installation successful, false if not
  */
-function xoops_module_install_quote(\XoopsModule $module)
+function xoops_module_install_quotes(\XoopsModule $module)
 {
-    $moduleDirName = \basename(\dirname(__DIR__));
+    $mtoolsDependencyError = quotes_mtools_dependency_error();
+    if ('' !== $mtoolsDependencyError) {
+        $module->setErrors($mtoolsDependencyError);
 
-    /** @var \XoopsModules\Quote\Helper $helper */
-    /** @var \XoopsModules\Quote\Utility $utility */
-    /** @var Common\Configurator $configurator */
-    $helper       = \XoopsModules\Quote\Helper::getInstance();
-    $utility      = new \XoopsModules\Quote\Utility();
-    $configurator = new \XoopsModules\Quote\Common\Configurator();
+        return false;
+    }
+
+    $moduleDirName = \basename(\dirname(__DIR__));
+    $dir           = \dirname(__DIR__);
+    $helper        = Helper::getInstance();
+    $utility       = new Utility();
+
+    $configurator = new Mtools\Common\Configurator($dir);
 
     // Load language files
     $helper->loadLanguage('admin');
@@ -88,11 +104,11 @@ function xoops_module_install_quote(\XoopsModule $module)
     /** @var \XoopsGroupPermHandler $grouppermHandler */
     $grouppermHandler = xoops_getHandler('groupperm');
     // access rights ------------------------------------------
-    $grouppermHandler->addRight($moduleDirName . '_approve', 1, XOOPS_GROUP_ADMIN, $moduleId);
-    $grouppermHandler->addRight($moduleDirName . '_submit', 1, XOOPS_GROUP_ADMIN, $moduleId);
-    $grouppermHandler->addRight($moduleDirName . '_view', 1, XOOPS_GROUP_ADMIN, $moduleId);
-    $grouppermHandler->addRight($moduleDirName . '_view', 1, XOOPS_GROUP_USERS, $moduleId);
-    $grouppermHandler->addRight($moduleDirName . '_view', 1, XOOPS_GROUP_ANONYMOUS, $moduleId);
+    $grouppermHandler->addRight($moduleDirName . '_approve', 1, \XOOPS_GROUP_ADMIN, $moduleId);
+    $grouppermHandler->addRight($moduleDirName . '_submit', 1, \XOOPS_GROUP_ADMIN, $moduleId);
+    $grouppermHandler->addRight($moduleDirName . '_view', 1, \XOOPS_GROUP_ADMIN, $moduleId);
+    $grouppermHandler->addRight($moduleDirName . '_view', 1, \XOOPS_GROUP_USERS, $moduleId);
+    $grouppermHandler->addRight($moduleDirName . '_view', 1, \XOOPS_GROUP_ANONYMOUS, $moduleId);
 
     //  ---  CREATE FOLDERS ---------------
     if (count($configurator->uploadFolders) > 0) {
@@ -121,7 +137,9 @@ function xoops_module_install_quote(\XoopsModule $module)
     }
 
     //delete .html entries from the tpl table
-    $sql = 'DELETE FROM ' . $GLOBALS['xoopsDB']->prefix('tplfile') . " WHERE `tpl_module` = '" . $module->getVar('dirname', 'n') . "' AND `tpl_file` LIKE '%.html%'";
+    $sql = 'DELETE FROM ' . $GLOBALS['xoopsDB']->prefix('tplfile') . ' WHERE `tpl_module` = '
+        . $GLOBALS['xoopsDB']->quote($module->getVar('dirname', 'n'))
+        . " AND `tpl_file` LIKE '%.html%'";
     $GLOBALS['xoopsDB']->exec($sql);
 
     return true;

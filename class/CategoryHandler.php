@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace XoopsModules\Quote;
+namespace XoopsModules\Quotes;
 
 /*
  You may not change or alter any portion of this comment or credits
@@ -13,19 +13,20 @@ namespace XoopsModules\Quote;
 */
 
 /**
- * Module: Quote
+ * Module: Quotes
  *
  * @category        Module
  * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
+ * @copyright       2000-2026 XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 
-use XoopsModules\Quote;
+use Xmf\Module\Helper\Permission;
 
+/** @var Helper $helper */
 $moduleDirName = \basename(\dirname(__DIR__));
 
-$permHelper = new \Xmf\Module\Helper\Permission();
+$permHelper = new Permission();
 
 /**
  * Class CategoryHandler
@@ -33,19 +34,12 @@ $permHelper = new \Xmf\Module\Helper\Permission();
 class CategoryHandler extends \XoopsPersistableObjectHandler
 {
     /**
-     * @var Helper
-     */
-    public $helper;
-
-    /**
      * Constructor
-     * @param null|\XoopsModules\Quote\Helper $helper
+     * @param null|Helper $helper
      */
-    public function __construct(?\XoopsDatabase $db = null, $helper = null)
+    public function __construct(?\XoopsDatabase $db = null, public $helper = null)
     {
-        /** @var \XoopsModules\Quote\Helper $this- >helper */
-        $this->helper = $helper;
-        parent::__construct($db, 'quote_category', Category::class, 'id', 'title');
+        parent::__construct($db, 'quotes_category', Category::class, 'id', 'title');
     }
 
     /**

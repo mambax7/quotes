@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace XoopsModules\Quote;
+namespace XoopsModules\Quotes;
 
 /*
  You may not change or alter any portion of this comment or credits
@@ -13,15 +13,16 @@ namespace XoopsModules\Quote;
 */
 
 /**
- * Module: Quote
+ * Module: Quotes
  *
  * @category        Module
  * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
+ * @copyright       2000-2026 XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 
-use XoopsModules\Quote;
+use Xmf\Module\Helper\Permission;
+use XoopsModules\Quotes;
 
 //$permHelper = new \Xmf\Module\Helper\Permission();
 
@@ -43,13 +44,12 @@ class Author extends \XoopsObject
 
     /**
      * Constructor
-     *
      */
     public function __construct()
     {
-        // /** @var Quote\Helper $helper */
-        //        $this->helper = Quote\Helper::getInstance();
-        $this->permHelper = new \Xmf\Module\Helper\Permission();
+        // /** @var Quotes\Helper $helper */
+        //        $this->helper = Quotes\Helper::getInstance();
+        $this->permHelper = new Permission();
 
         $this->initVar('id', \XOBJ_DTYPE_INT);
         $this->initVar('name', \XOBJ_DTYPE_TXTBOX);
@@ -63,37 +63,28 @@ class Author extends \XoopsObject
     /**
      * Get form
      *
-     * @return Quote\Form\AuthorForm
+     * @return Quotes\Form\AuthorForm
      */
-    public function getForm()
+    public function getForm(): Form\AuthorForm
     {
         $form = new Form\AuthorForm($this);
 
         return $form;
     }
 
-    /**
-     * @return array|null
-     */
-    public function getGroupsRead()
+    public function getGroupsRead(): ?array
     {
         //$permHelper = new \Xmf\Module\Helper\Permission();
         return $this->permHelper->getGroupsForItem('sbcolumns_read', $this->getVar('id'));
     }
 
-    /**
-     * @return array|null
-     */
-    public function getGroupsSubmit()
+    public function getGroupsSubmit(): ?array
     {
         //$permHelper = new \Xmf\Module\Helper\Permission();
         return $this->permHelper->getGroupsForItem('sbcolumns_submit', $this->getVar('id'));
     }
 
-    /**
-     * @return array|null
-     */
-    public function getGroupsModeration()
+    public function getGroupsModeration(): ?array
     {
         //$permHelper = new \Xmf\Module\Helper\Permission();
         return $this->permHelper->getGroupsForItem('sbcolumns_moderation', $this->getVar('id'));

@@ -11,23 +11,26 @@
 */
 
 /**
- * Module: Quote
+ * Module: Quotes
  *
  * @category        Module
  * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
+ * @copyright       2000-2026 XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 
-use XoopsModules\Quote;
+use XoopsModules\Mtools;
+use XoopsModules\Quotes\Helper;
+use XoopsModules\Quotes\Utility;
 
+/** @var Helper $helper */
+/** @var Utility $utility */
 if ((!defined('XOOPS_ROOT_PATH')) || !$GLOBALS['xoopsUser'] instanceof \XoopsUser
-    || !$GLOBALS['xoopsUser']->isAdmin()
-) {
+    || !$GLOBALS['xoopsUser']->isAdmin()) {
     exit('Restricted access' . PHP_EOL);
 }
 
-require \dirname(__DIR__) . '/preloads/autoloader.php';
+require \dirname(__DIR__) . '/bootstrap.php';
 
 /**
  * Prepares system prior to attempting to install module
@@ -35,18 +38,22 @@ require \dirname(__DIR__) . '/preloads/autoloader.php';
  *
  * @return bool true if ready to install, false if not
  */
-function xoops_module_pre_update_quote(\XoopsModule $module)
+function xoops_module_pre_update_quotes(\XoopsModule $module)
 {
-    // /** @var \XoopsModules\Quote\Helper $helper */
-    //$helper       = \XoopsModules\Quote\Helper::getInstance();
-    /** @var \XoopsModules\Quote\Utility $utility */
-    $utility = new \XoopsModules\Quote\Utility();
+    $mtoolsDependencyError = quotes_mtools_dependency_error();
+    if ('' !== $mtoolsDependencyError) {
+        $module->setErrors($mtoolsDependencyError);
+
+        return false;
+    }
+
+    $helper  = Helper::getInstance();
+    $utility = new Utility();
 
     $xoopsSuccess = $utility::checkVerXoops($module);
     $phpSuccess   = $utility::checkVerPhp($module);
 
-    /** @var \XoopsModules\Quote\Common\Configurator $configurator */
-    $configurator = new \XoopsModules\Quote\Common\Configurator();
+    $configurator = new Mtools\Common\Configurator($helper->path());
 
     //create upload folders
     $uploadFolders = $configurator->uploadFolders;
@@ -54,7 +61,7 @@ function xoops_module_pre_update_quote(\XoopsModule $module)
         $utility::prepareFolder($value);
     }
 
-    //    $migrator = new \XoopsModules\Quote\Common\Migrate();
+    //    $migrator = new \XoopsModules\Mtools\Common\Migrate();
     //    $migrator->synchronizeSchema();
 
     return $xoopsSuccess && $phpSuccess;
@@ -67,21 +74,25 @@ function xoops_module_pre_update_quote(\XoopsModule $module)
  *
  * @return bool true if update successful, false if not
  */
-function xoops_module_update_quote(\XoopsModule $module, $previousVersion = null)
+function xoops_module_update_quotes(\XoopsModule $module, $previousVersion = null)
 {
+    $mtoolsDependencyError = quotes_mtools_dependency_error();
+    if ('' !== $mtoolsDependencyError) {
+        $module->setErrors($mtoolsDependencyError);
+
+        return false;
+    }
+
     $moduleDirName = \basename(\dirname(__DIR__));
-    $previousVersionInt = (int)($previousVersion ?? 0);
     //$moduleDirNameUpper = \mb_strtoupper($moduleDirName);
 
-    /** @var Quote\Helper $helper */
-    /** @var Quote\Utility $utility */
-    /** @var Quote\Common\Configurator $configurator */
-    $helper       = Quote\Helper::getInstance();
-    $utility      = new Quote\Utility();
-    $configurator = new Quote\Common\Configurator();
+    $helper  = Helper::getInstance();
+    $utility = new Utility();
+
+    $configurator = new Mtools\Common\Configurator($helper->path());
     $helper->loadLanguage('common');
 
-    if ($previousVersionInt < 240) {
+    if ($previousVersion < 240) {
         //delete old HTML templates
         if (count($configurator->templateFolders) > 0) {
             foreach ($configurator->templateFolders as $folder) {
@@ -98,7 +109,7 @@ function xoops_module_update_quote(\XoopsModule $module, $previousVersion = null
                         foreach ($templateList as $k => $v) {
                             $fileInfo = new SplFileInfo($templateFolder . $v);
                             if ('html' === $fileInfo->getExtension() && 'index.html' !== $fileInfo->getFilename()) {
-                                if (file_exists($templateFolder . $v)) {
+                                if (is_file($templateFolder . $v)) {
                                     unlink($templateFolder . $v);
                                 }
                             }
@@ -149,7 +160,9 @@ function xoops_module_update_quote(\XoopsModule $module, $previousVersion = null
         }
 
         //delete .html entries from the tpl table
-        $sql = 'DELETE FROM ' . $GLOBALS['xoopsDB']->prefix('tplfile') . " WHERE `tpl_module` = '" . $module->getVar('dirname', 'n') . "' AND `tpl_file` LIKE '%.html%'";
+        $sql = 'DELETE FROM ' . $GLOBALS['xoopsDB']->prefix('tplfile') . ' WHERE `tpl_module` = '
+            . $GLOBALS['xoopsDB']->quote($module->getVar('dirname', 'n'))
+            . " AND `tpl_file` LIKE '%.html%'";
         $GLOBALS['xoopsDB']->exec($sql);
 
         /** @var \XoopsGroupPermHandler $grouppermHandler */

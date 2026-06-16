@@ -14,6 +14,9 @@
  * @license      GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @author       XOOPS Development Team
  */
+
+use Xmf\Module\Admin;
+
 $moduleDirName      = \basename(\dirname(__DIR__));
 $moduleDirNameUpper = \mb_strtoupper($moduleDirName);
 
@@ -29,14 +32,16 @@ return (object)[
     ],
     'uploadFolders'  => [
         XOOPS_UPLOAD_PATH . '/' . $moduleDirName,
+        XOOPS_UPLOAD_PATH . '/' . $moduleDirName . '/author',
+        XOOPS_UPLOAD_PATH . '/' . $moduleDirName . '/quote',
         XOOPS_UPLOAD_PATH . '/' . $moduleDirName . '/category',
-        XOOPS_UPLOAD_PATH . '/' . $moduleDirName . '/screenshots',
         //XOOPS_UPLOAD_PATH . '/flags'
     ],
     'copyBlankFiles' => [
         XOOPS_UPLOAD_PATH . '/' . $moduleDirName,
+        XOOPS_UPLOAD_PATH . '/' . $moduleDirName . '/author',
+        XOOPS_UPLOAD_PATH . '/' . $moduleDirName . '/quote',
         XOOPS_UPLOAD_PATH . '/' . $moduleDirName . '/category',
-        XOOPS_UPLOAD_PATH . '/' . $moduleDirName . '/screenshots',
         //XOOPS_UPLOAD_PATH . '/flags'
     ],
 
@@ -82,5 +87,5 @@ return (object)[
         //            'totalsubmitted'  => $helper->getHandler('Item')->getItemsCount(-1, [Constants::PUBLISHER_STATUS_SUBMITTED]),
     ],
     'modCopyright'  => "<a href='https://xoops.org' title='XOOPS Project' target='_blank'>
-                     <img src='" . \Xmf\Module\Admin::iconUrl('xoopsmicrobutton.gif') . "' alt='XOOPS Project'></a>",
+                     <img src='" . Admin::iconUrl('xoopsmicrobutton.gif') . "' alt='XOOPS Project'></a>",
 ];

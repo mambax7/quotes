@@ -9,25 +9,27 @@
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 */
+
 /**
- * Module: Quote
+ * Module: Quotes
  *
- * @param mixed $itemId
- * @param mixed $commentCount
- * @copyright       {@link https://xoops.org/ XOOPS Project}
- * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @category        Module
  * @author          XOOPS Development Team <https://xoops.org>
+ * @copyright       2000-2026 XOOPS Project (https://xoops.org)
+ * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
+
+use XoopsModules\Quotes\Helper;
+
+/** @var Helper $helper */
 /**
  * CommentsUpdate
  *
  * @return bool
  */
-function quoteCommentsUpdate(mixed $itemId, mixed $commentCount)
+function quotesCommentsUpdate(mixed $itemId, mixed $commentCount)
 {
-    /** @var \XoopsModules\Quote\Helper $helper */
-    $helper = \XoopsModules\Quote\Helper::getInstance();
+    $helper = Helper::getInstance();
     /** @var \XoopsPersistableObjectHandler $helper- >getHandler('Author') */
     if (!$helper->getHandler('Author')->updateAll('comments', (int)$commentCount, new \Criteria('lid', (int)$itemId))) {
         return false;
@@ -41,7 +43,7 @@ function quoteCommentsUpdate(mixed $itemId, mixed $commentCount)
  *
  * @param string $comment
  */
-function quoteCommentsApprove(&$comment): void
+function quotesCommentsApprove(&$comment): void
 {
     // notification mail here
 }

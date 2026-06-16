@@ -1,18 +1,18 @@
 <?php
 
-namespace Tests\Unit\XoopsModules\Quote;
+namespace Tests\Unit\XoopsModules\Quotes;
 
 use Mockery;
 use Mockery\Mock;
 use PHPUnit\Framework\TestCase;
 use XoopsDatabase;
-use XoopsModules\Quote\Helper;
-use XoopsModules\Quote\QuoteHandler;
+use XoopsModules\Quotes\Helper;
+use XoopsModules\Quotes\QuoteHandler;
 
 /**
  * Class QuoteHandlerTest.
  *
- * @covers \XoopsModules\Quote\QuoteHandler
+ * @covers \XoopsModules\Quotes\QuoteHandler
  */
 final class QuoteHandlerTest extends TestCase
 {

@@ -10,123 +10,124 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 */
 /**
- * Module: Quote
+ * Module: Quotes
  *
  * @category        Module
  * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
+ * @copyright       2000-2026 XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 // Admin
-define('MI_QUOTE_NAME', 'Quote');
-define('MI_QUOTE_DESC', '&lt;p&gt;This module is for doing following...&lt;/p&gt;');
+define('MI_QUOTES_NAME', 'Quotes');
+define('MI_QUOTES_DESC', 'A curated quote library for browsing memorable words by author and category.');
 //Menu
-define('MI_QUOTE_ADMENU1', 'Home');
-define('MI_QUOTE_ADMENU2', 'Quote');
-define('MI_QUOTE_ADMENU3', 'Category');
-define('MI_QUOTE_ADMENU4', 'Author');
-define('MI_QUOTE_ADMENU5', 'Feedback');
-define('MI_QUOTE_ADMENU6', 'Migrate');
-define('MI_QUOTE_ADMENU7', 'About');
+define('MI_QUOTES_ADMENU1', 'Home');
+define('MI_QUOTES_ADMENU2', 'Quote');
+define('MI_QUOTES_ADMENU3', 'Category');
+define('MI_QUOTES_ADMENU4', 'Author');
+define('MI_QUOTES_ADMENU5', 'Feedback');
+define('MI_QUOTES_ADMENU6', 'Migrate');
+define('MI_QUOTES_ADMENU7', 'About');
+define('MI_QUOTES_ADMENU8', 'Permissions');
 //Blocks
-define('MI_QUOTE_QUOTE_BLOCK', 'Quote block');
-define('MI_QUOTE_CATEGORY_BLOCK', 'Category block');
-define('MI_QUOTE_AUTHOR_BLOCK', 'Author block');
+define('MI_QUOTES_QUOTE_BLOCK', 'Quote block');
+define('MI_QUOTES_CATEGORY_BLOCK', 'Category block');
+define('MI_QUOTES_AUTHOR_BLOCK', 'Author block');
 //Config
-define('MI_QUOTE_EDITOR_ADMIN', 'Editor: Admin');
-define('MI_QUOTE_EDITOR_ADMIN_DESC', 'Select the Editor to use by the Admin');
-define('MI_QUOTE_EDITOR_USER', 'Editor: User');
-define('MI_QUOTE_EDITOR_USER_DESC', 'Select the Editor to use by the User');
-define('MI_QUOTE_KEYWORDS', 'Keywords');
-define('MI_QUOTE_KEYWORDS_DESC', 'Insert here the keywords (separate by comma)');
-define('MI_QUOTE_ADMINPAGER', 'Admin: records / page');
-define('MI_QUOTE_ADMINPAGER_DESC', 'Admin: # of records shown per page');
-define('MI_QUOTE_USERPAGER', 'User: records / page');
-define('MI_QUOTE_USERPAGER_DESC', 'User: # of records shown per page');
-define('MI_QUOTE_MAXSIZE', 'Max size');
-define('MI_QUOTE_MAXSIZE_DESC', 'Set a number of max size uploads file in byte');
-define('MI_QUOTE_MIMETYPES', 'Mime Types');
-define('MI_QUOTE_MIMETYPES_DESC', 'Set the mime types selected');
-define('MI_QUOTE_IDPAYPAL', 'Paypal ID');
-define('MI_QUOTE_IDPAYPAL_DESC', 'Insert here your PayPal ID for donactions.');
-define('MI_QUOTE_ADVERTISE', 'Advertisement Code');
-define('MI_QUOTE_ADVERTISE_DESC', 'Insert here the advertisement code');
-define('MI_QUOTE_BOOKMARKS', 'Social Bookmarks');
-define('MI_QUOTE_BOOKMARKS_DESC', 'Show Social Bookmarks in the form');
-define('MI_QUOTE_FBCOMMENTS', 'Facebook comments');
-define('MI_QUOTE_FBCOMMENTS_DESC', 'Allow Facebook comments in the form');
+define('MI_QUOTES_EDITOR_ADMIN', 'Editor: Admin');
+define('MI_QUOTES_EDITOR_ADMIN_DESC', 'Select the Editor to use by the Admin');
+define('MI_QUOTES_EDITOR_USER', 'Editor: User');
+define('MI_QUOTES_EDITOR_USER_DESC', 'Select the Editor to use by the User');
+define('MI_QUOTES_KEYWORDS', 'Keywords');
+define('MI_QUOTES_KEYWORDS_DESC', 'Insert here the keywords (separate by comma)');
+define('MI_QUOTES_ADMINPAGER', 'Admin: records / page');
+define('MI_QUOTES_ADMINPAGER_DESC', 'Admin: # of records shown per page');
+define('MI_QUOTES_USERPAGER', 'User: records / page');
+define('MI_QUOTES_USERPAGER_DESC', 'User: # of records shown per page');
+define('MI_QUOTES_MAXSIZE', 'Max size');
+define('MI_QUOTES_MAXSIZE_DESC', 'Set a number of max size uploads file in byte');
+define('MI_QUOTES_MIMETYPES', 'Mime Types');
+define('MI_QUOTES_MIMETYPES_DESC', 'Set the mime types selected');
+define('MI_QUOTES_IDPAYPAL', 'Paypal ID');
+define('MI_QUOTES_IDPAYPAL_DESC', 'Insert here your PayPal ID for donactions.');
+define('MI_QUOTES_ADVERTISE', 'Advertisement Code');
+define('MI_QUOTES_ADVERTISE_DESC', 'Insert here the advertisement code');
+define('MI_QUOTES_BOOKMARKS', 'Social Bookmarks');
+define('MI_QUOTES_BOOKMARKS_DESC', 'Show Social Bookmarks in the form');
+define('MI_QUOTES_FBCOMMENTS', 'Facebook comments');
+define('MI_QUOTES_FBCOMMENTS_DESC', 'Allow Facebook comments in the form');
 // Notifications
-define('MI_QUOTE_GLOBAL_NOTIFY', 'Allow Facebook comments in the form');
-define('MI_QUOTE_GLOBAL_NOTIFY_DESC', 'Allow Facebook comments in the form');
-define('MI_QUOTE_CATEGORY_NOTIFY', 'Allow Facebook comments in the form');
-define('MI_QUOTE_CATEGORY_NOTIFY_DESC', 'Allow Facebook comments in the form');
-define('MI_QUOTE_FILE_NOTIFY', 'Allow Facebook comments in the form');
-define('MI_QUOTE_FILE_NOTIFY_DESC', 'Allow Facebook comments in the form');
-define('MI_QUOTE_GLOBAL_NEWCATEGORY_NOTIFY', 'Allow Facebook comments in the form');
-define('MI_QUOTE_GLOBAL_NEWCATEGORY_NOTIFY_CAPTION', 'Allow Facebook comments in the form');
-define('MI_QUOTE_GLOBAL_NEWCATEGORY_NOTIFY_DESC', 'Allow Facebook comments in the form');
-define('MI_QUOTE_GLOBAL_NEWCATEGORY_NOTIFY_SUBJECT', 'Allow Facebook comments in the form');
-define('MI_QUOTE_GLOBAL_FILEMODIFY_NOTIFY', 'Allow Facebook comments in the form');
-define('MI_QUOTE_GLOBAL_FILEMODIFY_NOTIFY_CAPTION', 'Allow Facebook comments in the form');
-define('MI_QUOTE_GLOBAL_FILEMODIFY_NOTIFY_DESC', 'Allow Facebook comments in the form');
-define('MI_QUOTE_GLOBAL_FILEMODIFY_NOTIFY_SUBJECT', 'Allow Facebook comments in the form');
-define('MI_QUOTE_GLOBAL_FILEBROKEN_NOTIFY', 'Allow Facebook comments in the form');
-define('MI_QUOTE_GLOBAL_FILEBROKEN_NOTIFY_CAPTION', 'Allow Facebook comments in the form');
-define('MI_QUOTE_GLOBAL_FILEBROKEN_NOTIFY_DESC', 'Allow Facebook comments in the form');
-define('MI_QUOTE_GLOBAL_FILEBROKEN_NOTIFY_SUBJECT', 'Allow Facebook comments in the form');
-define('MI_QUOTE_GLOBAL_FILESUBMIT_NOTIFY', 'Allow Facebook comments in the form');
-define('MI_QUOTE_GLOBAL_FILESUBMIT_NOTIFY_CAPTION', 'Allow Facebook comments in the form');
-define('MI_QUOTE_GLOBAL_FILESUBMIT_NOTIFY_DESC', 'Allow Facebook comments in the form');
-define('MI_QUOTE_GLOBAL_FILESUBMIT_NOTIFY_SUBJECT', 'Allow Facebook comments in the form');
-define('MI_QUOTE_GLOBAL_NEWFILE_NOTIFY', 'Allow Facebook comments in the form');
-define('MI_QUOTE_GLOBAL_NEWFILE_NOTIFY_CAPTION', 'Allow Facebook comments in the form');
-define('MI_QUOTE_GLOBAL_NEWFILE_NOTIFY_DESC', 'Allow Facebook comments in the form');
-define('MI_QUOTE_GLOBAL_NEWFILE_NOTIFY_SUBJECT', 'Allow Facebook comments in the form');
-define('MI_QUOTE_CATEGORY_FILESUBMIT_NOTIFY', 'Allow Facebook comments in the form');
-define('MI_QUOTE_CATEGORY_FILESUBMIT_NOTIFY_CAPTION', 'Allow Facebook comments in the form');
-define('MI_QUOTE_CATEGORY_FILESUBMIT_NOTIFY_DESC', 'Allow Facebook comments in the form');
-define('MI_QUOTE_CATEGORY_FILESUBMIT_NOTIFY_SUBJECT', 'Allow Facebook comments in the form');
-define('MI_QUOTE_CATEGORY_NEWFILE_NOTIFY', 'Allow Facebook comments in the form');
-define('MI_QUOTE_CATEGORY_NEWFILE_NOTIFY_CAPTION', 'Allow Facebook comments in the form');
-define('MI_QUOTE_CATEGORY_NEWFILE_NOTIFY_DESC', 'Allow Facebook comments in the form');
-define('MI_QUOTE_CATEGORY_NEWFILE_NOTIFY_SUBJECT', 'Allow Facebook comments in the form');
-define('MI_QUOTE_FILE_APPROVE_NOTIFY', 'Allow Facebook comments in the form');
-define('MI_QUOTE_FILE_APPROVE_NOTIFY_CAPTION', 'Allow Facebook comments in the form');
-define('MI_QUOTE_FILE_APPROVE_NOTIFY_DESC', 'Allow Facebook comments in the form');
-define('MI_QUOTE_FILE_APPROVE_NOTIFY_SUBJECT', 'Allow Facebook comments in the form');
+define('MI_QUOTES_GLOBAL_NOTIFY', 'Allow Facebook comments in the form');
+define('MI_QUOTES_GLOBAL_NOTIFY_DESC', 'Allow Facebook comments in the form');
+define('MI_QUOTES_CATEGORY_NOTIFY', 'Allow Facebook comments in the form');
+define('MI_QUOTES_CATEGORY_NOTIFY_DESC', 'Allow Facebook comments in the form');
+define('MI_QUOTES_FILE_NOTIFY', 'Allow Facebook comments in the form');
+define('MI_QUOTES_FILE_NOTIFY_DESC', 'Allow Facebook comments in the form');
+define('MI_QUOTES_GLOBAL_NEWCATEGORY_NOTIFY', 'Allow Facebook comments in the form');
+define('MI_QUOTES_GLOBAL_NEWCATEGORY_NOTIFY_CAPTION', 'Allow Facebook comments in the form');
+define('MI_QUOTES_GLOBAL_NEWCATEGORY_NOTIFY_DESC', 'Allow Facebook comments in the form');
+define('MI_QUOTES_GLOBAL_NEWCATEGORY_NOTIFY_SUBJECT', 'Allow Facebook comments in the form');
+define('MI_QUOTES_GLOBAL_FILEMODIFY_NOTIFY', 'Allow Facebook comments in the form');
+define('MI_QUOTES_GLOBAL_FILEMODIFY_NOTIFY_CAPTION', 'Allow Facebook comments in the form');
+define('MI_QUOTES_GLOBAL_FILEMODIFY_NOTIFY_DESC', 'Allow Facebook comments in the form');
+define('MI_QUOTES_GLOBAL_FILEMODIFY_NOTIFY_SUBJECT', 'Allow Facebook comments in the form');
+define('MI_QUOTES_GLOBAL_FILEBROKEN_NOTIFY', 'Allow Facebook comments in the form');
+define('MI_QUOTES_GLOBAL_FILEBROKEN_NOTIFY_CAPTION', 'Allow Facebook comments in the form');
+define('MI_QUOTES_GLOBAL_FILEBROKEN_NOTIFY_DESC', 'Allow Facebook comments in the form');
+define('MI_QUOTES_GLOBAL_FILEBROKEN_NOTIFY_SUBJECT', 'Allow Facebook comments in the form');
+define('MI_QUOTES_GLOBAL_FILESUBMIT_NOTIFY', 'Allow Facebook comments in the form');
+define('MI_QUOTES_GLOBAL_FILESUBMIT_NOTIFY_CAPTION', 'Allow Facebook comments in the form');
+define('MI_QUOTES_GLOBAL_FILESUBMIT_NOTIFY_DESC', 'Allow Facebook comments in the form');
+define('MI_QUOTES_GLOBAL_FILESUBMIT_NOTIFY_SUBJECT', 'Allow Facebook comments in the form');
+define('MI_QUOTES_GLOBAL_NEWFILE_NOTIFY', 'Allow Facebook comments in the form');
+define('MI_QUOTES_GLOBAL_NEWFILE_NOTIFY_CAPTION', 'Allow Facebook comments in the form');
+define('MI_QUOTES_GLOBAL_NEWFILE_NOTIFY_DESC', 'Allow Facebook comments in the form');
+define('MI_QUOTES_GLOBAL_NEWFILE_NOTIFY_SUBJECT', 'Allow Facebook comments in the form');
+define('MI_QUOTES_CATEGORY_FILESUBMIT_NOTIFY', 'Allow Facebook comments in the form');
+define('MI_QUOTES_CATEGORY_FILESUBMIT_NOTIFY_CAPTION', 'Allow Facebook comments in the form');
+define('MI_QUOTES_CATEGORY_FILESUBMIT_NOTIFY_DESC', 'Allow Facebook comments in the form');
+define('MI_QUOTES_CATEGORY_FILESUBMIT_NOTIFY_SUBJECT', 'Allow Facebook comments in the form');
+define('MI_QUOTES_CATEGORY_NEWFILE_NOTIFY', 'Allow Facebook comments in the form');
+define('MI_QUOTES_CATEGORY_NEWFILE_NOTIFY_CAPTION', 'Allow Facebook comments in the form');
+define('MI_QUOTES_CATEGORY_NEWFILE_NOTIFY_DESC', 'Allow Facebook comments in the form');
+define('MI_QUOTES_CATEGORY_NEWFILE_NOTIFY_SUBJECT', 'Allow Facebook comments in the form');
+define('MI_QUOTES_FILE_APPROVE_NOTIFY', 'Allow Facebook comments in the form');
+define('MI_QUOTES_FILE_APPROVE_NOTIFY_CAPTION', 'Allow Facebook comments in the form');
+define('MI_QUOTES_FILE_APPROVE_NOTIFY_DESC', 'Allow Facebook comments in the form');
+define('MI_QUOTES_FILE_APPROVE_NOTIFY_SUBJECT', 'Allow Facebook comments in the form');
 
 // Help
-define('MI_QUOTE_DIRNAME', basename(dirname(__DIR__, 2)));
-define('MI_QUOTE_HELP_HEADER', __DIR__ . '/help/helpheader.tpl');
-define('MI_QUOTE_BACK_2_ADMIN', 'Back to Administration of ');
-define('MI_QUOTE_OVERVIEW', 'Overview');
+define('MI_QUOTES_DIRNAME', basename(dirname(__DIR__, 2)));
+define('MI_QUOTES_HELP_HEADER', __DIR__ . '/help/helpheader.tpl');
+define('MI_QUOTES_BACK_2_ADMIN', 'Back to Administration of ');
+define('MI_QUOTES_OVERVIEW', 'Overview');
 // The name of this module
-//define('MI_QUOTE_NAME', 'YYYYY Module Name');
+//define('MI_QUOTES_NAME', 'YYYYY Module Name');
 
-//define('MI_QUOTE_HELP_DIR', __DIR__);
+//define('MI_QUOTES_HELP_DIR', __DIR__);
 
 //help multipage
-define('MI_QUOTE_DISCLAIMER', 'Disclaimer');
-define('MI_QUOTE_LICENSE', 'License');
-define('MI_QUOTE_SUPPORT', 'Support');
-//define('MI_QUOTE_REQUIREMENTS', 'Requirements');
-//define('MI_QUOTE_CREDITS', 'Credits');
-//define('MI_QUOTE_HOWTO', 'How To');
-//define('MI_QUOTE_UPDATE', 'Update');
-//define('MI_QUOTE_INSTALL', 'Install');
-//define('MI_QUOTE_HISTORY', 'History');
-//define('MI_QUOTE_HELP1', 'YYYYY');
-//define('MI_QUOTE_HELP2', 'YYYYY');
-//define('MI_QUOTE_HELP3', 'YYYYY');
-//define('MI_QUOTE_HELP4', 'YYYYY');
-//define('MI_QUOTE_HELP5', 'YYYYY');
-//define('MI_QUOTE_HELP6', 'YYYYY');
+define('MI_QUOTES_DISCLAIMER', 'Disclaimer');
+define('MI_QUOTES_LICENSE', 'License');
+define('MI_QUOTES_SUPPORT', 'Support');
+//define('MI_QUOTES_REQUIREMENTS', 'Requirements');
+//define('MI_QUOTES_CREDITS', 'Credits');
+//define('MI_QUOTES_HOWTO', 'How To');
+//define('MI_QUOTES_UPDATE', 'Update');
+//define('MI_QUOTES_INSTALL', 'Install');
+//define('MI_QUOTES_HISTORY', 'History');
+//define('MI_QUOTES_HELP1', 'YYYYY');
+//define('MI_QUOTES_HELP2', 'YYYYY');
+//define('MI_QUOTES_HELP3', 'YYYYY');
+//define('MI_QUOTES_HELP4', 'YYYYY');
+//define('MI_QUOTES_HELP5', 'YYYYY');
+//define('MI_QUOTES_HELP6', 'YYYYY');
 
 // Permissions Groups
-define('MI_QUOTE_GROUPS', 'Groups access');
-define('MI_QUOTE_GROUPS_DESC', 'Select general access permission for groups.');
-define('MI_QUOTE_ADMINGROUPS', 'Admin Group Permissions');
-define('MI_QUOTE_ADMINGROUPS_DESC', 'Which groups have access to tools and permissions page');
+define('MI_QUOTES_GROUPS', 'Groups access');
+define('MI_QUOTES_GROUPS_DESC', 'Select general access permission for groups.');
+define('MI_QUOTES_ADMINGROUPS', 'Admin Group Permissions');
+define('MI_QUOTES_ADMINGROUPS_DESC', 'Which groups have access to tools and permissions page');
 
-//define('MI_QUOTE_SHOW_SAMPLE_BUTTON', 'Import Sample Button?');
-//define('MI_QUOTE_SHOW_SAMPLE_BUTTON_DESC', 'If yes, the "Add Sample Data" button will be visible to the Admin. It is Yes as a default for first installation.');
+//define('MI_QUOTES_SHOW_SAMPLE_BUTTON', 'Import Sample Button?');
+//define('MI_QUOTES_SHOW_SAMPLE_BUTTON_DESC', 'If yes, the "Add Sample Data" button will be visible to the Admin. It is Yes as a default for first installation.');

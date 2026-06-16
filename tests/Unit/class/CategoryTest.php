@@ -1,14 +1,14 @@
 <?php
 
-namespace Tests\Unit\XoopsModules\Quote;
+namespace Tests\Unit\XoopsModules\Quotes;
 
 use PHPUnit\Framework\TestCase;
-use XoopsModules\Quote\Category;
+use XoopsModules\Quotes\Category;
 
 /**
  * Class CategoryTest.
  *
- * @covers \XoopsModules\Quote\Category
+ * @covers \XoopsModules\Quotes\Category
  */
 final class CategoryTest extends TestCase
 {

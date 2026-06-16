@@ -11,59 +11,66 @@
 */
 
 /**
- * Module: Quote
+ * Module: Quotes
  *
  * @category        Module
  * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
+ * @copyright       2000-2026 XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 
 use Xmf\Request;
-use XoopsModules\Quote;
+use XoopsModules\Quotes\Author;
+use XoopsModules\Quotes\AuthorHandler;
+use XoopsModules\Quotes\Helper;
+use XoopsModules\Quotes\Utility;
 
+/** @var Author $authorObject */
+/** @var AuthorHandler $authorHandler */
+/** @var Helper $helper */
+/** @var Utility $utility */
 require __DIR__ . '/header.php';
 
-$op = \Xmf\Request::getCmd('op', 'list');
+$op = Request::getCmd('op', 'list', 'GET');
 
 if ('edit' !== $op) {
     if ('view' === $op) {
-        $GLOBALS['xoopsOption']['template_main'] = 'quote_author.tpl';
+        $GLOBALS['xoopsOption']['template_main'] = 'quotes_author.tpl';
     } else {
-        $GLOBALS['xoopsOption']['template_main'] = 'quote_author_list0.tpl';
+        $GLOBALS['xoopsOption']['template_main'] = 'quotes_author_list0.tpl';
     }
 }
 require_once XOOPS_ROOT_PATH . '/header.php';
 
 global $xoTheme;
 
-$start = \Xmf\Request::getInt('start', 0);
+$start = Request::getInt('start', 0, 'GET');
 // Define Stylesheet
 /** @var xos_opal_Theme $xoTheme */
-$xoTheme->addStylesheet($stylesheet);
+quotes_register_theme_assets($stylesheet);
 
 $db = \XoopsDatabaseFactory::getDatabaseConnection();
 
 // Get Handler
-/** @var \XoopsPersistableObjectHandler $authorHandler */
 $authorHandler = $helper->getHandler('Author');
 
 $authorPaginationLimit = $helper->getConfig('userpager');
 
 $criteria = new \CriteriaCompo();
 
-$criteria->setOrder('DESC');
+$criteria->setSort('name');
+$criteria->setOrder('ASC');
 $criteria->setLimit($authorPaginationLimit);
 $criteria->setStart($start);
 
 $authorCount = $authorHandler->getCount($criteria);
 $authorArray = $authorHandler->getAll($criteria);
 
-$id = \Xmf\Request::getInt('id', 0, 'GET');
+$id = Request::getInt('id', 0, 'GET');
 
 switch ($op) {
     case 'edit':
-        $authorObject = $authorHandler->get(Request::getString('id', ''));
+        $authorObject = $authorHandler->get(Request::getInt('id', 0, 'GET'));
         $form         = $authorObject->getForm();
         $form->display();
         break;
@@ -73,19 +80,56 @@ switch ($op) {
         $myid                  = $id;
         //id
         $authorObject = $authorHandler->get($myid);
+        if (!\is_object($authorObject)) {
+            redirect_header(QUOTES_URL . '/author.php', 3, _NOPERM);
+            exit;
+        }
 
         $criteria = new \CriteriaCompo();
         $criteria->setSort('id');
         $criteria->setOrder('DESC');
         $criteria->setLimit($authorPaginationLimit);
         $criteria->setStart($start);
-        $author['id']      = $authorObject->getVar('id');
+        $countryList       = \XoopsLists::getCountryList();
+        $author['id']      = (int)$authorObject->getVar('id');
         $author['name']    = $authorObject->getVar('name');
-        $author['country'] = strip_tags((string) \XoopsLists::getCountryList()[$authorObject->getVar('country')]);
-        $author['bio']     = $authorObject->getVar('bio');
+        $country           = $authorObject->getVar('country');
+        $author['country'] = \strip_tags($countryList[(string)$country] ?? (string)$country);
+        $author['bio']     = quotes_render_rich_text((string)$authorObject->getVar('bio', 'n'));
         $author['photo']   = $authorObject->getVar('photo');
+        $author['photo_url'] = quotes_author_photo_url((string)$author['photo']);
         $author['created'] = formatTimestamp($authorObject->getVar('created'), 's');
         $author['updated'] = formatTimestamp($authorObject->getVar('updated'), 's');
+        $author['url']     = QUOTES_URL . '/author.php?op=view&id=' . $author['id'];
+
+        $quoteStart    = \max(0, Request::getInt('qstart', 0, 'GET'));
+        $quoteCriteria = new \CriteriaCompo();
+        $quoteCriteria->add(new \Criteria('author_id', $author['id']));
+        $quoteCriteria->add(new \Criteria('online', 1));
+        $quoteCount = $quoteHandler->getCount($quoteCriteria);
+
+        $quoteCriteria->setSort('created');
+        $quoteCriteria->setOrder('DESC');
+        $quoteCriteria->setLimit(1);
+        $quoteCriteria->setStart($quoteStart);
+
+        $authorQuote = [];
+        foreach ($quoteHandler->getAll($quoteCriteria) as $quoteObject) {
+            $authorQuote = [
+                'id'    => (int)$quoteObject->getVar('id'),
+                'quote' => quotes_render_rich_text((string)$quoteObject->getVar('quote', 'n')),
+                'url'   => QUOTES_URL . '/quote.php?op=view&id=' . (int)$quoteObject->getVar('id'),
+            ];
+            break;
+        }
+
+        $GLOBALS['xoopsTpl']->assign('author_quote', $authorQuote);
+        $GLOBALS['xoopsTpl']->assign('author_quote_nav', [
+            'prev'  => $quoteStart > 0 ? QUOTES_URL . '/author.php?op=view&id=' . $author['id'] . '&qstart=' . ($quoteStart - 1) : '',
+            'next'  => ($quoteStart + 1) < $quoteCount ? QUOTES_URL . '/author.php?op=view&id=' . $author['id'] . '&qstart=' . ($quoteStart + 1) : '',
+            'count' => $quoteCount,
+            'index' => $quoteCount > 0 ? $quoteStart + 1 : 0,
+        ]);
 
         //       $GLOBALS['xoopsTpl']->append('author', $author);
         $keywords[] = $authorObject->getVar('name');
@@ -95,7 +139,7 @@ switch ($op) {
 
         // Display Navigation
         if ($authorCount > $authorPaginationLimit) {
-            $GLOBALS['xoopsTpl']->assign('xoops_mpageurl', QUOTE_URL . '/author.php');
+            $GLOBALS['xoopsTpl']->assign('xoops_mpageurl', QUOTES_URL . '/author.php');
             xoops_load('XoopsPageNav');
             $pagenav = new \XoopsPageNav($authorCount, $authorPaginationLimit, $start, 'op=view&id');
             $GLOBALS['xoopsTpl']->assign('pagenav', $pagenav->renderNav(4));
@@ -108,24 +152,27 @@ switch ($op) {
 
         if ($authorCount > 0) {
             $GLOBALS['xoopsTpl']->assign('author', []);
+            $countryList = \XoopsLists::getCountryList();
             foreach (array_keys($authorArray) as $i) {
-                $author['id']      = $authorArray[$i]->getVar('id');
+                $author['id']      = (int)$authorArray[$i]->getVar('id');
                 $author['name']    = $authorArray[$i]->getVar('name');
                 $author['name']    = $utility::truncateHtml($author['name'], $helper->getConfig('truncatelength'));
-                $author['country'] = strip_tags((string) \XoopsLists::getCountryList()[$authorArray[$i]->getVar('country')]);
+                $country           = (string)$authorArray[$i]->getVar('country');
+                $author['country'] = \strip_tags($countryList[$country] ?? $country);
                 $author['bio']     = $authorArray[$i]->getVar('bio');
                 $author['bio']     = $utility::truncateHtml($author['bio'], $helper->getConfig('truncatelength'));
                 $author['photo']   = $authorArray[$i]->getVar('photo');
-                $author['photo']   = $utility::truncateHtml($author['photo'], $helper->getConfig('truncatelength'));
+                $author['photo_url'] = quotes_author_photo_url((string)$author['photo']);
                 $author['created'] = formatTimestamp($authorArray[$i]->getVar('created'), 's');
                 $author['updated'] = formatTimestamp($authorArray[$i]->getVar('updated'), 's');
+                $author['url']     = QUOTES_URL . '/author.php?op=view&id=' . $author['id'];
                 $GLOBALS['xoopsTpl']->append('author', $author);
                 $keywords[] = $authorArray[$i]->getVar('name');
                 unset($author);
             }
             // Display Navigation
             if ($authorCount > $authorPaginationLimit) {
-                $GLOBALS['xoopsTpl']->assign('xoops_mpageurl', QUOTE_URL . '/author.php');
+                $GLOBALS['xoopsTpl']->assign('xoops_mpageurl', QUOTES_URL . '/author.php');
                 xoops_load('XoopsPageNav');
                 $pagenav = new \XoopsPageNav($authorCount, $authorPaginationLimit, $start, 'start');
                 $GLOBALS['xoopsTpl']->assign('pagenav', $pagenav->renderNav(4));
@@ -138,16 +185,25 @@ if (isset($keywords)) {
     $utility::metaKeywords($helper->getConfig('keywords') . ', ' . implode(', ', $keywords));
 }
 //description
-$utility::metaDescription(MD_QUOTE_AUTHOR_DESC);
+$utility::metaDescription(MD_QUOTES_AUTHOR_DESC);
 
-$GLOBALS['xoopsTpl']->assign('xoops_mpageurl', QUOTE_URL . '/author.php');
-$GLOBALS['xoopsTpl']->assign('quote_url', QUOTE_URL);
+$GLOBALS['xoopsTpl']->assign('xoops_mpageurl', QUOTES_URL . '/author.php');
+$GLOBALS['xoopsTpl']->assign('quotes_url', QUOTES_URL);
 $GLOBALS['xoopsTpl']->assign('adv', $helper->getConfig('advertise'));
 
 $GLOBALS['xoopsTpl']->assign('bookmarks', $helper->getConfig('bookmarks'));
 $GLOBALS['xoopsTpl']->assign('fbcomments', $helper->getConfig('fbcomments'));
 
-$GLOBALS['xoopsTpl']->assign('admin', QUOTE_ADMIN);
+$GLOBALS['xoopsTpl']->assign('admin', QUOTES_ADMIN);
 $GLOBALS['xoopsTpl']->assign('copyright', $copyright);
 
 require XOOPS_ROOT_PATH . '/footer.php';
+
+function quotes_author_photo_url(string $photo): string
+{
+    if ('blank.png' === \strtolower($photo)) {
+        return '';
+    }
+
+    return '' !== $photo ? QUOTES_UPLOAD_URL . '/author/' . \rawurlencode($photo) : '';
+}

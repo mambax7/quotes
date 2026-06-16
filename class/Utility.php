@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace XoopsModules\Quote;
+namespace XoopsModules\Quotes;
 
 /*
  You may not change or alter any portion of this comment or credits
@@ -13,20 +13,21 @@ namespace XoopsModules\Quote;
 */
 
 /**
- * Module: Quote
+ * Module: Quotes
  *
  * @category        Module
  * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
+ * @copyright       2000-2026 XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 
-use XoopsModules\Quote;
+use XoopsModules\Mtools;
+use XoopsModules\Quotes;
 
 /**
  * Class Utility
  */
-class Utility extends Common\SysUtility
+class Utility extends Mtools\Common\SysUtility
 {
     //--------------- Custom module methods -----------------------------
 }

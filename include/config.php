@@ -9,12 +9,15 @@
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 */
+
+use Xmf\Module\Admin;
+
 /**
- * Module: Quote
+ * Module: Quotes
  *
  * @category        Module
  * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
+ * @copyright       2000-2026 XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 function getConfig()
@@ -67,8 +70,7 @@ function getConfig()
             '/images',
         ],
 
-        'renameTables' => [
-            //         'XX_archive'     => 'ZZZZ_archive',
+        'renameTables' => [//         'XX_archive'     => 'ZZZZ_archive',
         ],
         'moduleStats'  => [
             //            'totalcategories' => $helper->getHandler('Category')->getCategoriesCount(-1),
@@ -76,6 +78,6 @@ function getConfig()
             //            'totalsubmitted'  => $helper->getHandler('Item')->getItemsCount(-1, [Constants::PUBLISHER_STATUS_SUBMITTED]),
         ],
         'modCopyright' => "<a href='https://xoops.org' title='XOOPS Project' target='_blank'>
-                     <img src='" . \Xmf\Module\Admin::iconUrl('xoopsmicrobutton.gif') . '\' alt=\'XOOPS Project\' ></a>',
+                     <img src='" . Admin::iconUrl('xoopsmicrobutton.gif') . '\' alt=\'XOOPS Project\' ></a>',
     ];
 }

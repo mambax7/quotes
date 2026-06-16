@@ -10,35 +10,35 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 */
 /**
- * Module: Quote
+ * Module: Quotes
  *
  * @category        Module
  * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
+ * @copyright       2000-2026 XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 
 // Main
-define('MB_QUOTE_DISPLAY', 'How Many Tables to Display');
-define('MB_QUOTE_TITLELENGTH', 'Title Length');
-define('MB_QUOTE_CATTODISPLAY', 'Categories to Display');
-define('MB_QUOTE_ALLCAT', 'All Categories');
-define('MB_QUOTE_WAITING', 'Submission is waiting');
+define('MB_QUOTES_DISPLAY', 'How Many Tables to Display');
+define('MB_QUOTES_TITLELENGTH', 'Title Length');
+define('MB_QUOTES_CATTODISPLAY', 'Categories to Display');
+define('MB_QUOTES_ALLCAT', 'All Categories');
+define('MB_QUOTES_WAITING', 'Submission is waiting');
 
-define('MB_QUOTE_ID', 'Id');
-define('MB_QUOTE_CID', 'Cid');
-define('MB_QUOTE_AUTHOR_ID', 'Author id');
-define('MB_QUOTE_QUOTE', 'Quote');
-define('MB_QUOTE_ONLINE', 'Online');
-define('MB_QUOTE_CREATED', 'Created');
-define('MB_QUOTE_UPDATED', 'Updated');
-define('MB_QUOTE_PID', 'Pid');
-define('MB_QUOTE_TITLE', 'Title');
-define('MB_QUOTE_DESCRIPTION', 'Description');
-define('MB_QUOTE_IMAGE', 'Image');
-define('MB_QUOTE_WEIGHT', 'Weight');
-define('MB_QUOTE_COLOR', 'Color');
-define('MB_QUOTE_NAME', 'Name');
-define('MB_QUOTE_COUNTRY', 'Country');
-define('MB_QUOTE_BIO', 'Bio');
-define('MB_QUOTE_PHOTO', 'Photo');
+define('MB_QUOTES_ID', 'Id');
+define('MB_QUOTES_CID', 'Cid');
+define('MB_QUOTES_AUTHOR_ID', 'Author id');
+define('MB_QUOTES_QUOTE', 'Quote');
+define('MB_QUOTES_CREATED', 'Created');
+define('MB_QUOTES_UPDATED', 'Updated');
+define('MB_QUOTES_PID', 'Pid');
+define('MB_QUOTES_TITLE', 'Title');
+define('MB_QUOTES_DESCRIPTION', 'Description');
+define('MB_QUOTES_IMAGE', 'Image');
+define('MB_QUOTES_WEIGHT', 'Weight');
+define('MB_QUOTES_COLOR', 'Color');
+define('MB_QUOTES_ONLINE', 'Online');
+define('MB_QUOTES_NAME', 'Name');
+define('MB_QUOTES_COUNTRY', 'Country');
+define('MB_QUOTES_BIO', 'Bio');
+define('MB_QUOTES_PHOTO', 'Photo');

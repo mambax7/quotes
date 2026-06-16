@@ -11,20 +11,27 @@
 */
 
 /**
- * Module: Quote
+ * Module: Quotes
  *
  * @category        Module
  * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
+ * @copyright       2000-2026 XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 
-use XoopsModules\Quote;
+use Xmf\Module\Admin;
+use Xmf\Request;
+use XoopsModules\Mtools;
+use XoopsModules\Quotes\Helper;
 
+/** @var Admin $adminObject */
+/** @var Helper $helper */
 require_once __DIR__ . '/admin_header.php';
 xoops_cp_header();
 
 $adminObject->displayNavigation(basename(__FILE__));
+$moduleDirNameUpper = \mb_strtoupper($helper->getDirname());
+$tokenHtml = $GLOBALS['xoopsSecurity']->getTokenHTML();
 
 echo <<<EOF
     <form method="post" class="form-inline">
@@ -37,19 +44,20 @@ echo <<<EOF
     <div class="form-group">
     <input name="schema" class="btn btn-default" type="submit" value="Write Schema">
     </div>
+    {$tokenHtml}
     </form>
     EOF;
 
-/** @var Quote\Common\Configurator $configurator */
-$configurator = new Quote\Common\Configurator();
+/** @var Mtools\Common\Configurator $configurator */
+$configurator = new Mtools\Common\Configurator($helper->path());
 
-/** @var \XoopsModules\Quote\Common\Migrate $migrator */
-$migrator = new \XoopsModules\Quote\Common\Migrate($configurator);
+/** @var Mtools\Common\Migrate $migrator */
+$migrator = new Mtools\Common\Migrate($configurator);
 
-$op        = \Xmf\Request::getCmd('op', 'show');
-$opShow    = \Xmf\Request::getCmd('show', null, 'POST');
-$opMigrate = \Xmf\Request::getCmd('migrate', null, 'POST');
-$opSchema  = \Xmf\Request::getCmd('schema', null, 'POST');
+$op        = Request::getCmd('op', 'show', 'REQUEST');
+$opShow    = Request::getCmd('show', '', 'POST');
+$opMigrate = Request::getCmd('migrate', '', 'POST');
+$opSchema  = Request::getCmd('schema', '', 'POST');
 $op        = !empty($opShow) ? 'show' : $op;
 $op        = !empty($opMigrate) ? 'migrate' : $op;
 $op        = !empty($opSchema) ? 'schema' : $op;
@@ -69,17 +77,20 @@ switch ($op) {
         }
         break;
     case 'migrate':
+        if (!$GLOBALS['xoopsSecurity']->check()) {
+            redirect_header('migrate.php', 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
+        }
         $migrator->synchronizeSchema();
-        $message = constant('CO_' . $moduleDirNameUpper . '_' . 'MIGRATE_OK');
+        $message = constant('_CO_QUOTES_MIGRATE_OK');
         break;
     case 'schema':
-        xoops_confirm(['op' => 'confirmwrite'], 'migrate.php', constant('CO_' . $moduleDirNameUpper . '_' . 'MIGRATE_WARNING'), constant('CO_' . $moduleDirNameUpper . '_' . 'CONFIRM'));
+        xoops_confirm(['op' => 'confirmwrite'], 'migrate.php', constant('_CO_QUOTES_MIGRATE_WARNING'), constant('_CO_QUOTES_CONFIRM'));
         break;
     case 'confirmwrite':
         if ($GLOBALS['xoopsSecurity']->check()) {
             $migrator->saveCurrentSchema();
 
-            $message = constant('CO_' . $moduleDirNameUpper . '_' . 'MIGRATE_SCHEMA_OK');
+            $message = constant('_CO_QUOTES_MIGRATE_SCHEMA_OK');
         }
         break;
 }

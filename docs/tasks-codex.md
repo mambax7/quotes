@@ -1,6 +1,6 @@
 # Codex Tasks
 
-Audit snapshot: low risk in this quick pass; files scanned: 134; raw superglobals: 21; unsafe unserialize: 0; eval: 0; create_function: 0; each: 0.
+Audit snapshot: low risk in this quick pass; files scanned: 102; raw superglobals: 17; unsafe unserialize: 0; eval: 0; create_function: 0; each: 0.
 
 1. [ ] No single critical blocker surfaced in the quick scan; work through the modernization and verification tasks below in order.
 2. [ ] Replace raw `$_GET`/`$_POST`/`$_REQUEST`/`$_FILES` access with `Xmf\Request`, pin the source hash (`GET` vs `POST`), and ensure every state-changing path validates the XOOPS security token before any work is done.

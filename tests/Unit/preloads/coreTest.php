@@ -2,17 +2,17 @@
 
 namespace Tests\Unit;
 
-use QuoteCorePreload;
+use QuotesCorePreload;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class QuoteCorePreloadTest.
+ * Class QuotesCorePreloadTest.
  *
- * @covers \QuoteCorePreload
+ * @covers \QuotesCorePreload
  */
-final class QuoteCorePreloadTest extends TestCase
+final class QuotesCorePreloadTest extends TestCase
 {
-    private QuoteCorePreload $quoteCorePreload;
+    private QuotesCorePreload $quotesCorePreload;
 
     /**
      * {@inheritdoc}
@@ -22,7 +22,7 @@ final class QuoteCorePreloadTest extends TestCase
         parent::setUp();
 
         /** @todo Correctly instantiate tested object to use it. */
-        $this->quoteCorePreload = new QuoteCorePreload();
+        $this->quotesCorePreload = new QuotesCorePreload();
     }
 
     /**
@@ -32,7 +32,7 @@ final class QuoteCorePreloadTest extends TestCase
     {
         parent::tearDown();
 
-        unset($this->quoteCorePreload);
+        unset($this->quotesCorePreload);
     }
 
     public function testEventCoreIncludeCommonEnd(): void

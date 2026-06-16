@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace XoopsModules\Quote\Form;
+namespace XoopsModules\Quotes\Form;
 
 /*
  You may not change or alter any portion of this comment or credits
@@ -13,21 +13,22 @@ namespace XoopsModules\Quote\Form;
 */
 
 /**
- * Module: Quote
+ * Module: Quotes
  *
  * @category        Module
  * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
+ * @copyright       2000-2026 XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 
-use XoopsModules\Quote;
+use Xmf\Module\Helper\Permission;
+use XoopsModules\Quotes;
 
 require_once \dirname(__DIR__, 2) . '/include/common.php';
 
 $moduleDirName = \basename(\dirname(__DIR__, 2));
-//$helper = Quote\Helper::getInstance();
-$permHelper = new \Xmf\Module\Helper\Permission();
+//$helper = Quotes\Helper::getInstance();
+$permHelper = new Permission();
 
 \xoops_load('XoopsFormLoader');
 
@@ -49,7 +50,7 @@ class AuthorForm extends \XoopsThemeForm
         $this->helper       = $target->helper;
         $this->targetObject = $target;
 
-        $title = $this->targetObject->isNew() ? \AM_QUOTE_AUTHOR_ADD : \AM_QUOTE_AUTHOR_EDIT;
+        $title = $this->targetObject->isNew() ? \AM_QUOTES_AUTHOR_ADD : \AM_QUOTES_AUTHOR_EDIT;
         parent::__construct($title, 'form', \xoops_getenv('SCRIPT_NAME'), 'post', true);
         $this->setExtra('enctype="multipart/form-data"');
 
@@ -60,11 +61,11 @@ class AuthorForm extends \XoopsThemeForm
         unset($hidden);
 
         // Id
-        $this->addElement(new \XoopsFormLabel(\AM_QUOTE_AUTHOR_ID, $this->targetObject->getVar('id'), 'id'));
+        $this->addElement(new \XoopsFormLabel(\AM_QUOTES_AUTHOR_ID, $this->targetObject->getVar('id'), 'id'));
         // Name
-        $this->addElement(new \XoopsFormText(\AM_QUOTE_AUTHOR_NAME, 'name', 50, 255, $this->targetObject->getVar('name')), false);
+        $this->addElement(new \XoopsFormText(\AM_QUOTES_AUTHOR_NAME, 'name', 50, 255, $this->targetObject->getVar('name')), false);
         // Country
-        $this->addElement(new \XoopsFormSelectCountry(\AM_QUOTE_AUTHOR_COUNTRY, 'country', $this->targetObject->getVar('country')), false);
+        $this->addElement(new \XoopsFormSelectCountry(\AM_QUOTES_AUTHOR_COUNTRY, 'country', $this->targetObject->getVar('country')), false);
         // Bio
         if (\class_exists('XoopsFormEditor')) {
             $editorOptions           = [];
@@ -74,40 +75,40 @@ class AuthorForm extends \XoopsThemeForm
             $editorOptions['cols']   = 40;
             $editorOptions['width']  = '100%';
             $editorOptions['height'] = '400px';
-            //$editorOptions['editor'] = xoops_getModuleOption('quote_editor', 'quote');
-            //$this->addElement( new \XoopsFormEditor(AM_QUOTE_AUTHOR_BIO, 'bio', $editorOptions), false  );
+            //$editorOptions['editor'] = xoops_getModuleOption('quotes_editor', 'quotes');
+            //$this->addElement( new \XoopsFormEditor(AM_QUOTES_AUTHOR_BIO, 'bio', $editorOptions), false  );
             if ($this->helper->isUserAdmin()) {
-                $descEditor = new \XoopsFormEditor(\AM_QUOTE_AUTHOR_BIO, $this->helper->getConfig('quoteEditorAdmin'), $editorOptions, $nohtml = false, $onfailure = 'textarea');
+                $descEditor = new \XoopsFormEditor(\AM_QUOTES_AUTHOR_BIO, $this->helper->getConfig('quotesEditorAdmin'), $editorOptions, $nohtml = false, $onfailure = 'textarea');
             } else {
-                $descEditor = new \XoopsFormEditor(\AM_QUOTE_AUTHOR_BIO, $this->helper->getConfig('quoteEditorUser'), $editorOptions, $nohtml = false, $onfailure = 'textarea');
+                $descEditor = new \XoopsFormEditor(\AM_QUOTES_AUTHOR_BIO, $this->helper->getConfig('quotesEditorUser'), $editorOptions, $nohtml = false, $onfailure = 'textarea');
             }
         } else {
-            $descEditor = new \XoopsFormDhtmlTextArea(\AM_QUOTE_AUTHOR_BIO, 'description', $this->targetObject->getVar('description', 'e'), 5, 50);
+            $descEditor = new \XoopsFormDhtmlTextArea(\AM_QUOTES_AUTHOR_BIO, 'description', $this->targetObject->getVar('description', 'e'), 5, 50);
         }
         $this->addElement($descEditor);
         // Photo
         $photo = $this->targetObject->getVar('photo') ?: 'blank.png';
 
-        $uploadDir   = '/uploads/quote/images/';
-        $imgtray     = new \XoopsFormElementTray(\AM_QUOTE_AUTHOR_PHOTO, '<br>');
-        $imgpath     = \sprintf(\AM_QUOTE_FORMIMAGE_PATH, $uploadDir);
+        $uploadDir   = '/uploads/quotes/author/';
+        $imgtray     = new \XoopsFormElementTray(\AM_QUOTES_AUTHOR_PHOTO, '<br>');
+        $imgpath     = \sprintf(\AM_QUOTES_FORMIMAGE_PATH, $uploadDir);
         $imageselect = new \XoopsFormSelect($imgpath, 'photo', $photo);
         $imageArray  = \XoopsLists::getImgListAsArray(XOOPS_ROOT_PATH . $uploadDir);
         foreach ($imageArray as $image) {
-            $imageselect->addOption((string)$image, $image);
+            $imageselect->addOption($image, $image);
         }
         $imageselect->setExtra("onchange='showImgSelected(\"image_photo\", \"photo\", \"" . $uploadDir . '", "", "' . XOOPS_URL . "\")'");
         $imgtray->addElement($imageselect);
         $imgtray->addElement(new \XoopsFormLabel('', "<br><img src='" . XOOPS_URL . '/' . $uploadDir . '/' . $photo . "' name='image_photo' id='image_photo' alt='' style='max-width:300px' >"));
         $fileseltray = new \XoopsFormElementTray('', '<br>');
-        $fileseltray->addElement(new \XoopsFormFile(\AM_QUOTE_FORMUPLOAD, 'photo', $this->helper->getConfig('maxsize')));
+        $fileseltray->addElement(new \XoopsFormFile(\AM_QUOTES_FORMUPLOAD, 'photo', $this->helper->getConfig('maxsize')));
         $fileseltray->addElement(new \XoopsFormLabel(''));
         $imgtray->addElement($fileseltray);
         $this->addElement($imgtray);
         // Created
-        $this->addElement(new \XoopsFormTextDateSelect(\AM_QUOTE_AUTHOR_CREATED, 'created', 0, \formatTimestamp($this->targetObject->getVar('created'), 's')));
+        $this->addElement(new \XoopsFormTextDateSelect(\AM_QUOTES_AUTHOR_CREATED, 'created', 0, \formatTimestamp($this->targetObject->getVar('created'), 's')));
         // Updated
-        $this->addElement(new \XoopsFormTextDateSelect(\AM_QUOTE_AUTHOR_UPDATED, 'updated', 0, \formatTimestamp($this->targetObject->getVar('updated'), 's')));
+        $this->addElement(new \XoopsFormTextDateSelect(\AM_QUOTES_AUTHOR_UPDATED, 'updated', 0, \formatTimestamp($this->targetObject->getVar('updated'), 's')));
 
         $this->addElement(new \XoopsFormHidden('op', 'save'));
         $this->addElement(new \XoopsFormButton('', 'submit', \_SUBMIT, 'submit'));

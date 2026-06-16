@@ -10,31 +10,31 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 */
 /**
- * Module: Quote
+ * Module: Quotes
  *
  * @category        Module
  * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
+ * @copyright       2000-2026 XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 $moduleDirName      = \basename(\dirname(__DIR__, 2));
 $moduleDirNameUpper = \mb_strtoupper($moduleDirName);
 
-define('CO_' . $moduleDirNameUpper . '_' . 'FB_FORM_TITLE', 'Send a feedback');
-define('CO_' . $moduleDirNameUpper . '_' . 'FB_RECIPIENT', 'Recipient');
-define('CO_' . $moduleDirNameUpper . '_' . 'FB_NAME', 'Name');
-define('CO_' . $moduleDirNameUpper . '_' . 'FB_NAME_PLACEHOLER', 'Please enter your name');
-define('CO_' . $moduleDirNameUpper . '_' . 'FB_SITE', 'Website');
-define('CO_' . $moduleDirNameUpper . '_' . 'FB_SITE_PLACEHOLER', 'Please enter your website');
-define('CO_' . $moduleDirNameUpper . '_' . 'FB_MAIL', 'Email');
-define('CO_' . $moduleDirNameUpper . '_' . 'FB_MAIL_PLACEHOLER', 'Please enter your email');
-define('CO_' . $moduleDirNameUpper . '_' . 'FB_TYPE', 'Type of feedback');
-define('CO_' . $moduleDirNameUpper . '_' . 'FB_TYPE_SUGGESTION', 'Suggestions');
-define('CO_' . $moduleDirNameUpper . '_' . 'FB_TYPE_BUGS', 'Bugs');
-define('CO_' . $moduleDirNameUpper . '_' . 'FB_TYPE_TESTIMONIAL', 'Testimonials');
-define('CO_' . $moduleDirNameUpper . '_' . 'FB_TYPE_FEATURES', 'Features');
-define('CO_' . $moduleDirNameUpper . '_' . 'FB_TYPE_OTHERS', 'Misc');
-define('CO_' . $moduleDirNameUpper . '_' . 'FB_TYPE_CONTENT', 'Feedback content');
-define('CO_' . $moduleDirNameUpper . '_' . 'FB_SEND_FOR', 'Feedback for module ');
-define('CO_' . $moduleDirNameUpper . '_' . 'FB_SEND_SUCCESS', 'Feedback successfully sent');
-define('CO_' . $moduleDirNameUpper . '_' . 'FB_SEND_ERROR', 'An errror occurred when feedback was sent!');
+define('_CO_QUOTES_FB_FORM_TITLE', 'Send a feedback');
+define('_CO_QUOTES_FB_RECIPIENT', 'Recipient');
+define('_CO_QUOTES_FB_NAME', 'Name');
+define('_CO_QUOTES_FB_NAME_PLACEHOLER', 'Please enter your name');
+define('_CO_QUOTES_FB_SITE', 'Website');
+define('_CO_QUOTES_FB_SITE_PLACEHOLER', 'Please enter your website');
+define('_CO_QUOTES_FB_MAIL', 'Email');
+define('_CO_QUOTES_FB_MAIL_PLACEHOLER', 'Please enter your email');
+define('_CO_QUOTES_FB_TYPE', 'Type of feedback');
+define('_CO_QUOTES_FB_TYPE_SUGGESTION', 'Suggestions');
+define('_CO_QUOTES_FB_TYPE_BUGS', 'Bugs');
+define('_CO_QUOTES_FB_TYPE_TESTIMONIAL', 'Testimonials');
+define('_CO_QUOTES_FB_TYPE_FEATURES', 'Features');
+define('_CO_QUOTES_FB_TYPE_OTHERS', 'Misc');
+define('_CO_QUOTES_FB_TYPE_CONTENT', 'Feedback content');
+define('_CO_QUOTES_FB_SEND_FOR', 'Feedback for module ');
+define('_CO_QUOTES_FB_SEND_SUCCESS', 'Feedback successfully sent');
+define('_CO_QUOTES_FB_SEND_ERROR', 'An errror occurred when feedback was sent!');

@@ -5,13 +5,29 @@
 *.cs     diff=csharp
 
 # Standard to msysgit
-*.doc	 diff=astextplain
-*.DOC	 diff=astextplain
+*.doc     diff=astextplain
+*.DOC     diff=astextplain
 *.docx diff=astextplain
 *.DOCX diff=astextplain
 *.dot  diff=astextplain
 *.DOT  diff=astextplain
 *.pdf  diff=astextplain
-*.PDF	 diff=astextplain
-*.rtf	 diff=astextplain
-*.RTF	 diff=astextplain
+*.PDF     diff=astextplain
+*.rtf     diff=astextplain
+*.RTF     diff=astextplain
+
+/vendor export-ignore
+/node_modules export-ignore
+/composer.lock export-ignore
+/package.json export-ignore
+/package-lock.json export-ignore
+/yarn.lock export-ignore
+/tests export-ignore
+/.github export-ignore
+/phpstan*.neon export-ignore
+/phpunit.xml.dist export-ignore
+/phpunitgen.txt export-ignore
+/psalm.xml export-ignore
+/.php-cs-fixer.dist.php export-ignore
+/rector.php export-ignore
+/assets/src export-ignore

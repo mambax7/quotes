@@ -11,28 +11,31 @@
 */
 
 /**
- * Module: Quote
+ * Module: Quotes
  *
  * @category        Module
  * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
+ * @copyright       2000-2026 XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 
-use XoopsModules\Quote;
+use Xmf\Module\Admin;
+use XoopsModules\Quotes\Helper;
+use XoopsModules\Quotes\Utility;
 
-require \dirname(__DIR__) . '/preloads/autoloader.php';
+/** @var Admin $adminObject */
+/** @var Utility $utility */
+/** @var Helper $helper */
+require \dirname(__DIR__) . '/bootstrap.php';
 
 $moduleDirName      = \basename(\dirname(__DIR__));
 $moduleDirNameUpper = \mb_strtoupper($moduleDirName);
 
 /** @var \XoopsDatabase $db */
-/** @var \XoopsModules\Quote\Helper $helper */
-/** @var \XoopsModules\Quote\Utility $utility */
 $db      = \XoopsDatabaseFactory::getDatabaseConnection();
-$helper  = \XoopsModules\Quote\Helper::getInstance();
-$utility = new \XoopsModules\Quote\Utility();
-//$configurator = new \XoopsModules\Quote\Common\Configurator();
+$helper  = Helper::getInstance();
+$utility = new Utility();
+//$configurator = new \XoopsModules\Mtools\Common\Configurator($helper->path());
 
 $helper->loadLanguage('common');
 
@@ -43,8 +46,8 @@ $categoryHandler = $helper->getHandler('Category');
 /** @var \XoopsPersistableObjectHandler $authorHandler */
 $authorHandler = $helper->getHandler('Author');
 
-$pathIcon16 = Xmf\Module\Admin::iconUrl('', '16');
-$pathIcon32 = Xmf\Module\Admin::iconUrl('', '32');
+$pathIcon16 = Admin::iconUrl('', '16');
+$pathIcon32 = Admin::iconUrl('', '32');
 //$pathModIcon16 = $helper->getConfig('modicons16');
 //$pathModIcon32 = $helper->getConfig('modicons32');
 
@@ -61,8 +64,8 @@ if (!defined($moduleDirNameUpper . '_CONSTANTS_DEFINED')) {
     //    define($moduleDirNameUpper . '_AUTHOR_LOGOIMG', constant($moduleDirNameUpper . '_URL') . '/assets/images/logoModule.png');
     define($moduleDirNameUpper . '_UPLOAD_URL', XOOPS_UPLOAD_URL . '/' . $moduleDirName); // WITHOUT Trailing slash
     define($moduleDirNameUpper . '_UPLOAD_PATH', XOOPS_UPLOAD_PATH . '/' . $moduleDirName); // WITHOUT Trailing slash
-    define($moduleDirNameUpper . '_CAT_IMAGES_URL', XOOPS_UPLOAD_URL . ' / ' . constant($moduleDirNameUpper . '_' . 'DIRNAME') . '/images/category');
-    define($moduleDirNameUpper . '_CAT_IMAGES_PATH', XOOPS_UPLOAD_PATH . '/' . constant($moduleDirNameUpper . '_' . 'DIRNAME') . ' / images / category');
+    define($moduleDirNameUpper . '_CAT_IMAGES_URL', XOOPS_UPLOAD_URL . '/' . constant($moduleDirNameUpper . '_' . 'DIRNAME') . '/category');
+    define($moduleDirNameUpper . '_CAT_IMAGES_PATH', XOOPS_UPLOAD_PATH . '/' . constant($moduleDirNameUpper . '_' . 'DIRNAME') . '/category');
     define($moduleDirNameUpper . '_CACHE_PATH', XOOPS_UPLOAD_PATH . '/' . $moduleDirName . '/');
     define($moduleDirNameUpper . '_AUTHOR_LOGOIMG', $pathIcon32 . '/xoopsmicrobutton.gif');
     define($moduleDirNameUpper . '_CONSTANTS_DEFINED', 1);
@@ -117,6 +120,50 @@ if (is_object($helper->getModule())) {
 
     $GLOBALS['xoopsTpl']->assign('pathModIcon16', XOOPS_URL . '/modules/' . $moduleDirName . '/' . $pathModIcon16);
     $GLOBALS['xoopsTpl']->assign('pathModIcon32', $pathModIcon32);
+}
+
+if (!\function_exists('quotes_render_rich_text')) {
+function quotes_render_rich_text(string $text): string
+{
+    $text = \trim($text);
+    if ('' === $text) {
+        return '';
+    }
+    $text = \preg_replace(
+        '/<p\b([^>]*)>\s*(?:&nbsp;|&amp;nbsp;|&#160;|&amp;#160;|&#xA0;|&#xa0;|&amp;#xA0;|&amp;#xa0;|\xC2\xA0|\s)*<\/p>/iu',
+        '<p><br></p>',
+        $text
+    ) ?? $text;
+    $text = \str_replace(
+        ["\xC2\xA0", '&nbsp;', '&amp;nbsp;', '&#160;', '&amp;#160;', '&#xA0;', '&#xa0;', '&amp;#xA0;', '&amp;#xa0;'],
+        ' ',
+        $text
+    );
+
+    if (!\class_exists(\HTMLPurifier::class) && \defined('XOOPS_TRUST_PATH')) {
+        $purifierAutoloader = \XOOPS_TRUST_PATH . '/vendor/ezyang/htmlpurifier/library/HTMLPurifier.auto.php';
+        if (\is_file($purifierAutoloader)) {
+            require_once $purifierAutoloader;
+        }
+    }
+
+    if (\class_exists(\HTMLPurifier::class) && \class_exists(\HTMLPurifier_Config::class)) {
+        $config = \HTMLPurifier_Config::createDefault();
+        $config->set(
+            'HTML.Allowed',
+            'p,br,strong,b,em,i,u,s,blockquote,span[class|style],div[class|style],ul,ol,li,a[href|title|target|rel]'
+        );
+        $config->set('CSS.AllowedProperties', ['color', 'background-color', 'font-weight', 'font-style', 'text-decoration', 'text-align']);
+        $config->set('Attr.AllowedFrameTargets', ['_blank']);
+        $config->set('Cache.DefinitionImpl', null);
+
+        return (new \HTMLPurifier($config))->purify($text);
+    }
+
+    $myts = \MyTextSanitizer::getInstance();
+
+    return $myts->displayTarea($text, 1, 1, 1, 1, 0);
+}
 }
 
 xoops_loadLanguage('main', $moduleDirName);

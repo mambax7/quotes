@@ -10,97 +10,131 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 */
 
-/**
- * Module: Quote
- *
- * @category        Module
- * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
- * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
- */
+use XoopsModules\Quotes\Helper;
 
-use XoopsModules\Quote;
-use XoopsModules\Quote\Helper;
+require_once \dirname(__DIR__) . '/bootstrap.php';
 
-/**
- * @param $options
- *
- * @return array
- */
-function showQuoteCategory($options)
+if (\function_exists('xoops_loadLanguage')) {
+    \xoops_loadLanguage('blocks', 'quotes');
+    \xoops_loadLanguage('main', 'quotes');
+}
+
+function showQuotesCategory(array $options): array
 {
-    // require \dirname(__DIR__) . '/class/category.php';
-    ///  $moduleDirName = \basename(\dirname(__DIR__));
-    //$myts = \MyTextSanitizer::getInstance();
+    if (!\class_exists(Helper::class) || '' !== quotes_mtools_dependency_error()) {
+        return ['items' => []];
+    }
 
-    $block         = [];
-    $blockType     = $options[0];
-    $categoryCount = $options[1];
-    //$titleLenght = $options[2];
+    $limit       = \max(1, (int)($options[1] ?? 5));
+    $titleLength = \max(20, (int)($options[2] ?? 80));
+    $selectedIds = quotes_category_block_selected_ids($options);
 
-    /** @var Helper $helper */
-    if (!class_exists(Helper::class)) {
+    try {
+        $helper          = Helper::getInstance();
+        $categoryHandler = $helper->getHandler('Category');
+        $criteria        = new \CriteriaCompo(new \Criteria('online', 1));
+        if ([] !== $selectedIds) {
+            $criteria->add(new \Criteria('id', $selectedIds, 'IN'));
+        }
+        $criteria->setSort('weight');
+        $criteria->setOrder('ASC');
+        $criteria->setLimit($limit);
+
+        $items = [];
+        foreach ($categoryHandler->getAll($criteria) as $categoryObject) {
+            $image = quotes_category_block_image((string)$categoryObject->getVar('image'));
+            $items[] = [
+                'id'          => (int)$categoryObject->getVar('id'),
+                'title'       => (string)$categoryObject->getVar('title'),
+                'description' => quotes_category_block_excerpt((string)$categoryObject->getVar('description', 'n'), $titleLength),
+                'color'       => quotes_category_block_color((string)$categoryObject->getVar('color')),
+                'image'       => '' !== $image ? \XOOPS_UPLOAD_URL . '/quotes/category/' . \rawurlencode($image) : '',
+                'url'         => \XOOPS_URL . '/modules/quotes/category.php?op=view&id=' . (int)$categoryObject->getVar('id'),
+            ];
+        }
+
+        return [
+            'items' => $items,
+            'url'   => \XOOPS_URL . '/modules/quotes/category.php',
+        ];
+    } catch (\Throwable) {
+        return ['items' => []];
+    }
+}
+
+function editQuotesCategory(array $options): string
+{
+    $limit       = \max(1, (int)($options[1] ?? 5));
+    $titleLength = \max(20, (int)($options[2] ?? 80));
+    $selectedIds = quotes_category_block_selected_ids($options);
+
+    $form = quotes_category_block_input_row(\defined('MB_QUOTES_DISPLAY') ? \MB_QUOTES_DISPLAY : 'Items to display', 'options[1]', (string)$limit);
+    $form .= quotes_category_block_input_row(\defined('MB_QUOTES_TITLELENGTH') ? \MB_QUOTES_TITLELENGTH : 'Text length', 'options[2]', (string)$titleLength);
+    $form .= "<input type='hidden' name='options[0]' value='1'>";
+
+    if (!\class_exists(Helper::class)) {
+        return $form;
+    }
+
+    try {
+        $helper          = Helper::getInstance();
+        $categoryHandler = $helper->getHandler('Category');
+        $criteria        = new \CriteriaCompo(new \Criteria('online', 1));
+        $criteria->setSort('title');
+        $criteria->setOrder('ASC');
+
+        $form .= "<label>" . quotes_category_block_escape(\defined('MB_QUOTES_CATTODISPLAY') ? \MB_QUOTES_CATTODISPLAY : 'Items to display') . "</label><br>";
+        $form .= "<select name='options[]' multiple='multiple' size='6'>";
+        $form .= "<option value='0'" . ([] === $selectedIds ? " selected='selected'" : '') . '>' . quotes_category_block_escape(\defined('MB_QUOTES_ALLCAT') ? \MB_QUOTES_ALLCAT : 'All') . '</option>';
+        foreach ($categoryHandler->getAll($criteria) as $categoryObject) {
+            $id       = (int)$categoryObject->getVar('id');
+            $selected = \in_array($id, $selectedIds, true) ? " selected='selected'" : '';
+            $form     .= "<option value='{$id}'{$selected}>" . quotes_category_block_escape((string)$categoryObject->getVar('title')) . '</option>';
+        }
+        $form .= '</select>';
+    } catch (\Throwable) {
+        return $form;
+    }
+
+    return $form;
+}
+
+function quotes_category_block_selected_ids(array $options): array
+{
+    $raw = \array_map('intval', \array_slice($options, 3));
+    if (\in_array(0, $raw, true)) {
         return [];
     }
 
-    $helper = Helper::getInstance();
-
-    /** @var \XoopsPersistableObjectHandler $categoryHandler */
-    $categoryHandler = $helper->getHandler('Category');
-    $criteria        = new \CriteriaCompo();
-    array_shift($options);
-    array_shift($options);
-    array_shift($options);
-    if ($blockType) {
-        $criteria->add(new \Criteria('id', 0, '!='));
-        $criteria->setSort('id');
-        $criteria->setOrder('ASC');
-    }
-
-    $criteria->setLimit($categoryCount);
-    $categoryArray = $categoryHandler->getAll($criteria);
-    foreach (array_keys($categoryArray) as $i) {
-    }
-
-    return $block;
+    return \array_values(\array_filter($raw, static fn (int $id): bool => $id > 0));
 }
 
-/**
- * @param $options
- *
- * @return string
- */
-function editQuoteCategory($options)
+function quotes_category_block_excerpt(string $text, int $length): string
 {
-    //require \dirname(__DIR__) . '/class/category.php';
-    // $moduleDirName = \basename(\dirname(__DIR__));
-
-    $form = MB_QUOTE_DISPLAY;
-    $form .= "<input type='hidden' name='options[0]' value='" . $options[0] . "' >";
-    $form .= "<input name='options[1]' size='5' maxlength='255' value='" . $options[1] . "' type='text' >&nbsp;<br>";
-    $form .= MB_QUOTE_TITLELENGTH . " : <input name='options[2]' size='5' maxlength='255' value='" . $options[2] . "' type='text' ><br><br>";
-
-    /** @var \XoopsModules\Quote\Helper $helper */
-    $helper = \XoopsModules\Quote\Helper::getInstance();
-
-    /** @var \XoopsPersistableObjectHandler $categoryHandler */
-    $categoryHandler = $helper->getHandler('Category');
-
-    $criteria = new \CriteriaCompo();
-    array_shift($options);
-    array_shift($options);
-    array_shift($options);
-    $criteria->add(new \Criteria('id', 0, '!='));
-    $criteria->setSort('id');
-    $criteria->setOrder('ASC');
-    $categoryArray = $categoryHandler->getAll($criteria);
-    $form          .= MB_QUOTE_CATTODISPLAY . "<br><select name='options[]' multiple='multiple' size='5'>";
-    $form          .= "<option value='0' " . (false === in_array(0, $options, true) ? '' : "selected='selected'") . '>' . MB_QUOTE_ALLCAT . '</option>';
-    foreach (array_keys($categoryArray) as $i) {
-        $id   = $categoryArray[$i]->getVar('id');
-        $form .= "<option value='" . $id . "' " . (false === in_array($id, $options, true) ? '' : "selected='selected'") . '>' . $categoryArray[$i]->getVar('title') . '</option>';
+    $plain = \trim(\strip_tags($text));
+    if (\mb_strlen($plain, 'UTF-8') <= $length) {
+        return $plain;
     }
-    $form .= '</select>';
 
-    return $form;
+    return \rtrim(\mb_substr($plain, 0, $length - 1, 'UTF-8')) . '...';
+}
+
+function quotes_category_block_image(string $image): string
+{
+    return 'blank.png' === \strtolower($image) ? '' : $image;
+}
+
+function quotes_category_block_color(string $value): string
+{
+    return \preg_match('/^#[0-9a-f]{3}(?:[0-9a-f]{3})?$/i', $value) ? $value : '#64748b';
+}
+
+function quotes_category_block_input_row(string $label, string $name, string $value): string
+{
+    return '<label>' . quotes_category_block_escape($label) . "</label><br><input name='" . quotes_category_block_escape($name) . "' size='5' maxlength='4' value='" . quotes_category_block_escape($value) . "' type='number' min='1'><br><br>";
+}
+
+function quotes_category_block_escape(string $value): string
+{
+    return \htmlspecialchars($value, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8');
 }

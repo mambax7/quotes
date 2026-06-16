@@ -10,97 +10,136 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 */
 
-/**
- * Module: Quote
- *
- * @category        Module
- * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
- * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
- */
+use XoopsModules\Quotes\Helper;
 
-use XoopsModules\Quote;
-use XoopsModules\Quote\Helper;
+require_once \dirname(__DIR__) . '/bootstrap.php';
 
-/**
- * @param $options
- *
- * @return array
- */
-function showQuoteQuote($options)
-{
-    // require \dirname(__DIR__) . '/class/quote.php';
-    ///  $moduleDirName = \basename(\dirname(__DIR__));
-    //$myts = \MyTextSanitizer::getInstance();
-
-    $block      = [];
-    $blockType  = $options[0];
-    $quoteCount = $options[1];
-    //$titleLenght = $options[2];
-
-    /** @var Helper $helper */
-    if (!class_exists(Helper::class)) {
-        return [];
-    }
-
-    $helper = Helper::getInstance();
-
-    /** @var \XoopsPersistableObjectHandler $quoteHandler */
-    $quoteHandler = $helper->getHandler('Quote');
-    $criteria     = new \CriteriaCompo();
-    array_shift($options);
-    array_shift($options);
-    array_shift($options);
-    if ($blockType) {
-        $criteria->add(new \Criteria('id', 0, '!='));
-        $criteria->setSort('id');
-        $criteria->setOrder('ASC');
-    }
-
-    $criteria->setLimit($quoteCount);
-    $quoteArray = $quoteHandler->getAll($criteria);
-    foreach (array_keys($quoteArray) as $i) {
-    }
-
-    return $block;
+if (\function_exists('xoops_loadLanguage')) {
+    \xoops_loadLanguage('blocks', 'quotes');
+    \xoops_loadLanguage('main', 'quotes');
 }
 
-/**
- * @param $options
- *
- * @return string
- */
-function editQuoteQuote($options)
+function showQuotesQuote(array $options): array
 {
-    //require \dirname(__DIR__) . '/class/quote.php';
-    // $moduleDirName = \basename(\dirname(__DIR__));
-
-    $form = MB_QUOTE_DISPLAY;
-    $form .= "<input type='hidden' name='options[0]' value='" . $options[0] . "' >";
-    $form .= "<input name='options[1]' size='5' maxlength='255' value='" . $options[1] . "' type='text' >&nbsp;<br>";
-    $form .= MB_QUOTE_TITLELENGTH . " : <input name='options[2]' size='5' maxlength='255' value='" . $options[2] . "' type='text' ><br><br>";
-
-    /** @var \XoopsModules\Quote\Helper $helper */
-    $helper = \XoopsModules\Quote\Helper::getInstance();
-
-    /** @var \XoopsPersistableObjectHandler $quoteHandler */
-    $quoteHandler = $helper->getHandler('Quote');
-
-    $criteria = new \CriteriaCompo();
-    array_shift($options);
-    array_shift($options);
-    array_shift($options);
-    $criteria->add(new \Criteria('id', 0, '!='));
-    $criteria->setSort('id');
-    $criteria->setOrder('ASC');
-    $quoteArray = $quoteHandler->getAll($criteria);
-    $form       .= MB_QUOTE_CATTODISPLAY . "<br><select name='options[]' multiple='multiple' size='5'>";
-    $form       .= "<option value='0' " . (false === in_array(0, $options, true) ? '' : "selected='selected'") . '>' . MB_QUOTE_ALLCAT . '</option>';
-    foreach (array_keys($quoteArray) as $i) {
-        $id   = $quoteArray[$i]->getVar('id');
-        $form .= "<option value='" . $id . "' " . (false === in_array($id, $options, true) ? '' : "selected='selected'") . '>' . $quoteArray[$i]->getVar('quote') . '</option>';
+    if (!\class_exists(Helper::class) || '' !== quotes_mtools_dependency_error()) {
+        return ['items' => []];
     }
-    $form .= '</select>';
+
+    $limit       = \max(1, (int)($options[1] ?? 5));
+    $titleLength = \max(20, (int)($options[2] ?? 140));
+    $selectedIds = quotes_block_selected_ids($options);
+
+    try {
+        $helper          = Helper::getInstance();
+        $quoteHandler    = $helper->getHandler('Quote');
+        $authorHandler   = $helper->getHandler('Author');
+        $categoryHandler = $helper->getHandler('Category');
+
+        $criteria = new \CriteriaCompo();
+        $criteria->add(new \Criteria('online', 1));
+        if ([] !== $selectedIds) {
+            $criteria->add(new \Criteria('id', $selectedIds, 'IN'));
+        }
+        $criteria->setSort('created');
+        $criteria->setOrder('DESC');
+        $criteria->setLimit($limit);
+
+        $items = [];
+        foreach ($quoteHandler->getAll($criteria) as $quoteObject) {
+            $authorId       = (int)$quoteObject->getVar('author_id');
+            $authorObject   = $authorHandler->get($authorId);
+            $categoryObject = $categoryHandler->get((int)$quoteObject->getVar('cid'));
+            $quoteText      = (string)$quoteObject->getVar('quote', 'n');
+
+            $items[] = [
+                'id'       => (int)$quoteObject->getVar('id'),
+                'quote'    => quotes_block_plain($quoteText),
+                'full'     => $quoteText,
+                'author'   => \is_object($authorObject) ? (string)$authorObject->getVar('name') : '',
+                'author_url' => $authorId > 0 ? \XOOPS_URL . '/modules/quotes/author.php?op=view&id=' . $authorId : '',
+                'category' => \is_object($categoryObject) ? (string)$categoryObject->getVar('title') : '',
+                'date'     => \formatTimestamp((int)$quoteObject->getVar('created'), 's'),
+                'url'      => \XOOPS_URL . '/modules/quotes/quote.php?op=view&id=' . (int)$quoteObject->getVar('id'),
+            ];
+        }
+
+        return [
+            'items' => $items,
+            'url'   => \XOOPS_URL . '/modules/quotes/quote.php',
+        ];
+    } catch (\Throwable) {
+        return ['items' => []];
+    }
+}
+
+function editQuotesQuote(array $options): string
+{
+    $limit       = \max(1, (int)($options[1] ?? 5));
+    $titleLength = \max(20, (int)($options[2] ?? 140));
+    $selectedIds = quotes_block_selected_ids($options);
+
+    $form = quotes_block_input_row(\defined('MB_QUOTES_DISPLAY') ? \MB_QUOTES_DISPLAY : 'Items to display', 'options[1]', (string)$limit);
+    $form .= quotes_block_input_row(\defined('MB_QUOTES_TITLELENGTH') ? \MB_QUOTES_TITLELENGTH : 'Text length', 'options[2]', (string)$titleLength);
+    $form .= "<input type='hidden' name='options[0]' value='1'>";
+
+    if (!\class_exists(Helper::class)) {
+        return $form;
+    }
+
+    try {
+        $helper       = Helper::getInstance();
+        $quoteHandler = $helper->getHandler('Quote');
+        $criteria     = new \CriteriaCompo(new \Criteria('online', 1));
+        $criteria->setSort('id');
+        $criteria->setOrder('ASC');
+        $quoteArray = $quoteHandler->getAll($criteria);
+
+        $form .= "<label>" . quotes_block_escape(\defined('MB_QUOTES_CATTODISPLAY') ? \MB_QUOTES_CATTODISPLAY : 'Items to display') . "</label><br>";
+        $form .= "<select name='options[]' multiple='multiple' size='6'>";
+        $form .= "<option value='0'" . ([] === $selectedIds ? " selected='selected'" : '') . '>' . quotes_block_escape(\defined('MB_QUOTES_ALLCAT') ? \MB_QUOTES_ALLCAT : 'All') . '</option>';
+        foreach ($quoteArray as $quoteObject) {
+            $id       = (int)$quoteObject->getVar('id');
+            $selected = \in_array($id, $selectedIds, true) ? " selected='selected'" : '';
+            $label    = quotes_block_excerpt((string)$quoteObject->getVar('quote', 'n'), 70);
+            $form     .= "<option value='{$id}'{$selected}>" . quotes_block_escape($label) . '</option>';
+        }
+        $form .= '</select>';
+    } catch (\Throwable) {
+        return $form;
+    }
 
     return $form;
+}
+
+function quotes_block_selected_ids(array $options): array
+{
+    $selected = \array_slice($options, 3);
+    $selected = \array_values(\array_filter(\array_map('intval', $selected), static fn (int $id): bool => $id > 0));
+
+    return \in_array(0, \array_map('intval', \array_slice($options, 3)), true) ? [] : $selected;
+}
+
+function quotes_block_excerpt(string $text, int $length): string
+{
+    $plain = quotes_block_plain($text);
+    if (\mb_strlen($plain, 'UTF-8') <= $length) {
+        return $plain;
+    }
+
+    return \rtrim(\mb_substr($plain, 0, $length - 1, 'UTF-8')) . '...';
+}
+
+function quotes_block_plain(string $text): string
+{
+    return \trim(\preg_replace('/\s+/u', ' ', \html_entity_decode(\strip_tags($text), \ENT_QUOTES | \ENT_HTML5, 'UTF-8')) ?? '');
+}
+
+function quotes_block_input_row(string $label, string $name, string $value): string
+{
+    return '<label>' . quotes_block_escape($label) . "</label><br><input name='" . quotes_block_escape($name) . "' size='5' maxlength='4' value='" . quotes_block_escape($value) . "' type='number' min='1'><br><br>";
+}
+
+function quotes_block_escape(string $value): string
+{
+    return \htmlspecialchars($value, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8');
 }

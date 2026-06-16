@@ -1,6 +1,6 @@
 CREDITS
 =============
 
-Originally created by the XOOPS Development Team.
+Originally created by Michael Beck (aka Mamba): https://github.com/mambax7
 
 

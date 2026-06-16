@@ -1,18 +1,18 @@
 <?php
 
-namespace Tests\Unit\XoopsModules\Quote;
+namespace Tests\Unit\XoopsModules\Quotes;
 
 use Mockery;
 use Mockery\Mock;
 use PHPUnit\Framework\TestCase;
 use XoopsDatabase;
-use XoopsModules\Quote\CategoryHandler;
-use XoopsModules\Quote\Helper;
+use XoopsModules\Quotes\CategoryHandler;
+use XoopsModules\Quotes\Helper;
 
 /**
  * Class CategoryHandlerTest.
  *
- * @covers \XoopsModules\Quote\CategoryHandler
+ * @covers \XoopsModules\Quotes\CategoryHandler
  */
 final class CategoryHandlerTest extends TestCase
 {

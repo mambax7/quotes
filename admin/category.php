@@ -11,32 +11,34 @@
 */
 
 /**
- * Module: Quote
+ * Module: Quotes
  *
  * @category        Module
  * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
+ * @copyright       2000-2026 XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 
+use Xmf\Module\Helper\Permission;
 use Xmf\Request;
 
 require_once __DIR__ . '/admin_header.php';
 xoops_cp_header();
 //It recovered the value of argument op in URL$
-$op    = \Xmf\Request::getString('op', 'list');
-$order = \Xmf\Request::getString('order', 'desc');
-$sort  = \Xmf\Request::getString('sort', '');
+$op    = Request::getString('op', 'list', 'REQUEST');
+$order = \strtolower(Request::getString('order', 'desc', 'GET'));
+$order = \in_array($order, ['asc', 'desc'], true) ? $order : 'desc';
+$sort  = Request::getString('sort', 'id', 'GET');
+$sort  = \in_array($sort, ['id', 'pid', 'title', 'weight', 'color', 'online'], true) ? $sort : 'id';
 
 $adminObject->displayNavigation(basename(__FILE__));
-/** @var \Xmf\Module\Helper\Permission $permHelper */
-$permHelper = new \Xmf\Module\Helper\Permission();
-$uploadDir  = XOOPS_UPLOAD_PATH . '/quote/category/';
-$uploadUrl  = XOOPS_UPLOAD_URL . '/quote/category/';
+$permHelper = new Permission();
+$uploadDir  = XOOPS_UPLOAD_PATH . '/quotes/category/';
+$uploadUrl  = XOOPS_UPLOAD_URL . '/quotes/category/';
 
 switch ($op) {
     case 'new':
-        $adminObject->addItemButton(AM_QUOTE_CATEGORY_LIST, 'category.php', 'list');
+        $adminObject->addItemButton(AM_QUOTES_CATEGORY_LIST, 'category.php', 'list');
         $adminObject->displayButton('left');
 
         $categoryObject = $categoryHandler->create();
@@ -47,18 +49,18 @@ switch ($op) {
         if (!$GLOBALS['xoopsSecurity']->check()) {
             redirect_header('category.php', 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
         }
-        if (0 !== \Xmf\Request::getInt('id', 0)) {
-            $categoryObject = $categoryHandler->get(Request::getInt('id', 0));
+        if (0 !== Request::getInt('id', 0, 'POST')) {
+            $categoryObject = $categoryHandler->get(Request::getInt('id', 0, 'POST'));
         } else {
             $categoryObject = $categoryHandler->create();
         }
         // Form save fields
-        $categoryObject->setVar('pid', Request::getVar('pid', ''));
-        $categoryObject->setVar('title', Request::getVar('title', ''));
-        $categoryObject->setVar('description', Request::getText('description', ''));
+        $categoryObject->setVar('pid', Request::getInt('pid', 0, 'POST'));
+        $categoryObject->setVar('title', Request::getString('title', '', 'POST'));
+        $categoryObject->setVar('description', Request::getText('description', '', 'POST'));
 
         require_once XOOPS_ROOT_PATH . '/class/uploader.php';
-        $uploadDir = XOOPS_UPLOAD_PATH . '/quote/images/';
+        $uploadDir = XOOPS_UPLOAD_PATH . '/quotes/category/';
         $uploader  = new \XoopsMediaUploader(
             $uploadDir,
             $helper->getConfig('mimetypes'),
@@ -66,12 +68,14 @@ switch ($op) {
             null,
             null
         );
-        if ($uploader->fetchMedia(Request::getArray('xoops_upload_file', '', 'POST')[0])) {
+        $uploadFields = Request::getArray('xoops_upload_file', [], 'POST');
+        $uploadField  = (string)($uploadFields[0] ?? '');
+        if ('' !== $uploadField && $uploader->fetchMedia($uploadField)) {
             //$extension = preg_replace( '/^.+\.([^.]+)$/sU' , '' , $_FILES['attachedfile']['name']);
             //$imgName = str_replace(' ', '', $_POST['image']).'.'.$extension;
 
             $uploader->setPrefix('image_');
-            $uploader->fetchMedia(Request::getArray('xoops_upload_file', '', 'POST')[0]);
+            $uploader->fetchMedia($uploadField);
             if (!$uploader->upload()) {
                 $errors = $uploader->getErrors();
                 redirect_header('javascript:history.go(-1)', 3, $errors);
@@ -79,19 +83,19 @@ switch ($op) {
                 $categoryObject->setVar('image', $uploader->getSavedFileName());
             }
         } else {
-            $categoryObject->setVar('image', Request::getVar('image', ''));
+            $categoryObject->setVar('image', Request::getString('image', '', 'POST'));
         }
 
-        $categoryObject->setVar('weight', Request::getVar('weight', ''));
-        $categoryObject->setVar('color', Request::getVar('color', ''));
-        $categoryObject->setVar('online', ((1 == \Xmf\Request::getInt('online', 0)) ? '1' : '0'));
+        $categoryObject->setVar('weight', Request::getInt('weight', 0, 'POST'));
+        $categoryObject->setVar('color', Request::getString('color', '', 'POST'));
+        $categoryObject->setVar('online', ((1 === Request::getInt('online', 0, 'POST')) ? '1' : '0'));
         //Permissions
         //===============================================================
 
         $mid = $GLOBALS['xoopsModule']->mid();
         /** @var \XoopsGroupPermHandler $grouppermHandler */
         $grouppermHandler = xoops_getHandler('groupperm');
-        $id               = \Xmf\Request::getInt('id', 0);
+        $id               = Request::getInt('id', 0, 'POST');
 
         /**
          * @param $myArray
@@ -105,8 +109,7 @@ switch ($op) {
         {
             $permissionArray = $myArray;
             if ($id > 0) {
-                $sql = 'DELETE FROM `' . $GLOBALS['xoopsDB']->prefix('group_permission') . "` WHERE `gperm_name` = '" . $permissionName
-                       . "' AND `gperm_itemid`= $id;";
+                $sql = 'DELETE FROM `' . $GLOBALS['xoopsDB']->prefix('group_permission') . '` WHERE `gperm_name` = ' . $GLOBALS['xoopsDB']->quote((string)$permissionName) . ' AND `gperm_itemid`= ' . (int)$id;
                 $GLOBALS['xoopsDB']->exec($sql);
             }
             //admin
@@ -143,50 +146,50 @@ switch ($op) {
 
         //setPermissions for View items
         $permissionGroup   = 'groupsRead';
-        $permissionName    = 'quote_view';
-        $permissionArray   = \Xmf\Request::getArray($permissionGroup, '');
+        $permissionName    = 'quotes_view';
+        $permissionArray   = Request::getArray($permissionGroup, [], 'POST');
         $permissionArray[] = XOOPS_GROUP_ADMIN;
         //setPermissions($permissionArray, $permissionGroup, $id, $grouppermHandler, $permissionName, $mid);
         $permHelper->savePermissionForItem($permissionName, $id, $permissionArray);
 
         //setPermissions for Submit items
         $permissionGroup   = 'groupsSubmit';
-        $permissionName    = 'quote_submit';
-        $permissionArray   = \Xmf\Request::getArray($permissionGroup, '');
+        $permissionName    = 'quotes_submit';
+        $permissionArray   = Request::getArray($permissionGroup, [], 'POST');
         $permissionArray[] = XOOPS_GROUP_ADMIN;
         //setPermissions($permissionArray, $permissionGroup, $id, $grouppermHandler, $permissionName, $mid);
         $permHelper->savePermissionForItem($permissionName, $id, $permissionArray);
 
         //setPermissions for Approve items
         $permissionGroup   = 'groupsModeration';
-        $permissionName    = 'quote_approve';
-        $permissionArray   = \Xmf\Request::getArray($permissionGroup, '');
+        $permissionName    = 'quotes_approve';
+        $permissionArray   = Request::getArray($permissionGroup, [], 'POST');
         $permissionArray[] = XOOPS_GROUP_ADMIN;
         //setPermissions($permissionArray, $permissionGroup, $id, $grouppermHandler, $permissionName, $mid);
         $permHelper->savePermissionForItem($permissionName, $id, $permissionArray);
 
         /*
-                    //Form quote_view
-                    $arr_quote_view = \Xmf\Request::getArray('cat_gperms_read');
+                    //Form quotes_view
+                    $arr_quotes_view = Request::getArray('cat_gperms_read');
                     if ($id > 0) {
                         $sql
                             =
-                            'DELETE FROM `' . $GLOBALS['xoopsDB']->prefix('group_permission') . "` WHERE `gperm_name`='quote_view' AND `gperm_itemid`=$id;";
+                            'DELETE FROM `' . $GLOBALS['xoopsDB']->prefix('group_permission') . "` WHERE `gperm_name`='quotes_view' AND `gperm_itemid`=$id;";
                         $GLOBALS['xoopsDB']->exec($sql);
                     }
                     //admin
                     $gperm = $grouppermHandler->create();
                     $gperm->setVar('gperm_groupid', XOOPS_GROUP_ADMIN);
-                    $gperm->setVar('gperm_name', 'quote_view');
+                    $gperm->setVar('gperm_name', 'quotes_view');
                     $gperm->setVar('gperm_modid', $mid);
                     $gperm->setVar('gperm_itemid', $id);
                     $grouppermHandler->insert($gperm);
                     unset($gperm);
-                    if (is_array($arr_quote_view)) {
-                        foreach ($arr_quote_view as $key => $cat_groupperm) {
+                    if (is_array($arr_quotes_view)) {
+                        foreach ($arr_quotes_view as $key => $cat_groupperm) {
                             $gperm = $grouppermHandler->create();
                             $gperm->setVar('gperm_groupid', $cat_groupperm);
-                            $gperm->setVar('gperm_name', 'quote_view');
+                            $gperm->setVar('gperm_name', 'quotes_view');
                             $gperm->setVar('gperm_modid', $mid);
                             $gperm->setVar('gperm_itemid', $id);
                             $grouppermHandler->insert($gperm);
@@ -194,8 +197,8 @@ switch ($op) {
                         }
                     } else {
                         $gperm = $grouppermHandler->create();
-                        $gperm->setVar('gperm_groupid', $arr_quote_view);
-                        $gperm->setVar('gperm_name', 'quote_view');
+                        $gperm->setVar('gperm_groupid', $arr_quotes_view);
+                        $gperm->setVar('gperm_name', 'quotes_view');
                         $gperm->setVar('gperm_modid', $mid);
                         $gperm->setVar('gperm_itemid', $id);
                         $grouppermHandler->insert($gperm);
@@ -206,7 +209,7 @@ switch ($op) {
         //===============================================================
 
         if ($categoryHandler->insert($categoryObject)) {
-            redirect_header('category.php?op=list', 2, AM_QUOTE_FORMOK);
+            redirect_header('category.php?op=list', 2, AM_QUOTES_FORMOK);
         }
 
         echo $categoryObject->getHtmlErrors();
@@ -214,43 +217,64 @@ switch ($op) {
         $form->display();
         break;
     case 'edit':
-        $adminObject->addItemButton(AM_QUOTE_ADD_CATEGORY, 'category.php?op=new', 'add');
-        $adminObject->addItemButton(AM_QUOTE_CATEGORY_LIST, 'category.php', 'list');
+        $adminObject->addItemButton(AM_QUOTES_ADD_CATEGORY, 'category.php?op=new', 'add');
+        $adminObject->addItemButton(AM_QUOTES_CATEGORY_LIST, 'category.php', 'list');
         $adminObject->displayButton('left');
-        $categoryObject = $categoryHandler->get(Request::getString('id', ''));
+        $categoryObject = $categoryHandler->get(Request::getInt('id', 0, 'GET'));
         $form           = $categoryObject->getForm();
         $form->display();
         break;
     case 'delete':
-        $categoryObject = $categoryHandler->get(Request::getString('id', ''));
-        if (1 == \Xmf\Request::getInt('ok', 0)) {
+        $selectedIds = \array_filter(\array_map('intval', Request::getArray('category_id', [], 'POST')));
+        $postedIds   = \array_filter(\array_map('intval', \explode(',', Request::getString('ids', '', 'POST'))));
+        $deleteIds   = $postedIds ?: $selectedIds;
+
+        if (1 === Request::getInt('ok', 0, 'POST')) {
             if (!$GLOBALS['xoopsSecurity']->check()) {
                 redirect_header('category.php', 3, implode(', ', $GLOBALS['xoopsSecurity']->getErrors()));
             }
-            if ($categoryHandler->delete($categoryObject)) {
-                redirect_header('category.php', 3, AM_QUOTE_FORMDELOK);
+            if ([] === $deleteIds) {
+                $deleteIds = [Request::getInt('id', 0, 'POST')];
+            }
+            $deleted = 0;
+            foreach ($deleteIds as $deleteId) {
+                $categoryObject = $categoryHandler->get($deleteId);
+                if (\is_object($categoryObject) && $categoryHandler->delete($categoryObject)) {
+                    ++$deleted;
+                }
+            }
+            if ($deleted > 0) {
+                redirect_header('category.php', 3, AM_QUOTES_FORMDELOK);
             } else {
-                echo $categoryObject->getHtmlErrors();
+                redirect_header('category.php', 3, _ERRORS);
             }
         } else {
-            xoops_confirm(['ok' => 1, 'id' => Request::getString('id', ''), 'op' => 'delete'], Request::getUrl('REQUEST_URI', '', 'SERVER'), sprintf(AM_QUOTE_FORMSUREDEL, $categoryObject->getVar('title')));
+            if ([] !== $deleteIds) {
+                xoops_confirm(['ok' => 1, 'ids' => \implode(',', $deleteIds), 'op' => 'delete'], Request::getUrl('REQUEST_URI', '', 'SERVER'), sprintf(AM_QUOTES_FORMSUREDEL, \implode(', ', $deleteIds)));
+                break;
+            }
+            $categoryObject = $categoryHandler->get(Request::getInt('id', 0, 'GET'));
+            if (!\is_object($categoryObject)) {
+                redirect_header('category.php', 3, _ERRORS);
+            }
+            xoops_confirm(['ok' => 1, 'id' => Request::getInt('id', 0, 'GET'), 'op' => 'delete'], Request::getUrl('REQUEST_URI', '', 'SERVER'), sprintf(AM_QUOTES_FORMSUREDEL, $categoryObject->getVar('title')));
         }
         break;
     case 'clone':
-        $id_field = \Xmf\Request::getString('id', '');
+        $id_field = Request::getInt('id', 0, 'GET');
 
-        if ($utility::cloneRecord('quote_category', 'id', $id_field)) {
-            redirect_header('category.php', 3, AM_QUOTE_CLONED_OK);
+        if ($utility::cloneRecord('quotes_category', 'id', $id_field)) {
+            redirect_header('category.php', 3, AM_QUOTES_CLONED_OK);
         } else {
-            redirect_header('category.php', 3, AM_QUOTE_CLONED_FAILED);
+            redirect_header('category.php', 3, AM_QUOTES_CLONED_FAILED);
         }
 
         break;
     case 'list':
     default:
-        $adminObject->addItemButton(AM_QUOTE_ADD_CATEGORY, 'category.php?op=new', 'add');
+        $adminObject->addItemButton(AM_QUOTES_ADD_CATEGORY, 'category.php?op=new', 'add');
         $adminObject->displayButton('left');
-        $start                   = \Xmf\Request::getInt('start', 0);
+        $start                   = Request::getInt('start', 0, 'GET');
         $categoryPaginationLimit = $helper->getConfig('userpager');
 
         $criteria = new \CriteriaCompo();
@@ -263,7 +287,7 @@ switch ($op) {
         /*
         //
         //
-                            <th class='center width5'>".AM_QUOTE_FORM_ACTION."</th>
+                            <th class='center width5'>".AM_QUOTES_FORM_ACTION."</th>
         //                    </tr>";
         //            $class = "odd";
         */
@@ -279,7 +303,7 @@ switch ($op) {
                 'start',
                 'op=list' . '&sort=' . $sort . '&order=' . $order
             );
-            $GLOBALS['xoopsTpl']->assign('pagenav', null === $pagenav ? $pagenav->renderNav() : '');
+            $GLOBALS['xoopsTpl']->assign('pagenav', $pagenav->renderNav());
         }
 
         $GLOBALS['xoopsTpl']->assign('categoryRows', $categoryTempRows);
@@ -304,39 +328,39 @@ switch ($op) {
             foreach (array_keys($categoryTempArray) as $i) {
                 //        $field = explode(':', $fields[$i]);
 
-                $GLOBALS['xoopsTpl']->assign('selectorid', AM_QUOTE_CATEGORY_ID);
+                $GLOBALS['xoopsTpl']->assign('selectorid', AM_QUOTES_CATEGORY_ID);
                 $categoryArray['id'] = $categoryTempArray[$i]->getVar('id');
 
-                $GLOBALS['xoopsTpl']->assign('selectorpid', AM_QUOTE_CATEGORY_PID);
+                $GLOBALS['xoopsTpl']->assign('selectorpid', AM_QUOTES_CATEGORY_PID);
                 $categoryArray['pid'] = $categoryTempArray[$i]->getVar('pid');
 
-                $GLOBALS['xoopsTpl']->assign('selectortitle', AM_QUOTE_CATEGORY_TITLE);
+                $GLOBALS['xoopsTpl']->assign('selectortitle', AM_QUOTES_CATEGORY_TITLE);
                 $categoryArray['title'] = $categoryTempArray[$i]->getVar('title');
                 $categoryArray['title'] = $utility::truncateHtml($categoryArray['title'], $helper->getConfig('truncatelength'));
 
-                $GLOBALS['xoopsTpl']->assign('selectordescription', AM_QUOTE_CATEGORY_DESCRIPTION);
+                $GLOBALS['xoopsTpl']->assign('selectordescription', AM_QUOTES_CATEGORY_DESCRIPTION);
                 $categoryArray['description'] = $categoryTempArray[$i]->getVar('description');
                 $categoryArray['description'] = $utility::truncateHtml($categoryArray['description'], $helper->getConfig('truncatelength'));
 
-                $GLOBALS['xoopsTpl']->assign('selectorimage', AM_QUOTE_CATEGORY_IMAGE);
-                $categoryArray['image'] = "<img src='" . $uploadUrl . $categoryTempArray[$i]->getVar('image') . "' name='" . 'name' . "' id=" . 'id' . " alt='' style='max-width:100px'>";
-                $categoryArray['image'] = $utility::truncateHtml($categoryArray['image'], $helper->getConfig('truncatelength'));
+                $GLOBALS['xoopsTpl']->assign('selectorimage', AM_QUOTES_CATEGORY_IMAGE);
+                $categoryImage          = (string)$categoryTempArray[$i]->getVar('image');
+                $categoryArray['image'] = '' !== $categoryImage ? "<img src='" . $uploadUrl . \htmlspecialchars($categoryImage, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "' alt='' style='max-width:100px'>" : '';
 
-                $selectorweight = $utility::selectSorting(AM_QUOTE_CATEGORY_WEIGHT, 'weight');
+                $selectorweight = $utility::selectSorting(AM_QUOTES_CATEGORY_WEIGHT, 'weight', $helper);
                 $GLOBALS['xoopsTpl']->assign('selectorweight', $selectorweight);
                 $categoryArray['weight'] = $categoryTempArray[$i]->getVar('weight');
 
-                $selectorcolor = $utility::selectSorting(AM_QUOTE_CATEGORY_COLOR, 'color');
+                $selectorcolor = $utility::selectSorting(AM_QUOTES_CATEGORY_COLOR, 'color', $helper);
                 $GLOBALS['xoopsTpl']->assign('selectorcolor', $selectorcolor);
                 $categoryArray['color'] = $categoryTempArray[$i]->getVar('color');
 
-                $selectoronline = $utility::selectSorting(AM_QUOTE_CATEGORY_ONLINE, 'online');
+                $selectoronline = $utility::selectSorting(AM_QUOTES_CATEGORY_ONLINE, 'online', $helper);
                 $GLOBALS['xoopsTpl']->assign('selectoronline', $selectoronline);
                 $categoryArray['online']      = $categoryTempArray[$i]->getVar('online');
-                $categoryArray['edit_delete'] =
-                    "<a href='category.php?op=edit&id=" . $i . "'><img src=" . $pathIcon16 . "/edit.png alt='" . _EDIT . "' title='" . _EDIT . "'></a>
-               <a href='category.php?op=delete&id=" . $i . "'><img src=" . $pathIcon16 . "/delete.png alt='" . _DELETE . "' title='" . _DELETE . "'></a>
-               <a href='category.php?op=clone&id=" . $i . "'><img src=" . $pathIcon16 . "/editcopy.png alt='" . _CLONE . "' title='" . _CLONE . "'></a>";
+                $categoryId                    = (int)$categoryArray['id'];
+                $categoryArray['edit_delete'] = "<a href='category.php?op=edit&amp;id={$categoryId}'><img src='{$pathIcon16}/edit.png' alt='" . _EDIT . "' title='" . _EDIT . "'></a>
+               <a href='category.php?op=delete&amp;id={$categoryId}'><img src='{$pathIcon16}/delete.png' alt='" . _DELETE . "' title='" . _DELETE . "'></a>
+               <a href='category.php?op=clone&amp;id={$categoryId}'><img src='{$pathIcon16}/editcopy.png' alt='" . _CLONE . "' title='" . _CLONE . "'></a>";
 
                 $GLOBALS['xoopsTpl']->appendByRef('categoryArrays', $categoryArray);
                 unset($categoryArray);
@@ -373,14 +397,14 @@ switch ($op) {
 
             //                    <tr>
 
-            //                     <th class='center width5'>".AM_QUOTE_FORM_ACTION."XXX</th>
+            //                     <th class='center width5'>".AM_QUOTES_FORM_ACTION."XXX</th>
             //                    </tr><tr><td class='errorMsg' colspan='9'>There are noXXX category</td></tr>";
             //            echo "</table><br><br>";
 
             //-------------------------------------------
 
             echo $GLOBALS['xoopsTpl']->fetch(
-                XOOPS_ROOT_PATH . '/modules/' . $GLOBALS['xoopsModule']->getVar('dirname') . '/templates/admin/quote_admin_category.tpl'
+                XOOPS_ROOT_PATH . '/modules/' . $GLOBALS['xoopsModule']->getVar('dirname') . '/templates/admin/quotes_admin_category.tpl'
             );
         }
 

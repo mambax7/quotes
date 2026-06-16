@@ -10,11 +10,11 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 */
 /**
- * Module: Quote
+ * Module: Quotes
  *
  * @category        Module
  * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
+ * @copyright       2000-2026 XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 // @see https://www.php-fig.org/psr/psr-4/examples/
@@ -42,7 +42,7 @@ spl_autoload_register(static function ($class): void {
     $file = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
 
     // if the file exists, require it
-    if (file_exists($file)) {
+    if (is_file($file)) {
         require_once $file;
     }
 });

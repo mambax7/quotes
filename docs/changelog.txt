@@ -1,3 +1,13 @@
-<h5>1.0       [2020/09/05]</h5>
+<h5>1.01 Beta 1   [WORK IN PROGRESS - NOT RELEASED]</h5>  Dev: XOOPS 2.7.0, PHP 8.2, PHP 8.5
 <hr>
- - Original release Quote (XOOPS Development Team)
+- documented Quotes as the reference consumer for the mTools shared-helper architecture
+- added README requirements for XOOPS 2.7, PHP 8.2, and mtools 1.1.0+
+- added runtime mTools dependency checks with clear install/update/admin failures
+- improved quote, category, author, and block presentation while keeping UI assets local to Quotes
+- streamlined test data buttons with mTools' TestdataButtons class (mamba)
+- added usage of TestdataSample class from mTools (mamba)
+- added usage of Blocksadmin class from mTools (mamba)
+
+<h5>1.0 Beta 1      [2020/09/05]</h5>
+<hr>
+ - Beta 1 release (mamba)

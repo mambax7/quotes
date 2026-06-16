@@ -11,15 +11,20 @@
 */
 
 /**
- * Module: Quote
+ * Module: Quotes
  *
  * @category        Module
  * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
+ * @copyright       2000-2026 XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 
-use XoopsModules\Quote;
+use XoopsModules\Mtools;
+use XoopsModules\Quotes\Helper;
+use XoopsModules\Quotes\Utility;
+
+/** @var Helper $helper */
+/** @var Utility $utility */
 
 /**
  * Prepares system prior to attempting to uninstall module
@@ -27,7 +32,7 @@ use XoopsModules\Quote;
  *
  * @return bool true if ready to uninstall, false if not
  */
-function xoops_module_pre_uninstall_quote(\XoopsModule $module)
+function xoops_module_pre_uninstall_quotes(\XoopsModule $module)
 {
     // Do some synchronization if needed
     return true;
@@ -39,17 +44,15 @@ function xoops_module_pre_uninstall_quote(\XoopsModule $module)
  *
  * @return bool true if uninstallation successful, false if not
  */
-function xoops_module_uninstall_quote(\XoopsModule $module)
+function xoops_module_uninstall_quotes(\XoopsModule $module)
 {
-    require \dirname(__DIR__) . '/preloads/autoloader.php';
+    require \dirname(__DIR__) . '/bootstrap.php';
     //$moduleDirName = \basename(\dirname(__DIR__));
     //$moduleDirNameUpper = \mb_strtoupper($moduleDirName);
 
-    /** @var \XoopsModules\Quote\Helper $helper */
-    /** @var \XoopsModules\Quote\Utility $utility */
-    $helper = \XoopsModules\Quote\Helper::getInstance();
-    //$utility      = new \XoopsModules\Quote\Utility();
-    //    $configurator = new \XoopsModules\Quote\Common\Configurator();
+    $helper = Helper::getInstance();
+    //$utility      = new Utility();
+    //    $configurator = new Mtools\Common\Configurator($helper->path());
 
     // Load language files
     $helper->loadLanguage('admin');
@@ -66,7 +69,7 @@ function xoops_module_uninstall_quote(\XoopsModule $module)
             if ($dirInfo->isDir()) {
                 // The directory exists so delete it
                 if (false === $utility::rrmdir($old_dir)) {
-                    $module->setErrors(sprintf(constant('CO_' . $moduleDirNameUpper . '_' . 'ERROR_BAD_DEL_PATH'), $old_dir));
+                    $module->setErrors(sprintf(constant('_CO_QUOTES_ERROR_BAD_DEL_PATH'), $old_dir));
                     $success = false;
                 }
             }
@@ -82,7 +85,7 @@ function xoops_module_uninstall_quote(\XoopsModule $module)
     $xmlfile = $GLOBALS['xoops']->path('xsitemap.xml');
     if (is_file($xmlfile)) {
         if (false === ($delOk = unlink($xmlfile))) {
-            $module->setErrors(sprintf(constant('CO_' . $moduleDirNameUpper . '_' . 'ERROR_BAD_REMOVE'), $xmlfile));
+            $module->setErrors(sprintf(constant('_CO_QUOTES_ERROR_BAD_REMOVE'), $xmlfile));
         }
     }
 //    return $success && $delOk; // use this if you're using this routine

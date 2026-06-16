@@ -11,34 +11,50 @@
 */
 
 /**
- * Module: Quote
+ * Module: Quotes
  *
  * @category        Module
  * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
+ * @copyright       2000-2026 XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 
-use XoopsModules\Quote;
+use Xmf\Module\Admin;
+use XoopsModules\Mtools\{
+    Helper as mtoolsHelper
+};
+use XoopsModules\Quotes\{
+    Helper,
+    Utility
+};
 
+/** @var Admin $adminObject */
+/** @var Helper $helper */
+/** @var Utility $utility */
 require \dirname(__DIR__, 3) . '/include/cp_header.php';
-require \dirname(__DIR__, 3) . '/class/xoopsformloader.php';
+require_once \dirname(__DIR__, 3) . '/class/xoopsformloader.php';
+
+require \dirname(__DIR__) . '/bootstrap.php';
+
+$mtoolsDependencyError = quotes_mtools_dependency_error();
+if ('' !== $mtoolsDependencyError) {
+    redirect_header(XOOPS_URL . '/admin.php', 3, $mtoolsDependencyError);
+    exit;
+}
 
 require \dirname(__DIR__) . '/include/common.php';
 
-require \dirname(__DIR__) . '/preloads/autoloader.php';
+$helper = Helper::getInstance();
 
 $moduleDirName = \basename(\dirname(__DIR__));
 
-/** @var \XoopsModules\Quote\Helper $helper */
-$helper = \XoopsModules\Quote\Helper::getInstance();
-/** @var Xmf\Module\Admin $adminObject */
-$adminObject = \Xmf\Module\Admin::getInstance();
+$utility     = new Utility();
+$adminObject = Admin::getInstance();
 
 $db = \XoopsDatabaseFactory::getDatabaseConnection();
 
-$pathIcon16    = \Xmf\Module\Admin::iconUrl('', '16');
-$pathIcon32    = \Xmf\Module\Admin::iconUrl('', '32');
+$pathIcon16    = Admin::iconUrl('', '16');
+$pathIcon32    = Admin::iconUrl('', '32');
 $pathModIcon32 = $helper->getConfig('modicons32');
 
 /** @var \XoopsPersistableObjectHandler $quoteHandler */

@@ -11,20 +11,26 @@
 */
 
 /**
- * Module: Quote
+ * Module: Quotes
  *
  * @category        Module
  * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
+ * @copyright       2000-2026 XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 
 use Xmf\Module\Admin;
 use Xmf\Request;
-use XoopsModules\Quote\Common;
-use XoopsModules\Quote\Common\TestdataButtons;
-use XoopsModules\Quote\Helper;
-use XoopsModules\Quote\Utility;
+use XoopsModules\Mtools\Common;
+use XoopsModules\Mtools\Common\Configurator;
+use XoopsModules\Mtools\Common\TestdataButtons;
+use XoopsModules\Mtools\Common\UpdateChecker;
+
+//    Helper,
+//    Utility
+
+use XoopsModules\Quotes\Helper;
+use XoopsModules\Quotes\Utility;
 
 /** @var Admin $adminObject */
 /** @var Helper $helper */
@@ -39,29 +45,28 @@ $totalQuote = $quoteHandler->getCount();
 /** @var \XoopsPersistableObjectHandler $categoryHandler */
 $totalCategory = $categoryHandler->getCount();
 //count "total Author"
-/** @var \XoopsPersistableObjectHandler $authorHandler */
 $totalAuthor = $authorHandler->getCount();
 // InfoBox Statistics
-$adminObject->addInfoBox(AM_QUOTE_STATISTICS);
+$adminObject->addInfoBox(AM_QUOTES_STATISTICS);
 
 // InfoBox quote
-$adminObject->addInfoBoxLine(sprintf(AM_QUOTE_THEREARE_QUOTE, $totalQuote));
+$adminObject->addInfoBoxLine(sprintf(AM_QUOTES_THEREARE_QUOTE, $totalQuote));
 
 // InfoBox category
-$adminObject->addInfoBoxLine(sprintf(AM_QUOTE_THEREARE_CATEGORY, $totalCategory));
+$adminObject->addInfoBoxLine(sprintf(AM_QUOTES_THEREARE_CATEGORY, $totalCategory));
 
 // InfoBox author
-$adminObject->addInfoBoxLine(sprintf(AM_QUOTE_THEREARE_AUTHOR, $totalAuthor));
+$adminObject->addInfoBoxLine(sprintf(AM_QUOTES_THEREARE_AUTHOR, $totalAuthor));
 
 //------ check Upload Folders ---------------
 $adminObject->addConfigBoxLine('');
 $redirectFile = $_SERVER['SCRIPT_NAME'];
 
-$configurator  = new Common\Configurator();
+$configurator  = new Configurator($helper->path());
 $uploadFolders = $configurator->uploadFolders;
 
 foreach (array_keys($uploadFolders) as $i) {
-    $adminObject->addConfigBoxLine(Common\DirectoryChecker::getDirectoryStatus($uploadFolders[$i], 0777, $redirectFile));
+    $adminObject->addConfigBoxLine(Common\DirectoryChecker::getDirectoryStatus($uploadFolders[$i], 0755, $redirectFile));
 }
 
 // Render Index
@@ -69,28 +74,28 @@ $adminObject->displayNavigation(basename(__FILE__));
 
 //check for latest release
 //$newRelease = $utility->checkVerModule($helper);
+//$newRelease = UpdateChecker::checkVerModule($helper);
 //if (null !== $newRelease) {
 //    $adminObject->addItemButton($newRelease[0], $newRelease[1], 'download', 'style="color : Red"');
 //}
 
 //------------- Test Data Buttons ----------------------------
 if ($helper->getConfig('displaySampleButton')) {
-    TestdataButtons::loadButtonConfig($adminObject);
+    TestdataButtons::loadButtonConfig($adminObject, $helper);
     $adminObject->displayButton('left', '');
 }
 $op = Request::getString('op', 0, 'GET');
 switch ($op) {
     case 'hide_buttons':
-        TestdataButtons::hideButtons();
+        TestdataButtons::hideButtons($helper);
         break;
     case 'show_buttons':
-        TestdataButtons::showButtons();
+        TestdataButtons::showButtons($helper);
         break;
 }
 //------------- End Test Data Buttons ----------------------------
 
 $adminObject->displayIndex();
-
 echo $utility::getServerStats();
 
 //codeDump(__FILE__);

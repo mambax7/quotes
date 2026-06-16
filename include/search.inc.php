@@ -10,7 +10,7 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 */
 /**
- * Module: Quote
+ * Module: Quotes
  *
  * @param mixed $queryarray
  * @param mixed $andor
@@ -18,34 +18,34 @@
  * @param mixed $offset
  * @param mixed $userid
  * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
+ * @copyright       2000-2026 XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @category        Module
  */
 /**
- *  quote_search
+ *  quotes_search
  *
  * @param $queryarray
  * @param $andor
  * @param $limit
  * @param $offset
  * @param $userid
- * @return array|bool
+ * @return array
  */
-function quote_search($queryarray, $andor, $limit, $offset, $userid)
+function quotes_search($queryarray, $andor, $limit, $offset, $userid)
 {
     $andor = \strtoupper((string)$andor);
     $andor = \in_array($andor, ['AND', 'OR'], true) ? $andor : 'OR';
 
-    $sql = 'SELECT id, name FROM ' . $GLOBALS['xoopsDB']->prefix('quote_author') . ' WHERE online = 1';
+    $sql = 'SELECT id, name FROM ' . $GLOBALS['xoopsDB']->prefix('quotes_author') . ' WHERE 1 = 1';
 
     if (0 !== $userid) {
-        $sql .= ' AND _submitter=' . (int)$userid;
+        return [];
     }
 
     if (is_array($queryarray) && $count = count($queryarray)) {
         $term = $GLOBALS['xoopsDB']->quote('%' . (string)$queryarray[0] . '%');
-        $sql .= ' AND ((name LIKE ' . $term . ')';
+        $sql  .= ' AND ((name LIKE ' . $term . ')';
 
         for ($i = 1; $i < $count; ++$i) {
             $term = $GLOBALS['xoopsDB']->quote('%' . (string)$queryarray[$i] . '%');
@@ -62,10 +62,10 @@ function quote_search($queryarray, $andor, $limit, $offset, $userid)
     if (!$GLOBALS['xoopsDB']->isResultSet($result) || !($result instanceof \mysqli_result)) {
         return $ret;
     }
-    while (false !== ($myrow = (($GLOBALS['xoopsDB']->isResultSet($result) && ($result instanceof \mysqli_result)) ? $GLOBALS['xoopsDB']->fetchArray($result) : false))) {
+    while (false !== ($row = (($GLOBALS['xoopsDB']->isResultSet($result) && ($result instanceof \mysqli_result)) ? $GLOBALS['xoopsDB']->fetchArray($result) : false))) {
         $ret[$i]['image'] = 'assets/images/icons/32/_search.png';
-        $ret[$i]['link']  = 'author.php?id=' . $myrow['id'];
-        $ret[$i]['title'] = $myrow['name'];
+        $ret[$i]['link']  = 'author.php?op=view&id=' . (int)$row['id'];
+        $ret[$i]['title'] = $row['name'];
         ++$i;
     }
 

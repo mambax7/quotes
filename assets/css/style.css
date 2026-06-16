@@ -1,68 +1,792 @@
 @charset "UTF-8";
 
-
 /*
  You may not change or alter any portion of this comment or credits
  of supporting developers from this source code or any supporting source code
  which is considered copyrighted (c) material of the original comment or credit authors.
- 
+
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 */
-/**
- * Module: Quote
- *
- * @category        Module
- * @author          XOOPS Development Team <https://xoops.org>
- * @copyright       {@link https://xoops.org/ XOOPS Project}
- * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
- */
-table {
-   margin: 0;
+
+.quotes-shell {
+    --quotes-ink: #1f2933;
+    --quotes-muted: #667085;
+    --quotes-line: #d9e2ec;
+    --quotes-soft: #f7f9fc;
+    --quotes-panel: #ffffff;
+    --quotes-accent: #456268;
+    --quotes-accent-2: #b35c44;
+    --quotes-link: #2457a6;
+    color: var(--quotes-ink);
+    container-type: inline-size;
 }
 
-table.quote {
-
-   padding: 2px;
-   border: 1px solid #ccc;
+[data-theme="dark"] .quotes-shell,
+[data-theme="noctis"] .quotes-shell,
+[data-theme="velvet"] .quotes-shell,
+[data-theme="graphite"] .quotes-shell,
+[data-bs-theme="dark"] .quotes-shell {
+    --quotes-ink: #f4f7fb;
+    --quotes-muted: #c5cfdd;
+    --quotes-line: #334155;
+    --quotes-soft: #101820;
+    --quotes-panel: #18212d;
+    --quotes-accent: #9dc7d8;
+    --quotes-accent-2: #f09a77;
+    --quotes-link: #8bc0ff;
 }
 
-td.fields {
-   font-family: Verdana, Tahoma, sans-serif;
-   font-size: 12px;
-   font-weight: normal;
+.quotes-shell a {
+    color: var(--quotes-link);
+    text-decoration: none;
 }
 
-div.outer {
-   color: #555;
-   background-color: #eee;
-   border: 1px solid #ccc;
+.quotes-shell a:hover,
+.quotes-shell a:focus {
+    text-decoration: underline;
 }
 
-ul.fields > li {
-   display: inline;
-   list-style: none none;
+.quotes-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: end;
+    padding: clamp(1.25rem, 3vw, 2.25rem);
+    margin-block-end: 1.5rem;
+    background: linear-gradient(135deg, #f7f9fc 0%, #ffffff 48%, #f3f0e8 100%);
+    border: 1px solid var(--quotes-line);
+    border-radius: 8px;
 }
 
-/* about */
-#about label, #about text {
+[data-theme="dark"] .quotes-shell .quotes-hero,
+[data-theme="noctis"] .quotes-shell .quotes-hero,
+[data-theme="velvet"] .quotes-shell .quotes-hero,
+[data-theme="graphite"] .quotes-shell .quotes-hero,
+[data-bs-theme="dark"] .quotes-shell .quotes-hero {
+    background: linear-gradient(135deg, #111827 0%, #18212d 52%, #211b26 100%);
+}
+
+.quotes-eyebrow {
+    margin: 0 0 .35rem;
+    color: var(--quotes-accent-2);
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.quotes-hero h1,
+.quotes-intro h2,
+.quotes-section-heading h2,
+.quotes-detail h2 {
+    margin: 0;
+    color: var(--quotes-ink);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.quotes-hero h1 {
+    max-width: 42rem;
+    font-size: clamp(1.65rem, 2.8vw, 2.45rem);
+}
+
+.quotes-hero-copy {
+    max-width: 42rem;
+    margin: .55rem 0 0;
+    color: var(--quotes-muted);
+    font-size: 1.05rem;
+    line-height: 1.55;
+}
+
+.quotes-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: .45rem;
+}
+
+.quotes-nav a,
+.quotes-card-actions a,
+.quotes-block-more,
+.quotes-section-heading a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    padding: .4rem .7rem;
+    border: 1px solid var(--quotes-line);
+    border-radius: 8px;
+    background: var(--quotes-panel);
+    font-size: .9rem;
+    font-weight: 600;
+}
+
+.quotes-ad,
+.quotes-system-block,
+.quotes-empty {
+    margin-block: 1rem;
+    padding: 1rem;
+    border: 1px solid var(--quotes-line);
+    border-radius: 8px;
+    background: var(--quotes-soft);
+}
+
+.quotes-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, .75fr);
+    gap: 1.25rem;
+    align-items: center;
+    margin-block-end: 1.5rem;
+}
+
+.quotes-intro p,
+.quotes-card p,
+.quotes-detail p,
+.quotes-rich-text,
+.quotes-block-text,
+.quotes-card-meta {
+    color: var(--quotes-muted);
+}
+
+.quotes-intro p {
+    margin: .5rem 0 0;
+    max-width: 44rem;
+}
+
+.quotes-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .75rem;
+}
+
+.quotes-stats a {
     display: block;
-    float: left;
-    margin-bottom: 12px;
+    padding: 1rem;
+    border: 1px solid var(--quotes-line);
+    border-radius: 8px;
+    background: var(--quotes-panel);
 }
 
+.quotes-stats strong {
+    display: block;
+    color: var(--quotes-accent);
+    font-size: 1.55rem;
+    line-height: 1;
+}
+
+.quotes-stats span {
+    display: block;
+    margin-block-start: .35rem;
+    color: var(--quotes-muted);
+    font-size: .9rem;
+}
+
+.quotes-section {
+    margin-block: 1.5rem;
+}
+
+.quotes-section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-block-end: 1rem;
+}
+
+.quotes-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.quotes-grid-quotes,
+.quotes-grid-categories,
+.quotes-grid-authors {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+}
+
+.quotes-card {
+    border: 1px solid var(--quotes-line);
+    border-radius: 8px;
+    background: var(--quotes-panel);
+    overflow: hidden;
+}
+
+.quotes-card > a {
+    display: grid;
+    gap: .85rem;
+    height: 100%;
+    padding: 1rem;
+    color: inherit;
+}
+
+.quotes-card-quote blockquote,
+.quotes-detail-quote blockquote {
+    margin: 0;
+    color: var(--quotes-ink);
+    font-size: 1.12rem;
+    line-height: 1.55;
+}
+
+.quotes-card-quote blockquote p,
+.quotes-detail-quote blockquote p {
+    display: inline;
+    margin: 0;
+    color: inherit;
+    font: inherit;
+}
+
+.quotes-card-quote blockquote p + p::before,
+.quotes-detail-quote blockquote p + p::before {
+    content: " ";
+}
+
+.quotes-card-quote blockquote::before,
+.quotes-detail-quote blockquote::before {
+    content: open-quote;
+    color: var(--quotes-accent-2);
+    font-weight: 700;
+}
+
+.quotes-card-quote blockquote::after,
+.quotes-detail-quote blockquote::after {
+    content: close-quote;
+    color: var(--quotes-accent-2);
+    font-weight: 700;
+}
+
+.quotes-card-quote p,
+.quotes-card-meta {
+    margin: 0;
+    font-size: .92rem;
+}
+
+.quotes-card-quote > a {
+    align-content: space-between;
+}
+
+.quotes-card-quote-meta {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: .75rem;
+    align-items: center;
+    margin-block-start: 1rem;
+}
+
+.quotes-card-quote-meta img {
+    width: 4.25rem;
+    height: 4.25rem;
+    border-radius: 8px;
+    object-fit: cover;
+    object-position: center top;
+}
+
+.quotes-card-author-line {
+    display: grid;
+    gap: .15rem;
+}
+
+.quotes-card-author-line strong {
+    color: var(--quotes-ink);
+    font-weight: 700;
+}
+
+.quotes-card-author-line span,
+.quotes-card-meta {
+    color: var(--quotes-muted);
+}
+
+.quotes-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .35rem .75rem;
+}
+
+.quotes-card-meta span + span::before,
+.quotes-block-meta span + span::before {
+    content: "/";
+    margin-inline-end: .75rem;
+    color: var(--quotes-line);
+}
+
+.quotes-card-category img,
+.quotes-detail img,
+.quotes-block img {
+    display: block;
+    width: 100%;
+    object-fit: cover;
+    background: var(--quotes-soft);
+}
+
+.quotes-card-category img,
+.quotes-category-visual {
+    aspect-ratio: 16 / 9;
+}
+
+.quotes-card-author > a {
+    grid-template-columns: minmax(6rem, 9rem) minmax(0, 1fr);
+    align-items: start;
+}
+
+.quotes-card-author img {
+    display: block;
+    width: min(100%, 9rem);
+    height: auto;
+    justify-self: center;
+    border-radius: 8px;
+    background: transparent;
+    object-fit: contain;
+}
+
+.quotes-card h3 {
+    margin: 0;
+    font-size: 1.08rem;
+}
+
+.quotes-category-visual {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+}
+
+.quotes-category-visual::before,
+.quotes-category-visual::after {
+    position: absolute;
+    content: "";
+    border-radius: 999px;
+}
+
+.quotes-category-visual::before {
+    width: 9rem;
+    height: 9rem;
+    inset-block-start: -3.25rem;
+    inset-inline-end: -2rem;
+    background: rgba(255, 255, 255, .58);
+}
+
+.quotes-category-visual::after {
+    width: 5.25rem;
+    height: 5.25rem;
+    inset-block-end: -1.75rem;
+    inset-inline-start: 1rem;
+    background: rgba(255, 255, 255, .44);
+}
+
+.quotes-category-visual span {
+    position: absolute;
+    inset-block-end: 1rem;
+    inset-inline-end: 1rem;
+    color: rgba(31, 41, 51, .55);
+    font-size: clamp(2.4rem, 5vw, 3.75rem);
+    line-height: 1;
+}
+
+.quotes-category-visual--science {
+    background: linear-gradient(135deg, #e0f2fe 0%, #fef9c3 56%, #d9f99d 100%);
+}
+
+.quotes-category-visual--science span::before {
+    content: "E=mc2";
+    font-size: .52em;
+    font-weight: 700;
+}
+
+.quotes-category-visual--politics {
+    background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 50%, #fecaca 100%);
+}
+
+.quotes-category-visual--politics span::before {
+    content: "\2696";
+}
+
+.quotes-category-visual--arts {
+    background: linear-gradient(135deg, #fae8ff 0%, #fef3c7 48%, #cffafe 100%);
+}
+
+.quotes-category-visual--arts span::before {
+    content: "\2726";
+}
+
+.quotes-category-visual--default {
+    background: linear-gradient(135deg, #e5e7eb 0%, #ffffff 55%, #dbeafe 100%);
+}
+
+.quotes-category-visual--default span::before {
+    content: "\201C";
+}
+
+.quotes-category-visual-detail {
+    min-height: 14rem;
+    border-radius: 8px;
+}
+
+.quotes-card p {
+    margin: .4rem 0 0;
+    line-height: 1.5;
+}
+
+.quotes-rich-text {
+    margin-block-start: .75rem;
+    line-height: 1.55;
+}
+
+.quotes-rich-text p {
+    margin: 0 0 1.1rem;
+    min-height: 1.55em;
+}
+
+.quotes-rich-text p:last-child {
+    margin-block-end: 0;
+}
+
+.quotes-rich-text .about-info-box,
+.quotes-rich-text > div + div {
+    margin-block-start: 1.1rem;
+}
+
+.quotes-rich-text .about-info-box__info-row,
+.quotes-rich-text .about-info-box > div {
+    margin-block-start: .55rem;
+}
+
+.quotes-rich-text .about-info-box__info-label {
+    font-weight: 700;
+}
+
+.quotes-color {
+    display: inline-block;
+    width: 2.25rem;
+    height: .35rem;
+    margin-block-end: .7rem;
+    border-radius: 999px;
+}
+
+.quotes-card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    padding: 0 1rem 1rem;
+}
+
+.quotes-detail-inline-actions {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-inline-start: .75rem;
+}
+
+.quotes-detail-inline-actions a,
+.quotes-quote-nav a,
+.quotes-quote-nav span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2rem;
+    min-height: 2rem;
+    padding: .35rem .65rem;
+    border: 1px solid var(--quotes-line);
+    border-radius: 8px;
+    background: var(--quotes-panel);
+    font-weight: 700;
+}
+
+.quotes-detail {
+    display: grid;
+    grid-template-columns: minmax(0, .45fr) minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: start;
+    padding: clamp(1rem, 3vw, 1.5rem);
+    border: 1px solid var(--quotes-line);
+    border-radius: 8px;
+    background: var(--quotes-panel);
+}
+
+.quotes-detail-category {
+    grid-template-columns: minmax(12rem, 24rem) minmax(0, 1fr);
+}
+
+.quotes-detail-category > img,
+.quotes-detail-category > .quotes-category-visual-detail {
+    width: 100%;
+    max-width: 24rem;
+    justify-self: center;
+}
+
+.quotes-detail-category .quotes-category-visual-detail {
+    min-height: 12rem;
+}
+
+.quotes-detail-quote {
+    display: block;
+    position: relative;
+    padding-inline: clamp(3rem, 5vw, 4rem);
+}
+
+.quotes-detail-quote blockquote {
+    font-size: clamp(1.45rem, 3vw, 2.15rem);
+}
+
+.quotes-detail-quote-nav {
+    position: absolute;
+    inset-block-start: clamp(1.1rem, 3vw, 1.65rem);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    color: var(--quotes-accent-2);
+    font-size: 2.75rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.quotes-detail-quote-nav:hover,
+.quotes-detail-quote-nav:focus {
+    color: var(--quotes-link);
+    text-decoration: none;
+}
+
+.quotes-detail-quote-nav-prev {
+    inset-inline-start: .75rem;
+}
+
+.quotes-detail-quote-nav-next {
+    inset-inline-end: .75rem;
+}
+
+.quotes-detail img {
+    max-height: 22rem;
+    border-radius: 8px;
+    object-position: center top;
+}
+
+.quotes-detail-author > img {
+    width: min(100%, 22rem);
+    height: auto;
+    max-height: none;
+    justify-self: center;
+    object-fit: contain;
+    background: transparent;
+}
+
+.quotes-detail dl {
+    display: grid;
+    gap: .65rem;
+    margin: 1rem 0 0;
+}
+
+.quotes-detail dl div {
+    display: grid;
+    grid-template-columns: 8rem minmax(0, 1fr);
+    gap: .75rem;
+    padding-block: .55rem;
+    border-block-start: 1px solid var(--quotes-line);
+}
+
+.quotes-detail dt {
+    color: var(--quotes-muted);
+    font-weight: 700;
+}
+
+.quotes-detail dd {
+    margin: 0;
+}
+
+.quotes-detail-person {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem 1rem;
+    align-items: center;
+}
+
+.quotes-detail-person-photo {
+    display: inline-flex;
+}
+
+.quotes-detail-person-photo img {
+    width: 5.5rem;
+    height: 5.5rem;
+    max-height: none;
+    border-radius: 8px;
+    object-fit: cover;
+    object-position: center top;
+}
+
+.quotes-detail-actions-row dd {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    align-items: center;
+}
+
+.quotes-pagination {
+    margin-block: 1rem;
+}
+
+.quotes-footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: .75rem;
+    margin-block-start: 1.5rem;
+    padding-block-start: 1rem;
+    border-block-start: 1px solid var(--quotes-line);
+    color: var(--quotes-muted);
+    font-size: .9rem;
+}
+
+.quotes-block {
+    display: grid;
+    gap: .75rem;
+}
+
+.quotes-block-item,
+.quotes-block-category,
+.quotes-block-author {
+    display: grid;
+    gap: .55rem;
+    padding: .85rem;
+    border: 1px solid var(--quotes-line);
+    border-radius: 8px;
+    background: var(--quotes-panel);
+    color: inherit;
+}
+
+.quotes-block-title {
+    color: var(--quotes-ink);
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.quotes-block-quote {
+    color: var(--quotes-ink);
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.quotes-block-author-name,
+.quotes-block-author-name a {
+    color: var(--quotes-ink);
+    font-weight: 700;
+}
+
+.quotes-block-meta {
+    display: flex;
+    flex-wrap: wrap;
+    color: var(--quotes-muted);
+    font-size: .85rem;
+}
+
+.quotes-block-category,
+.quotes-block-author {
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+    align-items: center;
+}
+
+.quotes-block-category.quotes-block-no-image,
+.quotes-block-author.quotes-block-no-image {
+    grid-template-columns: 1fr;
+}
+
+.quotes-block-category img,
+.quotes-block-author img {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 8px;
+    object-position: center top;
+}
+
+.quotes-block-category-body,
+.quotes-block-author span {
+    min-width: 0;
+}
+
+.quotes-block-text {
+    display: block;
+    margin-block-start: .2rem;
+    font-size: .85rem;
+    line-height: 1.35;
+}
+
+.quotes-block-more {
+    justify-self: start;
+}
+
+.quotes-author-quotes {
+    margin-block-start: 1rem;
+}
+
+.quotes-author-quote-card {
+    position: relative;
+}
+
+.quotes-author-quote-card > a {
+    padding-inline-end: 5.5rem;
+}
+
+.quotes-quote-count {
+    color: var(--quotes-muted);
+    font-weight: 700;
+}
+
+.quotes-quote-nav {
+    position: absolute;
+    inset-block-end: 1rem;
+    inset-inline-end: 1rem;
+    display: flex;
+    gap: .35rem;
+}
+
+.quotes-quote-nav span {
+    color: var(--quotes-muted);
+    opacity: .55;
+}
+
+#about label,
+#about text {
+    display: block;
+    float: inline-start;
+    margin-block-end: 12px;
+}
 
 #about label {
-    text-align: right;
     width: 200px;
-    padding-right: 20px;
+    padding-inline-end: 20px;
+    text-align: end;
 }
-
-    br {
-        clear: left;
-    }
 
 #about br {
     clear: both;
+}
+
+@container (max-width: 720px) {
+    .quotes-hero,
+    .quotes-intro,
+    .quotes-detail {
+        grid-template-columns: 1fr;
+    }
+
+    .quotes-nav {
+        justify-content: flex-start;
+    }
+
+    .quotes-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .quotes-card-author > a {
+        grid-template-columns: 1fr;
+    }
+
+    .quotes-section-heading,
+    .quotes-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .quotes-detail dl div {
+        grid-template-columns: 1fr;
+        gap: .25rem;
+    }
 }
