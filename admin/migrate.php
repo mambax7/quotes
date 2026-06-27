@@ -49,7 +49,7 @@ echo <<<EOF
     EOF;
 
 /** @var Mtools\Common\Configurator $configurator */
-$configurator = new Mtools\Common\Configurator($helper->path());
+$configurator = Mtools\Common\Configurator::forModule($helper);
 
 /** @var Mtools\Common\Migrate $migrator */
 $migrator = new Mtools\Common\Migrate($configurator);

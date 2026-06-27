@@ -19,7 +19,8 @@
  * @license         GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 
-use XoopsModules\Mtools;
+use XoopsModules\Mtools\Common\Configurator;
+use XoopsModules\Mtools\Module\Installer;
 use XoopsModules\Quotes\Helper;
 use XoopsModules\Quotes\Utility;
 
@@ -47,19 +48,13 @@ function xoops_module_pre_update_quotes(\XoopsModule $module)
         return false;
     }
 
-    $helper  = Helper::getInstance();
     $utility = new Utility();
 
     $xoopsSuccess = $utility::checkVerXoops($module);
     $phpSuccess   = $utility::checkVerPhp($module);
 
-    $configurator = new Mtools\Common\Configurator($helper->path());
-
-    //create upload folders
-    $uploadFolders = $configurator->uploadFolders;
-    foreach ($uploadFolders as $value) {
-        $utility::prepareFolder($value);
-    }
+    // Ensure upload folders exist before the update runs.
+    Installer::createUploadFolders(new Configurator(\dirname(__DIR__)));
 
     //    $migrator = new \XoopsModules\Mtools\Common\Migrate();
     //    $migrator->synchronizeSchema();
@@ -83,87 +78,28 @@ function xoops_module_update_quotes(\XoopsModule $module, $previousVersion = nul
         return false;
     }
 
-    $moduleDirName = \basename(\dirname(__DIR__));
-    //$moduleDirNameUpper = \mb_strtoupper($moduleDirName);
+    // Add the owner column to existing installs (idempotent — safe to re-run).
+    $db = \XoopsDatabaseFactory::getDatabaseConnection();
+    $quoteTable = $db->prefix('quotes_quote');
+    if (!\XoopsModules\Mtools\Common\Db::fieldExists($db, 'uid', $quoteTable)) {
+        $db->exec("ALTER TABLE `{$quoteTable}` ADD COLUMN `uid` INT UNSIGNED NOT NULL DEFAULT 0 AFTER `author_id`, ADD KEY `idx_uid` (`uid`)");
+    }
+    $authorTable = $db->prefix('quotes_author');
+    if (!\XoopsModules\Mtools\Common\Db::fieldExists($db, 'uid', $authorTable)) {
+        $db->exec("ALTER TABLE `{$authorTable}` ADD COLUMN `uid` INT UNSIGNED NOT NULL DEFAULT 0 AFTER `photo`, ADD KEY `idx_uid` (`uid`)");
+    }
 
-    $helper  = Helper::getInstance();
-    $utility = new Utility();
-
-    $configurator = new Mtools\Common\Configurator($helper->path());
+    $helper = Helper::getInstance();
     $helper->loadLanguage('common');
+    $configurator = new Configurator(\dirname(__DIR__));
 
     if ($previousVersion < 240) {
-        //delete old HTML templates
-        if (count($configurator->templateFolders) > 0) {
-            foreach ($configurator->templateFolders as $folder) {
-                $templateFolder = $GLOBALS['xoops']->path('modules/' . $moduleDirName . $folder);
-                if (is_dir($templateFolder)) {
-                    //$templateList = array_diff(scandir($templateFolder, SCANDIR_SORT_NONE), ['..', '.',]);
-                    $temp = scandir($templateFolder, SCANDIR_SORT_NONE);
-                    if (false !== $temp) {
-                        $templateList = array_diff($temp, [
-                            '..',
-                            '.',
-                        ]);
-
-                        foreach ($templateList as $k => $v) {
-                            $fileInfo = new SplFileInfo($templateFolder . $v);
-                            if ('html' === $fileInfo->getExtension() && 'index.html' !== $fileInfo->getFilename()) {
-                                if (is_file($templateFolder . $v)) {
-                                    unlink($templateFolder . $v);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        //  ---  DELETE OLD FILES ---------------
-        if (count($configurator->oldFiles) > 0) {
-            //    foreach (array_keys($GLOBALS['uploadFolders']) as $i) {
-            foreach (array_keys($configurator->oldFiles) as $i) {
-                $tempFile = $GLOBALS['xoops']->path('modules/' . $moduleDirName . $configurator->oldFiles[$i]);
-                if (is_file($tempFile)) {
-                    unlink($tempFile);
-                }
-            }
-        }
-
-        //  ---  DELETE OLD FOLDERS ---------------
-        xoops_load('XoopsFile');
-        if (count($configurator->oldFolders) > 0) {
-            //    foreach (array_keys($GLOBALS['uploadFolders']) as $i) {
-            foreach (array_keys($configurator->oldFolders) as $i) {
-                $tempFolder = $GLOBALS['xoops']->path('modules/' . $moduleDirName . $configurator->oldFolders[$i]);
-                /** @var \XoopsObjectHandler $folderHandler */
-                $folderHandler = \XoopsFile::getHandler('folder', $tempFolder);
-                $folderHandler->delete($tempFolder);
-            }
-        }
-
-        //  ---  CREATE FOLDERS ---------------
-        if (count($configurator->uploadFolders) > 0) {
-            //    foreach (array_keys($GLOBALS['uploadFolders']) as $i) {
-            foreach (array_keys($configurator->uploadFolders) as $i) {
-                $utility::createFolder($configurator->uploadFolders[$i]);
-            }
-        }
-
-        //  ---  COPY blank.png FILES ---------------
-        if (count($configurator->copyBlankFiles) > 0) {
-            $file = \dirname(__DIR__) . '/assets/images/blank.png';
-            foreach (array_keys($configurator->copyBlankFiles) as $i) {
-                $dest = $configurator->copyBlankFiles[$i] . '/blank.png';
-                $utility::copyFile($file, $dest);
-            }
-        }
-
-        //delete .html entries from the tpl table
-        $sql = 'DELETE FROM ' . $GLOBALS['xoopsDB']->prefix('tplfile') . ' WHERE `tpl_module` = '
-            . $GLOBALS['xoopsDB']->quote($module->getVar('dirname', 'n'))
-            . " AND `tpl_file` LIKE '%.html%'";
-        $GLOBALS['xoopsDB']->exec($sql);
+        // Shared update cleanup: remove legacy .html templates / old files / old folders,
+        // (re)create upload folders, reseed blank.png, and purge .html rows from tplfile.
+        Installer::removeOldAssets($module, $configurator);
+        Installer::createUploadFolders($configurator);
+        Installer::copyBlankFiles($configurator);
+        Installer::purgeHtmlTemplates($module);
 
         /** @var \XoopsGroupPermHandler $grouppermHandler */
         $grouppermHandler = xoops_getHandler('groupperm');

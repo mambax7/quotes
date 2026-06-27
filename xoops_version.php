@@ -21,18 +21,16 @@ $moduleDirName      = basename(__DIR__);
 $moduleDirNameUpper = \mb_strtoupper($moduleDirName);
 
 $modversion = [
-    'version'             => '1.1.0',
+    'version'             => '1.2.0',
     'module_status'       => 'Beta 1',
-    'release_date'        => '2026/04/30',
-    'name'                => MI_QUOTES_NAME,
-    'description'         => MI_QUOTES_DESC,
-    'release'             => '2026/04/30',
+    'release_date'        => '2026/06/18',
+    'name'                => _MI_QUOTES_NAME,
+    'description'         => _MI_QUOTES_DESC,
     'author'              => 'XOOPS Development Team',
     'author_mail'         => 'name@site.com',
     'author_website_url'  => 'https://xoops.org',
     'author_website_name' => 'XOOPS Project',
     'credits'             => 'XOOPS Development Team',
-    //    'license' => 'GPL 2.0 or later',
     'license'             => 'GPL 2.0 or later',
     'license_url'         => 'www.gnu.org/licenses/gpl-2.0.html',
 
@@ -44,8 +42,8 @@ $modversion = [
     'min_php'             => '8.2',
     'min_xoops'           => '2.7.0',
     'min_admin'           => '1.2',
-    'min_db'              => ['mysql' => '5.5'],
-    'min_modules'         => ['mtools' => '1.1.0'],
+    'min_db'              => ['mysql' => '5.7'],
+    'min_modules'         => ['mtools' => '1.2.0'],
     'image'               => 'assets/images/logoModule.png',
     'dirname'             => $moduleDirName,
     'modicons16'          => 'assets/images/icons/16',
@@ -78,6 +76,9 @@ $modversion = [
         $moduleDirName . '_' . 'author',
     ],
 ];
+// ------------------- Front sub-menu -------------------
+$modversion['sub'][] = ['name' => _MI_QUOTES_SMNAME_ADD_AUTHOR, 'url' => 'author.php?op=edit'];
+$modversion['sub'][] = ['name' => _MI_QUOTES_SMNAME_ADD_QUOTE, 'url' => 'quote.php?op=edit'];
 // ------------------- Search -----------------------------//
 $modversion['hasSearch']      = 1;
 $modversion['search']['file'] = 'include/search.inc.php';
@@ -115,24 +116,24 @@ $modversion['templates'] = [
 // ------------------- Help files ------------------- //
 $modversion['help']        = 'page=help';
 $modversion['helpsection'] = [
-    ['name' => MI_QUOTES_OVERVIEW, 'link' => 'page=help'],
-    ['name' => MI_QUOTES_DISCLAIMER, 'link' => 'page=disclaimer'],
-    ['name' => MI_QUOTES_LICENSE, 'link' => 'page=license'],
-    ['name' => MI_QUOTES_SUPPORT, 'link' => 'page=support'],
+    ['name' => _MI_QUOTES_OVERVIEW, 'link' => 'page=help'],
+    ['name' => _MI_QUOTES_DISCLAIMER, 'link' => 'page=disclaimer'],
+    ['name' => _MI_QUOTES_LICENSE, 'link' => 'page=license'],
+    ['name' => _MI_QUOTES_SUPPORT, 'link' => 'page=support'],
 
-    //    ['name' => MI_QUOTES_HELP1, 'link' => 'page=help1'],
-    //    ['name' => MI_QUOTES_HELP2, 'link' => 'page=help2']
-    //    ['name' => MI_QUOTES_HELP3, 'link' => 'page=help3'],
-    //    ['name' => MI_QUOTES_HELP4, 'link' => 'page=help4'],
-    //    ['name' => MI_QUOTES_HOWTO, 'link' => 'page=__howto'],
-    //    ['name' => MI_QUOTES_REQUIREMENTS, 'link' => 'page=__requirements'],
-    //    ['name' => MI_QUOTES_CREDITS, 'link' => 'page=__credits'],
+    //    ['name' => _MI_QUOTES_HELP1, 'link' => 'page=help1'],
+    //    ['name' => _MI_QUOTES_HELP2, 'link' => 'page=help2']
+    //    ['name' => _MI_QUOTES_HELP3, 'link' => 'page=help3'],
+    //    ['name' => _MI_QUOTES_HELP4, 'link' => 'page=help4'],
+    //    ['name' => _MI_QUOTES_HOWTO, 'link' => 'page=__howto'],
+    //    ['name' => _MI_QUOTES_REQUIREMENTS, 'link' => 'page=__requirements'],
+    //    ['name' => _MI_QUOTES_CREDITS, 'link' => 'page=__credits'],
 ];
 
 // ------------------- Blocks -----------------------------//
 $modversion['blocks'][] = [
     'file'        => 'quote.php',
-    'name'        => MI_QUOTES_QUOTE_BLOCK,
+    'name'        => _MI_QUOTES_QUOTE_BLOCK,
     'description' => '',
     'show_func'   => 'showQuotesQuote',
     'edit_func'   => 'editQuotesQuote',
@@ -142,7 +143,7 @@ $modversion['blocks'][] = [
 
 $modversion['blocks'][] = [
     'file'        => 'category.php',
-    'name'        => MI_QUOTES_CATEGORY_BLOCK,
+    'name'        => _MI_QUOTES_CATEGORY_BLOCK,
     'description' => '',
     'show_func'   => 'showQuotesCategory',
     'edit_func'   => 'editQuotesCategory',
@@ -152,7 +153,7 @@ $modversion['blocks'][] = [
 
 $modversion['blocks'][] = [
     'file'        => 'author.php',
-    'name'        => MI_QUOTES_AUTHOR_BLOCK,
+    'name'        => _MI_QUOTES_AUTHOR_BLOCK,
     'description' => '',
     'show_func'   => 'showQuotesAuthor',
     'edit_func'   => 'editQuotesAuthor',
@@ -165,8 +166,8 @@ xoops_load('xoopseditorhandler');
 $editorHandler          = \XoopsEditorHandler::getInstance();
 $modversion['config'][] = [
     'name'        => 'quotesEditorAdmin',
-    'title'       => 'MI_QUOTES_EDITOR_ADMIN',
-    'description' => 'MI_QUOTES_EDITOR_DESC_ADMIN',
+    'title'       => '_MI_QUOTES_EDITOR_ADMIN',
+    'description' => '_MI_QUOTES_EDITOR_DESC_ADMIN',
     'formtype'    => 'select',
     'valuetype'   => 'text',
     'options'     => array_flip($editorHandler->getList()),
@@ -175,8 +176,8 @@ $modversion['config'][] = [
 
 $modversion['config'][] = [
     'name'        => 'quotesEditorUser',
-    'title'       => 'MI_QUOTES_EDITOR_USER',
-    'description' => 'MI_QUOTES_EDITOR_DESC_USER',
+    'title'       => '_MI_QUOTES_EDITOR_USER',
+    'description' => '_MI_QUOTES_EDITOR_DESC_USER',
     'formtype'    => 'select',
     'valuetype'   => 'text',
     'options'     => array_flip($editorHandler->getList()),
@@ -191,8 +192,8 @@ $groups        = array_flip($xoopsGroups);
 
 $modversion['config'][] = [
     'name'        => 'groups',
-    'title'       => 'MI_QUOTES_GROUPS',
-    'description' => 'MI_QUOTES_GROUPS_DESC',
+    'title'       => '_MI_QUOTES_GROUPS',
+    'description' => '_MI_QUOTES_GROUPS_DESC',
     'formtype'    => 'select_multi',
     'valuetype'   => 'array',
     'options'     => $groups,
@@ -209,8 +210,8 @@ $admin_groups     = array_flip($adminXoopsGroups);
 
 $modversion['config'][] = [
     'name'        => 'admin_groups',
-    'title'       => 'MI_QUOTES_ADMINGROUPS',
-    'description' => 'MI_QUOTES_ADMINGROUPS_DESC',
+    'title'       => '_MI_QUOTES_ADMINGROUPS',
+    'description' => '_MI_QUOTES_ADMINGROUPS_DESC',
     'formtype'    => 'select_multi',
     'valuetype'   => 'array',
     'options'     => $admin_groups,
@@ -219,8 +220,8 @@ $modversion['config'][] = [
 
 $modversion['config'][] = [
     'name'        => 'keywords',
-    'title'       => 'MI_QUOTES_KEYWORDS',
-    'description' => 'MI_QUOTES_KEYWORDS_DESC',
+    'title'       => '_MI_QUOTES_KEYWORDS',
+    'description' => '_MI_QUOTES_KEYWORDS_DESC',
     'formtype'    => 'textbox',
     'valuetype'   => 'text',
     'default'     => 'quotes,quote, category, author',
@@ -229,8 +230,8 @@ $modversion['config'][] = [
 // --------------Uploads : maxsize of image --------------
 $modversion['config'][] = [
     'name'        => 'maxsize',
-    'title'       => 'MI_QUOTES_MAXSIZE',
-    'description' => 'MI_QUOTES_MAXSIZE_DESC',
+    'title'       => '_MI_QUOTES_MAXSIZE',
+    'description' => '_MI_QUOTES_MAXSIZE_DESC',
     'formtype'    => 'textbox',
     'valuetype'   => 'int',
     'default'     => 5000000,
@@ -239,8 +240,8 @@ $modversion['config'][] = [
 // --------------Uploads : mimetypes of image --------------
 $modversion['config'][] = [
     'name'        => 'mimetypes',
-    'title'       => 'MI_QUOTES_MIMETYPES',
-    'description' => 'MI_QUOTES_MIMETYPES_DESC',
+    'title'       => '_MI_QUOTES_MIMETYPES',
+    'description' => '_MI_QUOTES_MIMETYPES_DESC',
     'formtype'    => 'select_multi',
     'valuetype'   => 'array',
     'default'     => ['image/gif', 'image/jpeg', 'image/jpg', 'image/png'],
@@ -257,8 +258,8 @@ $modversion['config'][] = [
 
 $modversion['config'][] = [
     'name'        => 'adminpager',
-    'title'       => 'MI_QUOTES_ADMINPAGER',
-    'description' => 'MI_QUOTES_ADMINPAGER_DESC',
+    'title'       => '_MI_QUOTES_ADMINPAGER',
+    'description' => '_MI_QUOTES_ADMINPAGER_DESC',
     'formtype'    => 'textbox',
     'valuetype'   => 'int',
     'default'     => 10,
@@ -266,8 +267,8 @@ $modversion['config'][] = [
 
 $modversion['config'][] = [
     'name'        => 'userpager',
-    'title'       => 'MI_QUOTES_USERPAGER',
-    'description' => 'MI_QUOTES_USERPAGER_DESC',
+    'title'       => '_MI_QUOTES_USERPAGER',
+    'description' => '_MI_QUOTES_USERPAGER_DESC',
     'formtype'    => 'textbox',
     'valuetype'   => 'int',
     'default'     => 10,
@@ -275,8 +276,8 @@ $modversion['config'][] = [
 
 $modversion['config'][] = [
     'name'        => 'advertise',
-    'title'       => 'MI_QUOTES_ADVERTISE',
-    'description' => 'MI_QUOTES_ADVERTISE_DESC',
+    'title'       => '_MI_QUOTES_ADVERTISE',
+    'description' => '_MI_QUOTES_ADVERTISE_DESC',
     'formtype'    => 'textarea',
     'valuetype'   => 'text',
     'default'     => '',
@@ -284,8 +285,8 @@ $modversion['config'][] = [
 
 $modversion['config'][] = [
     'name'        => 'bookmarks',
-    'title'       => 'MI_QUOTES_BOOKMARKS',
-    'description' => 'MI_QUOTES_BOOKMARKS_DESC',
+    'title'       => '_MI_QUOTES_BOOKMARKS',
+    'description' => '_MI_QUOTES_BOOKMARKS_DESC',
     'formtype'    => 'yesno',
     'valuetype'   => 'int',
     'default'     => 0,
@@ -293,8 +294,8 @@ $modversion['config'][] = [
 
 $modversion['config'][] = [
     'name'        => 'fbcomments',
-    'title'       => 'MI_QUOTES_FBCOMMENTS',
-    'description' => 'MI_QUOTES_FBCOMMENTS_DESC',
+    'title'       => '_MI_QUOTES_FBCOMMENTS',
+    'description' => '_MI_QUOTES_FBCOMMENTS_DESC',
     'formtype'    => 'yesno',
     'valuetype'   => 'int',
     'default'     => 0,
@@ -341,15 +342,15 @@ $modversion['notification']['lookup_func'] = 'quotes_notify_iteminfo';
 
 $modversion['notification']['category'][] = [
     'name'           => 'global',
-    'title'          => MI_QUOTES_GLOBAL_NOTIFY,
-    'description'    => MI_QUOTES_GLOBAL_NOTIFY_DESC,
+    'title'          => _MI_QUOTES_GLOBAL_NOTIFY,
+    'description'    => _MI_QUOTES_GLOBAL_NOTIFY_DESC,
     'subscribe_from' => ['index.php', 'viewcat.php', 'singlefile.php'],
 ];
 
 $modversion['notification']['category'][] = [
     'name'           => 'category',
-    'title'          => MI_QUOTES_CATEGORY_NOTIFY,
-    'description'    => MI_QUOTES_CATEGORY_NOTIFY_DESC,
+    'title'          => _MI_QUOTES_CATEGORY_NOTIFY,
+    'description'    => _MI_QUOTES_CATEGORY_NOTIFY_DESC,
     'subscribe_from' => ['viewcat.php', 'singlefile.php'],
     'item_name'      => 'cid',
     'allow_bookmark' => 1,
@@ -357,8 +358,8 @@ $modversion['notification']['category'][] = [
 
 $modversion['notification']['category'][] = [
     'name'           => 'file',
-    'title'          => MI_QUOTES_FILE_NOTIFY,
-    'description'    => MI_QUOTES_FILE_NOTIFY_DESC,
+    'title'          => _MI_QUOTES_FILE_NOTIFY,
+    'description'    => _MI_QUOTES_FILE_NOTIFY_DESC,
     'subscribe_from' => 'singlefile.php',
     'item_name'      => 'lid',
     'allow_bookmark' => 1,
@@ -367,84 +368,84 @@ $modversion['notification']['category'][] = [
 $modversion['notification']['event'][] = [
     'name'          => 'new_category',
     'category'      => 'global',
-    'title'         => MI_QUOTES_GLOBAL_NEWCATEGORY_NOTIFY,
-    'caption'       => MI_QUOTES_GLOBAL_NEWCATEGORY_NOTIFY_CAPTION,
-    'description'   => MI_QUOTES_GLOBAL_NEWCATEGORY_NOTIFY_DESC,
+    'title'         => _MI_QUOTES_GLOBAL_NEWCATEGORY_NOTIFY,
+    'caption'       => _MI_QUOTES_GLOBAL_NEWCATEGORY_NOTIFY_CAPTION,
+    'description'   => _MI_QUOTES_GLOBAL_NEWCATEGORY_NOTIFY_DESC,
     'mail_template' => 'global_newcategory_notify',
-    'mail_subject'  => MI_QUOTES_GLOBAL_NEWCATEGORY_NOTIFY_SUBJECT,
+    'mail_subject'  => _MI_QUOTES_GLOBAL_NEWCATEGORY_NOTIFY_SUBJECT,
 ];
 
 $modversion['notification']['event'][] = [
     'name'          => 'file_modify',
     'category'      => 'global',
     'admin_only'    => 1,
-    'title'         => MI_QUOTES_GLOBAL_FILEMODIFY_NOTIFY,
-    'caption'       => MI_QUOTES_GLOBAL_FILEMODIFY_NOTIFY_CAPTION,
-    'description'   => MI_QUOTES_GLOBAL_FILEMODIFY_NOTIFY_DESC,
+    'title'         => _MI_QUOTES_GLOBAL_FILEMODIFY_NOTIFY,
+    'caption'       => _MI_QUOTES_GLOBAL_FILEMODIFY_NOTIFY_CAPTION,
+    'description'   => _MI_QUOTES_GLOBAL_FILEMODIFY_NOTIFY_DESC,
     'mail_template' => 'global_filemodify_notify',
-    'mail_subject'  => MI_QUOTES_GLOBAL_FILEMODIFY_NOTIFY_SUBJECT,
+    'mail_subject'  => _MI_QUOTES_GLOBAL_FILEMODIFY_NOTIFY_SUBJECT,
 ];
 
 $modversion['notification']['event'][] = [
     'name'          => 'file_broken',
     'category'      => 'global',
     'admin_only'    => 1,
-    'title'         => MI_QUOTES_GLOBAL_FILEBROKEN_NOTIFY,
-    'caption'       => MI_QUOTES_GLOBAL_FILEBROKEN_NOTIFY_CAPTION,
-    'description'   => MI_QUOTES_GLOBAL_FILEBROKEN_NOTIFY_DESC,
+    'title'         => _MI_QUOTES_GLOBAL_FILEBROKEN_NOTIFY,
+    'caption'       => _MI_QUOTES_GLOBAL_FILEBROKEN_NOTIFY_CAPTION,
+    'description'   => _MI_QUOTES_GLOBAL_FILEBROKEN_NOTIFY_DESC,
     'mail_template' => 'global_filebroken_notify',
-    'mail_subject'  => MI_QUOTES_GLOBAL_FILEBROKEN_NOTIFY_SUBJECT,
+    'mail_subject'  => _MI_QUOTES_GLOBAL_FILEBROKEN_NOTIFY_SUBJECT,
 ];
 
 $modversion['notification']['event'][] = [
     'name'          => 'file_submit',
     'category'      => 'global',
     'admin_only'    => 1,
-    'title'         => MI_QUOTES_GLOBAL_FILESUBMIT_NOTIFY,
-    'caption'       => MI_QUOTES_GLOBAL_FILESUBMIT_NOTIFY_CAPTION,
-    'description'   => MI_QUOTES_GLOBAL_FILESUBMIT_NOTIFY_DESC,
+    'title'         => _MI_QUOTES_GLOBAL_FILESUBMIT_NOTIFY,
+    'caption'       => _MI_QUOTES_GLOBAL_FILESUBMIT_NOTIFY_CAPTION,
+    'description'   => _MI_QUOTES_GLOBAL_FILESUBMIT_NOTIFY_DESC,
     'mail_template' => 'global_filesubmit_notify',
-    'mail_subject'  => MI_QUOTES_GLOBAL_FILESUBMIT_NOTIFY_SUBJECT,
+    'mail_subject'  => _MI_QUOTES_GLOBAL_FILESUBMIT_NOTIFY_SUBJECT,
 ];
 
 $modversion['notification']['event'][] = [
     'name'          => 'new_file',
     'category'      => 'global',
-    'title'         => MI_QUOTES_GLOBAL_NEWFILE_NOTIFY,
-    'caption'       => MI_QUOTES_GLOBAL_NEWFILE_NOTIFY_CAPTION,
-    'description'   => MI_QUOTES_GLOBAL_NEWFILE_NOTIFY_DESC,
+    'title'         => _MI_QUOTES_GLOBAL_NEWFILE_NOTIFY,
+    'caption'       => _MI_QUOTES_GLOBAL_NEWFILE_NOTIFY_CAPTION,
+    'description'   => _MI_QUOTES_GLOBAL_NEWFILE_NOTIFY_DESC,
     'mail_template' => 'global_newfile_notify',
-    'mail_subject'  => MI_QUOTES_GLOBAL_NEWFILE_NOTIFY_SUBJECT,
+    'mail_subject'  => _MI_QUOTES_GLOBAL_NEWFILE_NOTIFY_SUBJECT,
 ];
 
 $modversion['notification']['event'][] = [
     'name'          => 'file_submit',
     'category'      => 'category',
     'admin_only'    => 1,
-    'title'         => MI_QUOTES_CATEGORY_FILESUBMIT_NOTIFY,
-    'caption'       => MI_QUOTES_CATEGORY_FILESUBMIT_NOTIFY_CAPTION,
-    'description'   => MI_QUOTES_CATEGORY_FILESUBMIT_NOTIFY_DESC,
+    'title'         => _MI_QUOTES_CATEGORY_FILESUBMIT_NOTIFY,
+    'caption'       => _MI_QUOTES_CATEGORY_FILESUBMIT_NOTIFY_CAPTION,
+    'description'   => _MI_QUOTES_CATEGORY_FILESUBMIT_NOTIFY_DESC,
     'mail_template' => 'category_filesubmit_notify',
-    'mail_subject'  => MI_QUOTES_CATEGORY_FILESUBMIT_NOTIFY_SUBJECT,
+    'mail_subject'  => _MI_QUOTES_CATEGORY_FILESUBMIT_NOTIFY_SUBJECT,
 ];
 
 $modversion['notification']['event'][] = [
     'name'          => 'new_file',
     'category'      => 'category',
-    'title'         => MI_QUOTES_CATEGORY_NEWFILE_NOTIFY,
-    'caption'       => MI_QUOTES_CATEGORY_NEWFILE_NOTIFY_CAPTION,
-    'description'   => MI_QUOTES_CATEGORY_NEWFILE_NOTIFY_DESC,
+    'title'         => _MI_QUOTES_CATEGORY_NEWFILE_NOTIFY,
+    'caption'       => _MI_QUOTES_CATEGORY_NEWFILE_NOTIFY_CAPTION,
+    'description'   => _MI_QUOTES_CATEGORY_NEWFILE_NOTIFY_DESC,
     'mail_template' => 'category_newfile_notify',
-    'mail_subject'  => MI_QUOTES_CATEGORY_NEWFILE_NOTIFY_SUBJECT,
+    'mail_subject'  => _MI_QUOTES_CATEGORY_NEWFILE_NOTIFY_SUBJECT,
 ];
 
 $modversion['notification']['event'][] = [
     'name'          => 'approve',
     'category'      => 'file',
     'admin_only'    => 1,
-    'title'         => MI_QUOTES_FILE_APPROVE_NOTIFY,
-    'caption'       => MI_QUOTES_FILE_APPROVE_NOTIFY_CAPTION,
-    'description'   => MI_QUOTES_FILE_APPROVE_NOTIFY_DESC,
+    'title'         => _MI_QUOTES_FILE_APPROVE_NOTIFY,
+    'caption'       => _MI_QUOTES_FILE_APPROVE_NOTIFY_CAPTION,
+    'description'   => _MI_QUOTES_FILE_APPROVE_NOTIFY_DESC,
     'mail_template' => 'file_approve_notify',
-    'mail_subject'  => MI_QUOTES_FILE_APPROVE_NOTIFY_SUBJECT,
+    'mail_subject'  => _MI_QUOTES_FILE_APPROVE_NOTIFY_SUBJECT,
 ];

@@ -2,7 +2,7 @@
 
 <section class="quotes-section">
     <div class="quotes-section-heading">
-        <h2><{$smarty.const.MD_QUOTES_CATEGORY|default:'Categories'|escape}></h2>
+        <h2><{$smarty.const._MD_QUOTES_CATEGORY|default:'Categories'|escape}></h2>
     </div>
 
     <{if $category|default:false}>
@@ -28,18 +28,20 @@
                     <{if $xoops_isadmin === true}>
                         <div class="quotes-card-actions">
                             <a href="category.php?op=edit&amp;id=<{$categoryitem.id}>" title="<{$smarty.const._EDIT|escape}>"><{$smarty.const._EDIT|escape}></a>
-                            <a href="admin/category.php?op=delete&amp;id=<{$categoryitem.id}>" title="<{$smarty.const._DELETE|escape}>"><{$smarty.const._DELETE|escape}></a>
+                            <{if $xoops_isadmin === true}><a href="admin/category.php?op=delete&amp;id=<{$categoryitem.id}>" title="<{$smarty.const._DELETE|escape}>"><{$smarty.const._DELETE|escape}></a><{/if}>
                         </div>
                     <{/if}>
                 </article>
             <{/foreach}>
         </div>
     <{else}>
-        <div class="quotes-empty"><{$smarty.const.MD_QUOTES_CATEGORY_DESC|default:'No categories are available yet.'|escape}></div>
+        <div class="quotes-empty"><{$smarty.const._MD_QUOTES_CATEGORY_DESC|default:'No categories are available yet.'|escape}></div>
     <{/if}>
 </section>
 
-<{if $pagenav|default:'' != ''}>
+<{if $pagination|default:'' != ''}>
+    <nav class="quotes-pagination"><{render_pagination total=$pagination.total limit=$pagination.limit start=$pagination.start urlPattern=$pagination.url window=2}></nav>
+<{elseif $pagenav|default:'' != ''}>
     <nav class="quotes-pagination"><{$pagenav}></nav>
 <{/if}>
 

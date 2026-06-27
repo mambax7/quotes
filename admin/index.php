@@ -21,7 +21,7 @@
 
 use Xmf\Module\Admin;
 use Xmf\Request;
-use XoopsModules\Mtools\Common;
+use XoopsModules\Mtools\Common\DirectoryChecker;
 use XoopsModules\Mtools\Common\Configurator;
 use XoopsModules\Mtools\Common\TestdataButtons;
 use XoopsModules\Mtools\Common\UpdateChecker;
@@ -47,26 +47,26 @@ $totalCategory = $categoryHandler->getCount();
 //count "total Author"
 $totalAuthor = $authorHandler->getCount();
 // InfoBox Statistics
-$adminObject->addInfoBox(AM_QUOTES_STATISTICS);
+$adminObject->addInfoBox(_AM_QUOTES_STATISTICS);
 
 // InfoBox quote
-$adminObject->addInfoBoxLine(sprintf(AM_QUOTES_THEREARE_QUOTE, $totalQuote));
+$adminObject->addInfoBoxLine(sprintf(_AM_QUOTES_THEREARE_QUOTE, $totalQuote));
 
 // InfoBox category
-$adminObject->addInfoBoxLine(sprintf(AM_QUOTES_THEREARE_CATEGORY, $totalCategory));
+$adminObject->addInfoBoxLine(sprintf(_AM_QUOTES_THEREARE_CATEGORY, $totalCategory));
 
 // InfoBox author
-$adminObject->addInfoBoxLine(sprintf(AM_QUOTES_THEREARE_AUTHOR, $totalAuthor));
+$adminObject->addInfoBoxLine(sprintf(_AM_QUOTES_THEREARE_AUTHOR, $totalAuthor));
 
 //------ check Upload Folders ---------------
 $adminObject->addConfigBoxLine('');
 $redirectFile = $_SERVER['SCRIPT_NAME'];
 
-$configurator  = new Configurator($helper->path());
+$configurator  = Configurator::forModule($helper);
 $uploadFolders = $configurator->uploadFolders;
 
 foreach (array_keys($uploadFolders) as $i) {
-    $adminObject->addConfigBoxLine(Common\DirectoryChecker::getDirectoryStatus($uploadFolders[$i], 0755, $redirectFile));
+    $adminObject->addConfigBoxLine(DirectoryChecker::getDirectoryStatus($uploadFolders[$i], 0755, $redirectFile));
 }
 
 // Render Index

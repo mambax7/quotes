@@ -55,6 +55,7 @@ class Quote extends \XoopsObject
         $this->initVar('id', \XOBJ_DTYPE_INT);
         $this->initVar('cid', \XOBJ_DTYPE_INT);
         $this->initVar('author_id', \XOBJ_DTYPE_INT);
+        $this->initVar('uid', \XOBJ_DTYPE_INT);
         $this->initVar('quote', \XOBJ_DTYPE_OTHER);
         $this->initVar('online', \XOBJ_DTYPE_INT);
         $this->initVar('created', \XOBJ_DTYPE_INT);

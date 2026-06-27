@@ -44,12 +44,12 @@ $utility = new Utility();
 
 $adminObject->displayNavigation(basename(__FILE__));
 $permHelper = new Permission();
-$uploadDir  = XOOPS_UPLOAD_PATH . '/quotes/author/';
-$uploadUrl  = XOOPS_UPLOAD_URL . '/quotes/author/';
+$uploadDir  = \Xoops\Helpers\Service\Path::moduleUpload('quotes', 'author') . '/';
+$uploadUrl  = \Xoops\Helpers\Service\Url::moduleUpload('quotes', 'author') . '/';
 
 switch ($op) {
     case 'new':
-        $adminObject->addItemButton(AM_QUOTES_AUTHOR_LIST, 'author.php', 'list');
+        $adminObject->addItemButton(_AM_QUOTES_AUTHOR_LIST, 'author.php', 'list');
         $adminObject->displayButton('left');
 
         $authorObject = $authorHandler->create();
@@ -60,60 +60,19 @@ switch ($op) {
         if (!$GLOBALS['xoopsSecurity']->check()) {
             redirect_header('author.php', 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
         }
-        if (0 !== Request::getInt('id', 0, 'POST')) {
-            $authorObject = $authorHandler->get(Request::getInt('id', 0, 'POST'));
-        } else {
-            $authorObject = $authorHandler->create();
-        }
-        // Form save fields
-        $authorObject->setVar('name', Request::getString('name', '', 'POST'));
-        $authorObject->setVar('country', Request::getString('country', '', 'POST'));
-        $authorObject->setVar('bio', Request::getText('bio', '', 'POST'));
-
-        require_once XOOPS_ROOT_PATH . '/class/uploader.php';
-        $uploadDir = XOOPS_UPLOAD_PATH . '/quotes/author/';
-        $uploader  = new \XoopsMediaUploader(
-            $uploadDir,
-            $helper->getConfig('mimetypes'),
-            $helper->getConfig('maxsize'),
-            null,
-            null
-        );
-        $uploadFields = Request::getArray('xoops_upload_file', [], 'POST');
-        $uploadField  = (string)($uploadFields[0] ?? '');
-        if ('' !== $uploadField && $uploader->fetchMedia($uploadField)) {
-            //$extension = preg_replace( '/^.+\.([^.]+)$/sU' , '' , $_FILES['attachedfile']['name']);
-            //$imgName = str_replace(' ', '', $_POST['photo']).'.'.$extension;
-
-            $uploader->setPrefix('photo_');
-            $uploader->fetchMedia($uploadField);
-            if (!$uploader->upload()) {
-                $errors = $uploader->getErrors();
-                redirect_header('javascript:history.go(-1)', 3, $errors);
-            } else {
-                $authorObject->setVar('photo', $uploader->getSavedFileName());
-            }
-        } else {
-            $authorObject->setVar('photo', Request::getString('photo', '', 'POST'));
+        // Shared hydrate/upload/insert logic (also used by the frontend save handler).
+        $result = $authorHandler->saveFromRequest($helper);
+        if ($result['ok']) {
+            redirect_header('author.php?op=list', 2, _AM_QUOTES_FORMOK);
         }
 
-        $dateTimeObj = \DateTime::createFromFormat(_SHORTDATESTRING, Request::getString('created', '', 'POST'));
-
-        $authorObject->setVar('created', $dateTimeObj instanceof \DateTimeInterface ? $dateTimeObj->getTimestamp() : time());
-        $dateTimeObj = \DateTime::createFromFormat(_SHORTDATESTRING, Request::getString('updated', '', 'POST'));
-
-        $authorObject->setVar('updated', $dateTimeObj instanceof \DateTimeInterface ? $dateTimeObj->getTimestamp() : time());
-        if ($authorHandler->insert($authorObject)) {
-            redirect_header('author.php?op=list', 2, AM_QUOTES_FORMOK);
-        }
-
-        echo $authorObject->getHtmlErrors();
-        $form = $authorObject->getForm();
+        echo $result['errors'];
+        $form = $result['object']->getForm();
         $form->display();
         break;
     case 'edit':
-        $adminObject->addItemButton(AM_QUOTES_ADD_AUTHOR, 'author.php?op=new', 'add');
-        $adminObject->addItemButton(AM_QUOTES_AUTHOR_LIST, 'author.php', 'list');
+        $adminObject->addItemButton(_AM_QUOTES_ADD_AUTHOR, 'author.php?op=new', 'add');
+        $adminObject->addItemButton(_AM_QUOTES_AUTHOR_LIST, 'author.php', 'list');
         $adminObject->displayButton('left');
         $authorObject = $authorHandler->get(Request::getInt('id', 0, 'GET'));
         $form         = $authorObject->getForm();
@@ -139,35 +98,43 @@ switch ($op) {
                 }
             }
             if ($deleted > 0) {
-                redirect_header('author.php', 3, AM_QUOTES_FORMDELOK);
+                redirect_header('author.php', 3, _AM_QUOTES_FORMDELOK);
             } else {
                 redirect_header('author.php', 3, _ERRORS);
             }
         } else {
             if ([] !== $deleteIds) {
-                xoops_confirm(['ok' => 1, 'ids' => \implode(',', $deleteIds), 'op' => 'delete'], Request::getUrl('REQUEST_URI', '', 'SERVER'), sprintf(AM_QUOTES_FORMSUREDEL, \implode(', ', $deleteIds)));
+                xoops_confirm(['ok' => 1, 'ids' => \implode(',', $deleteIds), 'op' => 'delete'], Request::getUrl('REQUEST_URI', '', 'SERVER'), sprintf(_AM_QUOTES_FORMSUREDEL, \implode(', ', $deleteIds)));
                 break;
             }
             $authorObject = $authorHandler->get(Request::getInt('id', 0, 'GET'));
             if (!\is_object($authorObject)) {
                 redirect_header('author.php', 3, _ERRORS);
             }
-            xoops_confirm(['ok' => 1, 'id' => Request::getInt('id', 0, 'GET'), 'op' => 'delete'], Request::getUrl('REQUEST_URI', '', 'SERVER'), sprintf(AM_QUOTES_FORMSUREDEL, $authorObject->getVar('name')));
+            xoops_confirm(['ok' => 1, 'id' => Request::getInt('id', 0, 'GET'), 'op' => 'delete'], Request::getUrl('REQUEST_URI', '', 'SERVER'), sprintf(_AM_QUOTES_FORMSUREDEL, $authorObject->getVar('name')));
         }
         break;
     case 'clone':
-        $id_field = Request::getInt('id', 0, 'GET');
-
-        if ($utility::cloneRecord('quotes_author', 'id', $id_field)) {
-            redirect_header('author.php', 3, AM_QUOTES_CLONED_OK);
+        // State-changing action: require a POST confirmation with a valid CSRF token.
+        if (1 === Request::getInt('ok', 0, 'POST')) {
+            if (!$GLOBALS['xoopsSecurity']->check()) {
+                redirect_header('author.php', 3, implode(', ', $GLOBALS['xoopsSecurity']->getErrors()));
+            }
+            $id_field = Request::getInt('id', 0, 'POST');
+            if ($utility::cloneRecord('quotes_author', 'id', $id_field)) {
+                redirect_header('author.php', 3, _AM_QUOTES_CLONED_OK);
+            } else {
+                redirect_header('author.php', 3, _AM_QUOTES_CLONED_FAILED);
+            }
         } else {
-            redirect_header('author.php', 3, AM_QUOTES_CLONED_FAILED);
+            $id_field = Request::getInt('id', 0, 'GET');
+            xoops_confirm(['ok' => 1, 'id' => $id_field, 'op' => 'clone'], Request::getUrl('REQUEST_URI', '', 'SERVER'), sprintf(_AM_QUOTES_FORMSURECLONE, $id_field));
         }
 
         break;
     case 'list':
     default:
-        $adminObject->addItemButton(AM_QUOTES_ADD_AUTHOR, 'author.php?op=new', 'add');
+        $adminObject->addItemButton(_AM_QUOTES_ADD_AUTHOR, 'author.php?op=new', 'add');
         $adminObject->displayButton('left');
         $start                 = Request::getInt('start', 0, 'GET');
         $authorPaginationLimit = $helper->getConfig('userpager');
@@ -182,7 +149,7 @@ switch ($op) {
         /*
         //
         //
-                            <th class='center width5'>".AM_QUOTES_FORM_ACTION."</th>
+                            <th class='center width5'>"._AM_QUOTES_FORM_ACTION."</th>
         //                    </tr>";
         //            $class = "odd";
         */
@@ -223,34 +190,37 @@ switch ($op) {
             foreach (array_keys($authorTempArray) as $i) {
                 //        $field = explode(':', $fields[$i]);
 
-                $GLOBALS['xoopsTpl']->assign('selectorid', AM_QUOTES_AUTHOR_ID);
+                $GLOBALS['xoopsTpl']->assign('selectorid', _AM_QUOTES_AUTHOR_ID);
                 $authorArray['id'] = $authorTempArray[$i]->getVar('id');
 
-                $selectorname = $utility::selectSorting(AM_QUOTES_AUTHOR_NAME, 'name', $helper);
+                $selectorname = $utility::selectSorting(_AM_QUOTES_AUTHOR_NAME, 'name', $helper);
                 $GLOBALS['xoopsTpl']->assign('selectorname', $selectorname);
                 $authorArray['name'] = $authorTempArray[$i]->getVar('name');
                 $authorArray['name'] = $utility::truncateHtml($authorArray['name'], $helper->getConfig('truncatelength'));
 
-                $selectorcountry = $utility::selectSorting(AM_QUOTES_AUTHOR_COUNTRY, 'country', $helper);
+                $selectorcountry = $utility::selectSorting(_AM_QUOTES_AUTHOR_COUNTRY, 'country', $helper);
                 $GLOBALS['xoopsTpl']->assign('selectorcountry', $selectorcountry);
                 //                $authorArray['country'] = strip_tags(\XoopsLists::getCountryList($authorTempArray[$i]->getVar('country')));
                 //                $authorArray['country'] = strip_tags(\XoopsLists::getCountryList()[$authorTempArray[$i]->getVar('country')]);
                 $countryCode            = (string)$authorTempArray[$i]->getVar('country');
                 $authorArray['country'] = \XoopsLists::getCountryList()[$countryCode] ?? $countryCode;
 
-                $GLOBALS['xoopsTpl']->assign('selectorbio', AM_QUOTES_AUTHOR_BIO);
+                $GLOBALS['xoopsTpl']->assign('selectorbio', _AM_QUOTES_AUTHOR_BIO);
                 $authorArray['bio'] = $authorTempArray[$i]->getVar('bio');
                 $authorArray['bio'] = $utility::truncateHtml($authorArray['bio'], $helper->getConfig('truncatelength'));
 
-                $GLOBALS['xoopsTpl']->assign('selectorphoto', AM_QUOTES_AUTHOR_PHOTO);
+                $GLOBALS['xoopsTpl']->assign('selectorphoto', _AM_QUOTES_AUTHOR_PHOTO);
                 $authorPhoto          = (string)$authorTempArray[$i]->getVar('photo');
-                $authorArray['photo'] = '' !== $authorPhoto ? "<img src='" . $uploadUrl . \htmlspecialchars($authorPhoto, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "' alt='' style='max-width:100px'>" : '';
+                $authorArray['photo'] = '' !== $authorPhoto ? "<img src='" . $uploadUrl . \Xoops\Helpers\Utility\HtmlBuilder::escape($authorPhoto) . "' alt='' style='max-width:100px'>" : '';
 
-                $selectorcreated = $utility::selectSorting(AM_QUOTES_AUTHOR_CREATED, 'created', $helper);
+                $GLOBALS['xoopsTpl']->assign('selectorsubmitter', _AM_QUOTES_SUBMITTER);
+                $authorArray['submitter'] = quotes_admin_uname((int)$authorTempArray[$i]->getVar('uid'));
+
+                $selectorcreated = $utility::selectSorting(_AM_QUOTES_AUTHOR_CREATED, 'created', $helper);
                 $GLOBALS['xoopsTpl']->assign('selectorcreated', $selectorcreated);
                 $authorArray['created'] = formatTimestamp($authorTempArray[$i]->getVar('created'), 's');
 
-                $selectorupdated = $utility::selectSorting(AM_QUOTES_AUTHOR_UPDATED, 'updated', $helper);
+                $selectorupdated = $utility::selectSorting(_AM_QUOTES_AUTHOR_UPDATED, 'updated', $helper);
                 $GLOBALS['xoopsTpl']->assign('selectorupdated', $selectorupdated);
                 $authorArray['updated']     = formatTimestamp($authorTempArray[$i]->getVar('updated'), 's');
                 $authorId                    = (int)$authorArray['id'];
@@ -293,7 +263,7 @@ switch ($op) {
 
             //                    <tr>
 
-            //                     <th class='center width5'>".AM_QUOTES_FORM_ACTION."XXX</th>
+            //                     <th class='center width5'>"._AM_QUOTES_FORM_ACTION."XXX</th>
             //                    </tr><tr><td class='errorMsg' colspan='8'>There are noXXX author</td></tr>";
             //            echo "</table><br><br>";
 

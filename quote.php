@@ -33,9 +33,9 @@ use XoopsModules\Quotes\QuoteHandler;
 /** @var Helper $helper */
 require __DIR__ . '/header.php';
 
-$op = Request::getCmd('op', 'list', 'GET');
+$op = Request::getString('op', 'list', 'REQUEST');
 
-if ('edit' !== $op) {
+if (!\in_array($op, ['edit', 'save'], true)) {
     if ('view' === $op) {
         $GLOBALS['xoopsOption']['template_main'] = 'quotes_quote.tpl';
     } else {
@@ -73,8 +73,56 @@ $id = Request::getInt('id', 0, 'GET');
 
 switch ($op) {
     case 'edit':
-        $quoteObject = $quoteHandler->get(Request::getInt('id', 0, 'GET'));
-        $form        = $quoteObject->getForm();
+        $editId      = Request::getInt('id', 0, 'GET');
+        $quoteObject = $quoteHandler->get($editId);
+        if ($editId > 0) {
+            // Editing an existing quote: admin OR owner-with-permission (server-side).
+            if (!quotes_user_can_edit_quote($quoteObject)) {
+                redirect_header(\Xoops\Helpers\Service\Url::module('quotes', 'quote.php'), 3, _NOPERM);
+            }
+        } elseif (!quotes_user_can_submit()) {
+            // Creating a new quote: per-category submit right (unchanged).
+            redirect_header(\Xoops\Helpers\Service\Url::module('quotes', 'quote.php'), 3, _NOPERM);
+        }
+        $form = $quoteObject->getForm();
+        $form->display();
+        break;
+    case 'save':
+        if (!$GLOBALS['xoopsSecurity']->check()) {
+            redirect_header(\Xoops\Helpers\Service\Url::module('quotes', 'quote.php'), 3, implode(', ', $GLOBALS['xoopsSecurity']->getErrors()));
+        }
+        $saveId           = Request::getInt('id', 0, 'POST');
+        $authorIdOverride = null;
+        if ($saveId > 0) {
+            // Edit: re-load + ownership gate (do not trust POST).
+            if (!quotes_user_can_edit_quote($quoteHandler->get($saveId))) {
+                redirect_header(\Xoops\Helpers\Service\Url::module('quotes', 'quote.php'), 3, _NOPERM);
+            }
+        } else {
+            // Create: per-category submit right on the target category.
+            if (!quotes_user_can_submit_to_category(Request::getInt('cid', 0, 'POST'))) {
+                redirect_header(\Xoops\Helpers\Service\Url::module('quotes', 'quote.php'), 3, _NOPERM);
+            }
+            // Resolve the author: a filled "new author" name wins over the dropdown selection.
+            $newAuthorName = \trim(Request::getString('name', '', 'POST'));
+            if ('' !== $newAuthorName) {
+                $authorResult = $authorHandler->saveFromRequest($helper, $helper->isUserAdmin());
+                if (!$authorResult['ok']) {
+                    echo $authorResult['errors'];
+                    $quoteHandler->create()->getForm()->display();
+                    break;
+                }
+                $authorIdOverride = (int)$authorResult['object']->getVar('id');
+            } elseif (Request::getInt('author_id', 0, 'POST') <= 0) {
+                redirect_header(\Xoops\Helpers\Service\Url::module('quotes', 'quote.php'), 3, _AM_QUOTES_NEED_AUTHOR);
+            }
+        }
+        $result = $quoteHandler->saveFromRequest($helper, $helper->isUserAdmin(), $authorIdOverride);
+        if ($result['ok']) {
+            redirect_header(\Xoops\Helpers\Service\Url::module('quotes', 'quote.php', ['op' => 'view', 'id' => (int)$result['object']->getVar('id')]), 2, _AM_QUOTES_FORMOK);
+        }
+        echo $result['errors'];
+        $form = $result['object']->getForm();
         $form->display();
         break;
     case 'view':
@@ -84,7 +132,7 @@ switch ($op) {
         //id
         $quoteObject = $quoteHandler->get($myid);
         if (!\is_object($quoteObject)) {
-            redirect_header(QUOTES_URL . '/quote.php', 3, _NOPERM);
+            redirect_header(\Xoops\Helpers\Service\Url::module('quotes', 'quote.php'), 3, _NOPERM);
             exit;
         }
 
@@ -107,7 +155,8 @@ switch ($op) {
         $quote['online']      = (int)$quoteObject->getVar('online');
         $quote['created']     = formatTimestamp($quoteObject->getVar('created'), 's');
         $quote['updated']     = (int)$quoteObject->getVar('updated') > 0 ? formatTimestamp($quoteObject->getVar('updated'), 's') : '';
-        $quote['url']         = QUOTES_URL . '/quote.php?op=view&id=' . $quote['id'];
+        $quote['url']         = \Xoops\Helpers\Service\Url::module('quotes', 'quote.php', ['op' => 'view', 'id' => $quote['id']]);
+        $quote['can_edit']    = quotes_user_can_edit_quote($quoteObject);
 
         //       $GLOBALS['xoopsTpl']->append('quote', $quote);
         $keywords[] = $quoteObject->getVar('quote');
@@ -140,17 +189,22 @@ switch ($op) {
                 $quote['online']      = (int)$quoteArray[$i]->getVar('online');
                 $quote['created']     = formatTimestamp($quoteArray[$i]->getVar('created'), 's');
                 $quote['updated']     = (int)$quoteArray[$i]->getVar('updated') > 0 ? formatTimestamp($quoteArray[$i]->getVar('updated'), 's') : '';
-                $quote['url']         = QUOTES_URL . '/quote.php?op=view&id=' . $quote['id'];
+                $quote['url']         = \Xoops\Helpers\Service\Url::module('quotes', 'quote.php', ['op' => 'view', 'id' => $quote['id']]);
+                $quote['can_edit']    = quotes_user_can_edit_quote($quoteArray[$i]);
                 $GLOBALS['xoopsTpl']->append('quote', $quote);
                 $keywords[] = $quoteArray[$i]->getVar('quote');
                 unset($quote);
             }
             // Display Navigation
             if ($quoteCount > $quotePaginationLimit) {
-                $GLOBALS['xoopsTpl']->assign('xoops_mpageurl', QUOTES_URL . '/quote.php');
-                xoops_load('XoopsPageNav');
-                $pagenav = new \XoopsPageNav($quoteCount, $quotePaginationLimit, $start, 'start');
-                $GLOBALS['xoopsTpl']->assign('pagenav', $pagenav->renderNav(4));
+                $GLOBALS['xoopsTpl']->assign('xoops_mpageurl', \Xoops\Helpers\Service\Url::module('quotes', 'quote.php'));
+                // SHOWCASE: data-driven pagination via xoops/smartyextensions render_pagination (S1, BS5, windowed).
+                $GLOBALS['xoopsTpl']->assign('pagination', [
+                    'total' => $quoteCount,
+                    'limit' => $quotePaginationLimit,
+                    'start' => $start,
+                    'url'   => \Xoops\Helpers\Service\Url::module('quotes', 'quote.php') . '?start={start}',
+                ]);
             }
         }
 }
@@ -160,10 +214,10 @@ if (isset($keywords)) {
     $utility::metaKeywords($helper->getConfig('keywords') . ', ' . implode(', ', $keywords));
 }
 //description
-$utility::metaDescription(MD_QUOTES_QUOTE_DESC);
+$utility::metaDescription(_MD_QUOTES_QUOTE_DESC);
 
-$GLOBALS['xoopsTpl']->assign('xoops_mpageurl', QUOTES_URL . '/quote.php');
-$GLOBALS['xoopsTpl']->assign('quotes_url', QUOTES_URL);
+$GLOBALS['xoopsTpl']->assign('xoops_mpageurl', \Xoops\Helpers\Service\Url::module('quotes', 'quote.php'));
+$GLOBALS['xoopsTpl']->assign('quotes_url', \Xoops\Helpers\Service\Url::module('quotes'));
 $GLOBALS['xoopsTpl']->assign('adv', $helper->getConfig('advertise'));
 
 $GLOBALS['xoopsTpl']->assign('bookmarks', $helper->getConfig('bookmarks'));
@@ -180,7 +234,7 @@ function quotes_author_photo_url(string $photo): string
         return '';
     }
 
-    return QUOTES_UPLOAD_URL . '/author/' . \rawurlencode($photo);
+    return \Xoops\Helpers\Service\Url::moduleUpload('quotes', 'author/' . \rawurlencode($photo));
 }
 
 function quotes_plain_text(string $text): string
@@ -216,8 +270,8 @@ function quotes_author_quote_nav(\XoopsPersistableObjectHandler $quoteHandler, i
     }
 
     return [
-        'prev'  => $currentIndex > 0 ? QUOTES_URL . '/quote.php?op=view&id=' . $quoteIds[$currentIndex - 1] : '',
-        'next'  => ($currentIndex + 1) < $quoteCount ? QUOTES_URL . '/quote.php?op=view&id=' . $quoteIds[$currentIndex + 1] : '',
+        'prev'  => $currentIndex > 0 ? \Xoops\Helpers\Service\Url::module('quotes', 'quote.php', ['op' => 'view', 'id' => $quoteIds[$currentIndex - 1]]) : '',
+        'next'  => ($currentIndex + 1) < $quoteCount ? \Xoops\Helpers\Service\Url::module('quotes', 'quote.php', ['op' => 'view', 'id' => $quoteIds[$currentIndex + 1]]) : '',
         'count' => $quoteCount,
         'index' => $currentIndex + 1,
     ];

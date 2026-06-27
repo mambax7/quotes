@@ -40,12 +40,12 @@ $sort  = \in_array($sort, ['id', 'cid', 'author_id', 'quote', 'online', 'created
 
 $adminObject->displayNavigation(basename(__FILE__));
 $permHelper = new Permission();
-$uploadDir  = XOOPS_UPLOAD_PATH . '/quotes/quote/';
-$uploadUrl  = XOOPS_UPLOAD_URL . '/quotes/quote/';
+$uploadDir  = \Xoops\Helpers\Service\Path::moduleUpload('quotes', 'quote') . '/';
+$uploadUrl  = \Xoops\Helpers\Service\Url::moduleUpload('quotes', 'quote') . '/';
 
 switch ($op) {
     case 'new':
-        $adminObject->addItemButton(AM_QUOTES_QUOTE_LIST, 'quote.php', 'list');
+        $adminObject->addItemButton(_AM_QUOTES_QUOTE_LIST, 'quote.php', 'list');
         $adminObject->displayButton('left');
 
         $quoteObject = $quoteHandler->create();
@@ -56,33 +56,19 @@ switch ($op) {
         if (!$GLOBALS['xoopsSecurity']->check()) {
             redirect_header('quote.php', 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
         }
-        if (0 !== Request::getInt('id', 0, 'POST')) {
-            $quoteObject = $quoteHandler->get(Request::getInt('id', 0, 'POST'));
-        } else {
-            $quoteObject = $quoteHandler->create();
-        }
-        // Form save fields
-        $quoteObject->setVar('cid', Request::getInt('cid', 0, 'POST'));
-        $quoteObject->setVar('author_id', Request::getInt('author_id', 0, 'POST'));
-        $quoteObject->setVar('quote', Request::getText('quote', '', 'POST'));
-        $quoteObject->setVar('online', ((1 === Request::getInt('online', 0, 'POST')) ? '1' : '0'));
-        $dateTimeObj = \DateTime::createFromFormat(_SHORTDATESTRING, Request::getString('created', '', 'POST'));
-
-        $quoteObject->setVar('created', $dateTimeObj instanceof \DateTimeInterface ? $dateTimeObj->getTimestamp() : time());
-        $dateTimeObj = \DateTime::createFromFormat(_SHORTDATESTRING, Request::getString('updated', '', 'POST'));
-
-        $quoteObject->setVar('updated', $dateTimeObj instanceof \DateTimeInterface ? $dateTimeObj->getTimestamp() : time());
-        if ($quoteHandler->insert($quoteObject)) {
-            redirect_header('quote.php?op=list', 2, AM_QUOTES_FORMOK);
+        // Shared hydrate/insert logic (also used by the frontend save handler).
+        $result = $quoteHandler->saveFromRequest($helper);
+        if ($result['ok']) {
+            redirect_header('quote.php?op=list', 2, _AM_QUOTES_FORMOK);
         }
 
-        echo $quoteObject->getHtmlErrors();
-        $form = $quoteObject->getForm();
+        echo $result['errors'];
+        $form = $result['object']->getForm();
         $form->display();
         break;
     case 'edit':
-        $adminObject->addItemButton(AM_QUOTES_ADD_QUOTE, 'quote.php?op=new', 'add');
-        $adminObject->addItemButton(AM_QUOTES_QUOTE_LIST, 'quote.php', 'list');
+        $adminObject->addItemButton(_AM_QUOTES_ADD_QUOTE, 'quote.php?op=new', 'add');
+        $adminObject->addItemButton(_AM_QUOTES_QUOTE_LIST, 'quote.php', 'list');
         $adminObject->displayButton('left');
         $quoteObject = $quoteHandler->get(Request::getInt('id', 0, 'GET'));
         $form        = $quoteObject->getForm();
@@ -108,35 +94,43 @@ switch ($op) {
                 }
             }
             if ($deleted > 0) {
-                redirect_header('quote.php', 3, AM_QUOTES_FORMDELOK);
+                redirect_header('quote.php', 3, _AM_QUOTES_FORMDELOK);
             } else {
                 redirect_header('quote.php', 3, _ERRORS);
             }
         } else {
             if ([] !== $deleteIds) {
-                xoops_confirm(['ok' => 1, 'ids' => \implode(',', $deleteIds), 'op' => 'delete'], Request::getUrl('REQUEST_URI', '', 'SERVER'), sprintf(AM_QUOTES_FORMSUREDEL, \implode(', ', $deleteIds)));
+                xoops_confirm(['ok' => 1, 'ids' => \implode(',', $deleteIds), 'op' => 'delete'], Request::getUrl('REQUEST_URI', '', 'SERVER'), sprintf(_AM_QUOTES_FORMSUREDEL, \implode(', ', $deleteIds)));
                 break;
             }
             $quoteObject = $quoteHandler->get(Request::getInt('id', 0, 'GET'));
             if (!\is_object($quoteObject)) {
                 redirect_header('quote.php', 3, _ERRORS);
             }
-            xoops_confirm(['ok' => 1, 'id' => Request::getInt('id', 0, 'GET'), 'op' => 'delete'], Request::getUrl('REQUEST_URI', '', 'SERVER'), sprintf(AM_QUOTES_FORMSUREDEL, $quoteObject->getVar('quote')));
+            xoops_confirm(['ok' => 1, 'id' => Request::getInt('id', 0, 'GET'), 'op' => 'delete'], Request::getUrl('REQUEST_URI', '', 'SERVER'), sprintf(_AM_QUOTES_FORMSUREDEL, $quoteObject->getVar('quote')));
         }
         break;
     case 'clone':
-        $id_field = Request::getInt('id', 0, 'GET');
-
-        if ($utility::cloneRecord('quotes_quote', 'id', $id_field)) {
-            redirect_header('quote.php', 3, AM_QUOTES_CLONED_OK);
+        // State-changing action: require a POST confirmation with a valid CSRF token.
+        if (1 === Request::getInt('ok', 0, 'POST')) {
+            if (!$GLOBALS['xoopsSecurity']->check()) {
+                redirect_header('quote.php', 3, implode(', ', $GLOBALS['xoopsSecurity']->getErrors()));
+            }
+            $id_field = Request::getInt('id', 0, 'POST');
+            if ($utility::cloneRecord('quotes_quote', 'id', $id_field)) {
+                redirect_header('quote.php', 3, _AM_QUOTES_CLONED_OK);
+            } else {
+                redirect_header('quote.php', 3, _AM_QUOTES_CLONED_FAILED);
+            }
         } else {
-            redirect_header('quote.php', 3, AM_QUOTES_CLONED_FAILED);
+            $id_field = Request::getInt('id', 0, 'GET');
+            xoops_confirm(['ok' => 1, 'id' => $id_field, 'op' => 'clone'], Request::getUrl('REQUEST_URI', '', 'SERVER'), sprintf(_AM_QUOTES_FORMSURECLONE, $id_field));
         }
 
         break;
     case 'list':
     default:
-        $adminObject->addItemButton(AM_QUOTES_ADD_QUOTE, 'quote.php?op=new', 'add');
+        $adminObject->addItemButton(_AM_QUOTES_ADD_QUOTE, 'quote.php?op=new', 'add');
         $adminObject->displayButton('left');
         $start                = Request::getInt('start', 0, 'GET');
         $quotePaginationLimit = $helper->getConfig('userpager');
@@ -151,7 +145,7 @@ switch ($op) {
         /*
         //
         //
-                            <th class='center width5'>".AM_QUOTES_FORM_ACTION."</th>
+                            <th class='center width5'>"._AM_QUOTES_FORM_ACTION."</th>
         //                    </tr>";
         //            $class = "odd";
         */
@@ -192,28 +186,31 @@ switch ($op) {
             foreach (array_keys($quoteTempArray) as $i) {
                 //        $field = explode(':', $fields[$i]);
 
-                $GLOBALS['xoopsTpl']->assign('selectorid', AM_QUOTES_QUOTE_ID);
+                $GLOBALS['xoopsTpl']->assign('selectorid', _AM_QUOTES_QUOTE_ID);
                 $quoteArray['id'] = $quoteTempArray[$i]->getVar('id');
 
-                $GLOBALS['xoopsTpl']->assign('selectorcid', AM_QUOTES_QUOTE_CID);
+                $GLOBALS['xoopsTpl']->assign('selectorcid', _AM_QUOTES_QUOTE_CID);
                 $quoteArray['cid'] = $categoryHandler->get($quoteTempArray[$i]->getVar('cid'))->getVar('title');
 
-                $selectorauthor_id = $utility::selectSorting(AM_QUOTES_QUOTE_AUTHOR_ID, 'author_id', $helper);
+                $selectorauthor_id = $utility::selectSorting(_AM_QUOTES_QUOTE_AUTHOR_ID, 'author_id', $helper);
                 $GLOBALS['xoopsTpl']->assign('selectorauthor_id', $selectorauthor_id);
                 $quoteArray['author_id'] = $authorHandler->get($quoteTempArray[$i]->getVar('author_id'))->getVar('name');
 
-                $GLOBALS['xoopsTpl']->assign('selectorquote', AM_QUOTES_QUOTE_QUOTE);
+                $GLOBALS['xoopsTpl']->assign('selectorquote', _AM_QUOTES_QUOTE_QUOTE);
                 $quoteArray['quote'] = $quoteTempArray[$i]->getVar('quote');
                 $quoteArray['quote'] = $utility::truncateHtml($quoteArray['quote'], $helper->getConfig('truncatelength'));
 
-                $GLOBALS['xoopsTpl']->assign('selectoronline', AM_QUOTES_QUOTE_ONLINE);
+                $GLOBALS['xoopsTpl']->assign('selectoronline', _AM_QUOTES_QUOTE_ONLINE);
                 $quoteArray['online'] = $quoteTempArray[$i]->getVar('online');
 
-                $selectorcreated = $utility::selectSorting(AM_QUOTES_QUOTE_CREATED, 'created', $helper);
+                $GLOBALS['xoopsTpl']->assign('selectorsubmitter', _AM_QUOTES_SUBMITTER);
+                $quoteArray['submitter'] = quotes_admin_uname((int)$quoteTempArray[$i]->getVar('uid'));
+
+                $selectorcreated = $utility::selectSorting(_AM_QUOTES_QUOTE_CREATED, 'created', $helper);
                 $GLOBALS['xoopsTpl']->assign('selectorcreated', $selectorcreated);
                 $quoteArray['created'] = formatTimestamp($quoteTempArray[$i]->getVar('created'), 's');
 
-                $selectorupdated = $utility::selectSorting(AM_QUOTES_QUOTE_UPDATED, 'updated', $helper);
+                $selectorupdated = $utility::selectSorting(_AM_QUOTES_QUOTE_UPDATED, 'updated', $helper);
                 $GLOBALS['xoopsTpl']->assign('selectorupdated', $selectorupdated);
                 $quoteArray['updated']     = formatTimestamp($quoteTempArray[$i]->getVar('updated'), 's');
                 $quoteId                    = (int)$quoteArray['id'];
@@ -256,7 +253,7 @@ switch ($op) {
 
             //                    <tr>
 
-            //                     <th class='center width5'>".AM_QUOTES_FORM_ACTION."XXX</th>
+            //                     <th class='center width5'>"._AM_QUOTES_FORM_ACTION."XXX</th>
             //                    </tr><tr><td class='errorMsg' colspan='8'>There are noXXX quote</td></tr>";
             //            echo "</table><br><br>";
 

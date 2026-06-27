@@ -50,7 +50,7 @@ class CategoryForm extends \XoopsThemeForm
         $this->helper       = $target->helper;
         $this->targetObject = $target;
 
-        $title = $this->targetObject->isNew() ? \AM_QUOTES_CATEGORY_ADD : \AM_QUOTES_CATEGORY_EDIT;
+        $title = $this->targetObject->isNew() ? \_AM_QUOTES_CATEGORY_ADD : \_AM_QUOTES_CATEGORY_EDIT;
         parent::__construct($title, 'form', \xoops_getenv('SCRIPT_NAME'), 'post', true);
         $this->setExtra('enctype="multipart/form-data"');
 
@@ -61,7 +61,7 @@ class CategoryForm extends \XoopsThemeForm
         unset($hidden);
 
         // Id
-        $this->addElement(new \XoopsFormLabel(\AM_QUOTES_CATEGORY_ID, $this->targetObject->getVar('id'), 'id'));
+        $this->addElement(new \XoopsFormLabel(\_AM_QUOTES_CATEGORY_ID, $this->targetObject->getVar('id'), 'id'));
         // Pid
         require_once XOOPS_ROOT_PATH . '/class/tree.php';
         //$categoryHandler = xoops_getModuleHandler('category', 'quotes' );
@@ -75,15 +75,15 @@ class CategoryForm extends \XoopsThemeForm
             $categoryTree = new \XoopsObjectTree($categoryArray, 'id', 'pid');
 
             // if (Quotes\Utility::checkVerXoops($GLOBALS['xoopsModule'], '2.5.9')) {
-            $categoryPid = $categoryTree->makeSelectElement('pid', 'title', '--', $this->targetObject->getVar('pid'), true, 0, '', \AM_QUOTES_CATEGORY_PID);
+            $categoryPid = $categoryTree->makeSelectElement('pid', 'title', '--', $this->targetObject->getVar('pid'), true, 0, '', \_AM_QUOTES_CATEGORY_PID);
             $this->addElement($categoryPid);
             //  } else {
             //      $categoryPid = $categoryTree->makeSelBox( 'pid', 'title','--', $this->targetObject->getVar('pid', 'e' ), true );
-            //      $this->addElement( new \XoopsFormLabel ( AM_QUOTES_CATEGORY_PID, $categoryPid ) );
+            //      $this->addElement( new \XoopsFormLabel ( _AM_QUOTES_CATEGORY_PID, $categoryPid ) );
             //  }
         }
         // Title
-        $this->addElement(new \XoopsFormText(\AM_QUOTES_CATEGORY_TITLE, 'title', 50, 255, $this->targetObject->getVar('title')), false);
+        $this->addElement(new \XoopsFormText(\_AM_QUOTES_CATEGORY_TITLE, 'title', 50, 255, $this->targetObject->getVar('title')), false);
         // Description
         if (\class_exists('XoopsFormEditor')) {
             $editorOptions           = [];
@@ -94,22 +94,22 @@ class CategoryForm extends \XoopsThemeForm
             $editorOptions['width']  = '100%';
             $editorOptions['height'] = '400px';
             //$editorOptions['editor'] = xoops_getModuleOption('quotes_editor', 'quotes');
-            //$this->addElement( new \XoopsFormEditor(AM_QUOTES_CATEGORY_DESCRIPTION, 'description', $editorOptions), false  );
+            //$this->addElement( new \XoopsFormEditor(_AM_QUOTES_CATEGORY_DESCRIPTION, 'description', $editorOptions), false  );
             if ($this->helper->isUserAdmin()) {
-                $descEditor = new \XoopsFormEditor(\AM_QUOTES_CATEGORY_DESCRIPTION, $this->helper->getConfig('quotesEditorAdmin'), $editorOptions, $nohtml = false, $onfailure = 'textarea');
+                $descEditor = new \XoopsFormEditor(\_AM_QUOTES_CATEGORY_DESCRIPTION, $this->helper->getConfig('quotesEditorAdmin'), $editorOptions, $nohtml = false, $onfailure = 'textarea');
             } else {
-                $descEditor = new \XoopsFormEditor(\AM_QUOTES_CATEGORY_DESCRIPTION, $this->helper->getConfig('quotesEditorUser'), $editorOptions, $nohtml = false, $onfailure = 'textarea');
+                $descEditor = new \XoopsFormEditor(\_AM_QUOTES_CATEGORY_DESCRIPTION, $this->helper->getConfig('quotesEditorUser'), $editorOptions, $nohtml = false, $onfailure = 'textarea');
             }
         } else {
-            $descEditor = new \XoopsFormDhtmlTextArea(\AM_QUOTES_CATEGORY_DESCRIPTION, 'description', $this->targetObject->getVar('description', 'e'), 5, 50);
+            $descEditor = new \XoopsFormDhtmlTextArea(\_AM_QUOTES_CATEGORY_DESCRIPTION, 'description', $this->targetObject->getVar('description', 'e'), 5, 50);
         }
         $this->addElement($descEditor);
         // Image
         $image = $this->targetObject->getVar('image') ?: 'blank.png';
 
         $uploadDir   = '/uploads/quotes/category/';
-        $imgtray     = new \XoopsFormElementTray(\AM_QUOTES_CATEGORY_IMAGE, '<br>');
-        $imgpath     = \sprintf(\AM_QUOTES_FORMIMAGE_PATH, $uploadDir);
+        $imgtray     = new \XoopsFormElementTray(\_AM_QUOTES_CATEGORY_IMAGE, '<br>');
+        $imgpath     = \sprintf(\_AM_QUOTES_FORMIMAGE_PATH, $uploadDir);
         $imageselect = new \XoopsFormSelect($imgpath, 'image', $image);
         $imageArray  = \XoopsLists::getImgListAsArray(XOOPS_ROOT_PATH . $uploadDir);
         foreach ($imageArray as $image) {
@@ -119,17 +119,17 @@ class CategoryForm extends \XoopsThemeForm
         $imgtray->addElement($imageselect);
         $imgtray->addElement(new \XoopsFormLabel('', "<br><img src='" . XOOPS_URL . '/' . $uploadDir . '/' . $image . "' name='image_image' id='image_image' alt='' style='max-width:300px' >"));
         $fileseltray = new \XoopsFormElementTray('', '<br>');
-        $fileseltray->addElement(new \XoopsFormFile(\AM_QUOTES_FORMUPLOAD, 'image', $this->helper->getConfig('maxsize')));
+        $fileseltray->addElement(new \XoopsFormFile(\_AM_QUOTES_FORMUPLOAD, 'image', $this->helper->getConfig('maxsize')));
         $fileseltray->addElement(new \XoopsFormLabel(''));
         $imgtray->addElement($fileseltray);
         $this->addElement($imgtray);
         // Weight
-        $this->addElement(new \XoopsFormText(\AM_QUOTES_CATEGORY_WEIGHT, 'weight', 50, 255, $this->targetObject->getVar('weight')), false);
+        $this->addElement(new \XoopsFormText(\_AM_QUOTES_CATEGORY_WEIGHT, 'weight', 50, 255, $this->targetObject->getVar('weight')), false);
         // Color
-        $this->addElement(new \XoopsFormColorPicker(\AM_QUOTES_CATEGORY_COLOR, 'color', $this->targetObject->getVar('color')), false);
+        $this->addElement(new \XoopsFormColorPicker(\_AM_QUOTES_CATEGORY_COLOR, 'color', $this->targetObject->getVar('color')), false);
         // Online
         $online       = $this->targetObject->isNew() ? 0 : $this->targetObject->getVar('online');
-        $check_online = new \XoopsFormCheckBox(\AM_QUOTES_CATEGORY_ONLINE, 'online', $online);
+        $check_online = new \XoopsFormCheckBox(\_AM_QUOTES_CATEGORY_ONLINE, 'online', $online);
         $check_online->addOption(1, ' ');
         $this->addElement($check_online);
 
@@ -164,7 +164,7 @@ class CategoryForm extends \XoopsThemeForm
         $cat_gperms_read     = $grouppermHandler->getGroupIds('quotes_view', $this->targetObject->getVar('id'), $mid);
         $arr_cat_gperms_read = $this->targetObject->isNew() ? '0' : $cat_gperms_read;
 
-        $permsTray = new \XoopsFormElementTray(\AM_QUOTES_PERMISSIONS_VIEW, '');
+        $permsTray = new \XoopsFormElementTray(\_AM_QUOTES_PERMISSIONS_VIEW, '');
 
         $selectAllReadCheckbox = new \XoopsFormCheckBox('', 'adminbox1', 1);
         $selectAllReadCheckbox->addOption('allbox', \_AM_SYSTEM_ALL);
@@ -192,7 +192,7 @@ class CategoryForm extends \XoopsThemeForm
         $cat_gperms_create     = $grouppermHandler->getGroupIds('quotes_submit', $this->targetObject->getVar('id'), $mid);
         $arr_cat_gperms_create = $this->targetObject->isNew() ? '0' : $cat_gperms_create;
 
-        $permsTray = new \XoopsFormElementTray(\AM_QUOTES_PERMISSIONS_SUBMIT, '');
+        $permsTray = new \XoopsFormElementTray(\_AM_QUOTES_PERMISSIONS_SUBMIT, '');
 
         $selectAllSubmitCheckbox = new \XoopsFormCheckBox('', 'adminbox2', 1);
         $selectAllSubmitCheckbox->addOption('allbox', \_AM_SYSTEM_ALL);
@@ -219,7 +219,7 @@ class CategoryForm extends \XoopsThemeForm
         $cat_gperms_admin     = $grouppermHandler->getGroupIds('quotes_approve', $this->targetObject->getVar('id'), $mid);
         $arr_cat_gperms_admin = $this->targetObject->isNew() ? '0' : $cat_gperms_admin;
 
-        $permsTray = new \XoopsFormElementTray(\AM_QUOTES_PERMISSIONS_APPROVE, '');
+        $permsTray = new \XoopsFormElementTray(\_AM_QUOTES_PERMISSIONS_APPROVE, '');
 
         $selectAllModerateCheckbox = new \XoopsFormCheckBox('', 'adminbox3', 1);
         $selectAllModerateCheckbox->addOption('allbox', \_AM_SYSTEM_ALL);

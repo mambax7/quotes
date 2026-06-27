@@ -13,6 +13,6 @@
                 </span>
             </a>
         <{/foreach}>
-        <a class="quotes-block-more" href="<{$block.url|escape:'html'}>"><{$smarty.const.MD_QUOTES_CATEGORY|default:'Categories'|escape}></a>
+        <a class="quotes-block-more" href="<{$block.url|escape:'html'}>"><{$smarty.const._MD_QUOTES_CATEGORY|default:'Categories'|escape}></a>
     </div>
 <{/if}>

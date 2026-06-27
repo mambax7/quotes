@@ -24,7 +24,6 @@ use XoopsModules\Quotes;
 $GLOBALS['xoopsOption']['template_main'] = 'quotes_index.tpl';
 require __DIR__ . '/header.php';
 require XOOPS_ROOT_PATH . '/header.php';
-//require __DIR__ . '/include/config.php';
 
 global $xoTheme;
 
@@ -54,7 +53,7 @@ foreach ($quoteHandler->getAll($onlineQuotesCriteria) as $quoteObject) {
         'author_country'   => \strip_tags($countryList[$countryCode] ?? $countryCode),
         'author_photo_url' => quotes_index_author_photo_url($authorPhoto),
         'category'         => \is_object($categoryObject) ? $categoryObject->getVar('title') : '',
-        'url'              => QUOTES_URL . '/quote.php?op=view&id=' . (int)$quoteObject->getVar('id'),
+        'url'              => \Xoops\Helpers\Service\Url::module('quotes', 'quote.php', ['op' => 'view', 'id' => (int)$quoteObject->getVar('id')]),
     ];
 }
 
@@ -67,10 +66,10 @@ $GLOBALS['xoopsTpl']->assign('latest_quotes', $latestQuotes);
 // keywords
 $utility::metaKeywords($helper->getConfig('keywords'));
 // description
-$utility::metaDescription(MD_QUOTES_DESC);
+$utility::metaDescription(_MD_QUOTES_DESC);
 
-$GLOBALS['xoopsTpl']->assign('xoops_mpageurl', QUOTES_URL . '/index.php');
-$GLOBALS['xoopsTpl']->assign('quotes_url', QUOTES_URL);
+$GLOBALS['xoopsTpl']->assign('xoops_mpageurl', \Xoops\Helpers\Service\Url::module('quotes', 'index.php'));
+$GLOBALS['xoopsTpl']->assign('quotes_url', \Xoops\Helpers\Service\Url::module('quotes'));
 $GLOBALS['xoopsTpl']->assign('adv', $helper->getConfig('advertise'));
 
 $GLOBALS['xoopsTpl']->assign('bookmarks', $helper->getConfig('bookmarks'));
@@ -87,7 +86,7 @@ function quotes_index_author_photo_url(string $photo): string
         return '';
     }
 
-    return QUOTES_UPLOAD_URL . '/author/' . \rawurlencode($photo);
+    return \Xoops\Helpers\Service\Url::moduleUpload('quotes', 'author/' . \rawurlencode($photo));
 }
 
 function quotes_index_plain_text(string $text): string

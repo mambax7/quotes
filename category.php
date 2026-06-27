@@ -32,9 +32,9 @@ use XoopsModules\Quotes\Utility;
 require __DIR__ . '/header.php';
 
 $utility = new Utility();
-$op      = Request::getCmd('op', 'list', 'GET');
+$op      = Request::getString('op', 'list', 'REQUEST');
 
-if ('edit' !== $op) {
+if (!\in_array($op, ['edit', 'save'], true)) {
     if ('view' === $op) {
         $GLOBALS['xoopsOption']['template_main'] = 'quotes_category.tpl';
     } else {
@@ -72,8 +72,30 @@ $id = Request::getInt('id', 0, 'GET');
 
 switch ($op) {
     case 'edit':
+        // Editing/posting requires the module "Submit from user side" permission (or admin);
+        // enforced server-side via the group-permission check, not just the template link.
+        if (!$helper->isUserAdmin()) {
+            redirect_header(\Xoops\Helpers\Service\Url::module('quotes', 'category.php'), 3, _NOPERM);
+        }
         $categoryObject = $categoryHandler->get(Request::getInt('id', 0, 'GET'));
         $form           = $categoryObject->getForm();
+        $form->display();
+        break;
+    case 'save':
+        // State-changing action: enforce the submit permission + CSRF token.
+        if (!$helper->isUserAdmin()) {
+            redirect_header(\Xoops\Helpers\Service\Url::module('quotes', 'category.php'), 3, _NOPERM);
+        }
+        if (!$GLOBALS['xoopsSecurity']->check()) {
+            redirect_header(\Xoops\Helpers\Service\Url::module('quotes', 'category.php'), 3, implode(', ', $GLOBALS['xoopsSecurity']->getErrors()));
+        }
+        // Shared hydrate/upload/insert logic (same method the admin save uses).
+        $result = $categoryHandler->saveFromRequest($helper);
+        if ($result['ok']) {
+            redirect_header(\Xoops\Helpers\Service\Url::module('quotes', 'category.php', ['op' => 'view', 'id' => (int)$result['object']->getVar('id')]), 2, _AM_QUOTES_FORMOK);
+        }
+        echo $result['errors'];
+        $form = $result['object']->getForm();
         $form->display();
         break;
     case 'view':
@@ -83,7 +105,7 @@ switch ($op) {
         //id
         $categoryObject = $categoryHandler->get($myid);
         if (!\is_object($categoryObject)) {
-            redirect_header(QUOTES_URL . '/category.php', 3, _NOPERM);
+            redirect_header(\Xoops\Helpers\Service\Url::module('quotes', 'category.php'), 3, _NOPERM);
             exit;
         }
 
@@ -102,7 +124,7 @@ switch ($op) {
         $category['weight']      = (int)$categoryObject->getVar('weight');
         $category['color']       = quotes_category_color((string)$categoryObject->getVar('color'));
         $category['online']      = (int)$categoryObject->getVar('online');
-        $category['url']         = QUOTES_URL . '/category.php?op=view&id=' . $category['id'];
+        $category['url']         = \Xoops\Helpers\Service\Url::module('quotes', 'category.php', ['op' => 'view', 'id' => $category['id']]);
 
         //       $GLOBALS['xoopsTpl']->append('category', $category);
         $keywords[] = $categoryObject->getVar('title');
@@ -127,7 +149,7 @@ switch ($op) {
                 'author_country'   => \strip_tags($countryList[$countryCode] ?? $countryCode),
                 'author_photo_url' => quotes_category_author_photo_url($authorPhoto),
                 'category'         => $category['title'],
-                'url'              => QUOTES_URL . '/quote.php?op=view&id=' . (int)$quoteObject->getVar('id'),
+                'url'              => \Xoops\Helpers\Service\Url::module('quotes', 'quote.php', ['op' => 'view', 'id' => (int)$quoteObject->getVar('id')]),
             ];
         }
 
@@ -154,17 +176,21 @@ switch ($op) {
                 $category['weight']      = (int)$categoryArray[$i]->getVar('weight');
                 $category['color']       = quotes_category_color((string)$categoryArray[$i]->getVar('color'));
                 $category['online']      = (int)$categoryArray[$i]->getVar('online');
-                $category['url']         = QUOTES_URL . '/category.php?op=view&id=' . $category['id'];
+                $category['url']         = \Xoops\Helpers\Service\Url::module('quotes', 'category.php', ['op' => 'view', 'id' => $category['id']]);
                 $GLOBALS['xoopsTpl']->append('category', $category);
                 $keywords[] = $categoryArray[$i]->getVar('title');
                 unset($category);
             }
             // Display Navigation
             if ($categoryCount > $categoryPaginationLimit) {
-                $GLOBALS['xoopsTpl']->assign('xoops_mpageurl', QUOTES_URL . '/category.php');
-                xoops_load('XoopsPageNav');
-                $pagenav = new \XoopsPageNav($categoryCount, $categoryPaginationLimit, $start, 'start');
-                $GLOBALS['xoopsTpl']->assign('pagenav', $pagenav->renderNav(4));
+                $GLOBALS['xoopsTpl']->assign('xoops_mpageurl', \Xoops\Helpers\Service\Url::module('quotes', 'category.php'));
+                // SHOWCASE: data-driven pagination via xoops/smartyextensions render_pagination (S1, BS5, windowed).
+                $GLOBALS['xoopsTpl']->assign('pagination', [
+                    'total' => $categoryCount,
+                    'limit' => $categoryPaginationLimit,
+                    'start' => $start,
+                    'url'   => \Xoops\Helpers\Service\Url::module('quotes', 'category.php') . '?start={start}',
+                ]);
             }
         }
 }
@@ -174,10 +200,10 @@ if (isset($keywords)) {
     $utility::metaKeywords($helper->getConfig('keywords') . ', ' . implode(', ', $keywords));
 }
 //description
-$utility::metaDescription(MD_QUOTES_CATEGORY_DESC);
+$utility::metaDescription(_MD_QUOTES_CATEGORY_DESC);
 
-$GLOBALS['xoopsTpl']->assign('xoops_mpageurl', QUOTES_URL . '/category.php');
-$GLOBALS['xoopsTpl']->assign('quotes_url', QUOTES_URL);
+$GLOBALS['xoopsTpl']->assign('xoops_mpageurl', \Xoops\Helpers\Service\Url::module('quotes', 'category.php'));
+$GLOBALS['xoopsTpl']->assign('quotes_url', \Xoops\Helpers\Service\Url::module('quotes'));
 $GLOBALS['xoopsTpl']->assign('adv', $helper->getConfig('advertise'));
 
 $GLOBALS['xoopsTpl']->assign('bookmarks', $helper->getConfig('bookmarks'));
@@ -194,7 +220,7 @@ function quotes_category_image_url(string $image): string
         return '';
     }
 
-    return '' !== $image ? QUOTES_UPLOAD_URL . '/category/' . \rawurlencode($image) : '';
+    return '' !== $image ? \Xoops\Helpers\Service\Url::moduleUpload('quotes', 'category/' . \rawurlencode($image)) : '';
 }
 
 function quotes_category_author_photo_url(string $photo): string
@@ -203,7 +229,7 @@ function quotes_category_author_photo_url(string $photo): string
         return '';
     }
 
-    return QUOTES_UPLOAD_URL . '/author/' . \rawurlencode($photo);
+    return \Xoops\Helpers\Service\Url::moduleUpload('quotes', 'author/' . \rawurlencode($photo));
 }
 
 function quotes_category_plain_text(string $text): string

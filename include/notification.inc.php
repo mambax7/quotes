@@ -64,7 +64,7 @@ function quotes_notify_iteminfo($category, $item_id)
             return null;
         }
         $item['name'] = $row['title'];
-        $item['url']  = XOOPS_URL . '/modules/' . $module->getVar('dirname') . '/category.php?op=view&id=' . (int)$item_id;
+        $item['url']  = \Xoops\Helpers\Service\Url::module((string)$module->getVar('dirname'), 'category.php', ['op' => 'view', 'id' => (int)$item_id]);
 
         return $item;
     }
@@ -81,7 +81,7 @@ function quotes_notify_iteminfo($category, $item_id)
             return null;
         }
         $item['name'] = $row['quote'];
-        $item['url']  = XOOPS_URL . '/modules/' . $module->getVar('dirname') . '/quote.php?op=view&id=' . (int)$row['id'];
+        $item['url']  = \Xoops\Helpers\Service\Url::module((string)$module->getVar('dirname'), 'quote.php', ['op' => 'view', 'id' => (int)$row['id']]);
 
         return $item;
     }

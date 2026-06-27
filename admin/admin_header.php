@@ -76,3 +76,22 @@ $helper->loadLanguage('modinfo');
 $helper->loadLanguage('common');
 
 //xoops_cp_header();
+
+/**
+ * Resolve a submitter username from a XOOPS uid (memoised). Returns '-' for anonymous/unknown.
+ */
+function quotes_admin_uname(int $uid): string
+{
+    static $cache = [];
+    if ($uid <= 0) {
+        return '-';
+    }
+    if (!\array_key_exists($uid, $cache)) {
+        /** @var \XoopsMemberHandler $memberHandler */
+        $memberHandler = \xoops_getHandler('member');
+        $user          = $memberHandler->getUser($uid);
+        $cache[$uid]   = \is_object($user) ? $user->getVar('uname') : '-';
+    }
+
+    return $cache[$uid];
+}

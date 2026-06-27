@@ -51,22 +51,15 @@ $pathIcon32 = Admin::iconUrl('', '32');
 //$pathModIcon16 = $helper->getConfig('modicons16');
 //$pathModIcon32 = $helper->getConfig('modicons32');
 
-if (!defined($moduleDirNameUpper . '_CONSTANTS_DEFINED')) {
-    define($moduleDirNameUpper . '_' . 'DIRNAME', basename(dirname(__DIR__)));
-    define($moduleDirNameUpper . '_ROOT_PATH', XOOPS_ROOT_PATH . '/modules/' . $moduleDirName);
-    define($moduleDirNameUpper . '_PATH', XOOPS_ROOT_PATH . '/modules/' . $moduleDirName);
-    define($moduleDirNameUpper . '_URL', XOOPS_URL . '/modules/' . $moduleDirName);
-    define($moduleDirNameUpper . '_IMAGES_URL', constant($moduleDirNameUpper . '_URL') . '/assets/images/');
-    define($moduleDirNameUpper . '_IMAGES_PATH', constant($moduleDirNameUpper . '_ROOT_PATH') . '/assets/images/');
-    define($moduleDirNameUpper . '_ADMIN_URL', constant($moduleDirNameUpper . '_URL') . '/admin/');
-    define($moduleDirNameUpper . '_ADMIN_PATH', constant($moduleDirNameUpper . '_ROOT_PATH') . '/admin/');
-    define($moduleDirNameUpper . '_ADMIN', constant($moduleDirNameUpper . '_URL') . '/admin/index.php');
-    //    define($moduleDirNameUpper . '_AUTHOR_LOGOIMG', constant($moduleDirNameUpper . '_URL') . '/assets/images/logoModule.png');
-    define($moduleDirNameUpper . '_UPLOAD_URL', XOOPS_UPLOAD_URL . '/' . $moduleDirName); // WITHOUT Trailing slash
-    define($moduleDirNameUpper . '_UPLOAD_PATH', XOOPS_UPLOAD_PATH . '/' . $moduleDirName); // WITHOUT Trailing slash
-    define($moduleDirNameUpper . '_CAT_IMAGES_URL', XOOPS_UPLOAD_URL . '/' . constant($moduleDirNameUpper . '_' . 'DIRNAME') . '/category');
-    define($moduleDirNameUpper . '_CAT_IMAGES_PATH', XOOPS_UPLOAD_PATH . '/' . constant($moduleDirNameUpper . '_' . 'DIRNAME') . '/category');
-    define($moduleDirNameUpper . '_CACHE_PATH', XOOPS_UPLOAD_PATH . '/' . $moduleDirName . '/');
+// Standard {UP}_* path/URL constants from the shared, helper-backed module context
+// (replaces the hand-built XOOPS_URL/XOOPS_ROOT_PATH concatenation block).
+$context = \XoopsModules\Mtools\Module\ModuleContext::fromHelper($helper);
+$context->defineConstants();
+
+// Module-specific constants not covered by the standard set.
+if (!defined($moduleDirNameUpper . '_CAT_IMAGES_URL')) {
+    define($moduleDirNameUpper . '_CAT_IMAGES_URL', $context->uploadUrl('category'));
+    define($moduleDirNameUpper . '_CAT_IMAGES_PATH', $context->uploadPath('category'));
     define($moduleDirNameUpper . '_AUTHOR_LOGOIMG', $pathIcon32 . '/xoopsmicrobutton.gif');
     define($moduleDirNameUpper . '_CONSTANTS_DEFINED', 1);
 }
@@ -118,7 +111,7 @@ if (is_object($helper->getModule())) {
     $pathModIcon16 = $helper->getModule()->getInfo('modicons16');
     $pathModIcon32 = $helper->getModule()->getInfo('modicons32');
 
-    $GLOBALS['xoopsTpl']->assign('pathModIcon16', XOOPS_URL . '/modules/' . $moduleDirName . '/' . $pathModIcon16);
+    $GLOBALS['xoopsTpl']->assign('pathModIcon16', \Xoops\Helpers\Service\Url::module($moduleDirName, (string)$pathModIcon16));
     $GLOBALS['xoopsTpl']->assign('pathModIcon32', $pathModIcon32);
 }
 

@@ -33,12 +33,12 @@ $sort  = \in_array($sort, ['id', 'pid', 'title', 'weight', 'color', 'online'], t
 
 $adminObject->displayNavigation(basename(__FILE__));
 $permHelper = new Permission();
-$uploadDir  = XOOPS_UPLOAD_PATH . '/quotes/category/';
-$uploadUrl  = XOOPS_UPLOAD_URL . '/quotes/category/';
+$uploadDir  = \Xoops\Helpers\Service\Path::moduleUpload('quotes', 'category') . '/';
+$uploadUrl  = \Xoops\Helpers\Service\Url::moduleUpload('quotes', 'category') . '/';
 
 switch ($op) {
     case 'new':
-        $adminObject->addItemButton(AM_QUOTES_CATEGORY_LIST, 'category.php', 'list');
+        $adminObject->addItemButton(_AM_QUOTES_CATEGORY_LIST, 'category.php', 'list');
         $adminObject->displayButton('left');
 
         $categoryObject = $categoryHandler->create();
@@ -49,46 +49,9 @@ switch ($op) {
         if (!$GLOBALS['xoopsSecurity']->check()) {
             redirect_header('category.php', 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
         }
-        if (0 !== Request::getInt('id', 0, 'POST')) {
-            $categoryObject = $categoryHandler->get(Request::getInt('id', 0, 'POST'));
-        } else {
-            $categoryObject = $categoryHandler->create();
-        }
-        // Form save fields
-        $categoryObject->setVar('pid', Request::getInt('pid', 0, 'POST'));
-        $categoryObject->setVar('title', Request::getString('title', '', 'POST'));
-        $categoryObject->setVar('description', Request::getText('description', '', 'POST'));
-
-        require_once XOOPS_ROOT_PATH . '/class/uploader.php';
-        $uploadDir = XOOPS_UPLOAD_PATH . '/quotes/category/';
-        $uploader  = new \XoopsMediaUploader(
-            $uploadDir,
-            $helper->getConfig('mimetypes'),
-            $helper->getConfig('maxsize'),
-            null,
-            null
-        );
-        $uploadFields = Request::getArray('xoops_upload_file', [], 'POST');
-        $uploadField  = (string)($uploadFields[0] ?? '');
-        if ('' !== $uploadField && $uploader->fetchMedia($uploadField)) {
-            //$extension = preg_replace( '/^.+\.([^.]+)$/sU' , '' , $_FILES['attachedfile']['name']);
-            //$imgName = str_replace(' ', '', $_POST['image']).'.'.$extension;
-
-            $uploader->setPrefix('image_');
-            $uploader->fetchMedia($uploadField);
-            if (!$uploader->upload()) {
-                $errors = $uploader->getErrors();
-                redirect_header('javascript:history.go(-1)', 3, $errors);
-            } else {
-                $categoryObject->setVar('image', $uploader->getSavedFileName());
-            }
-        } else {
-            $categoryObject->setVar('image', Request::getString('image', '', 'POST'));
-        }
-
-        $categoryObject->setVar('weight', Request::getInt('weight', 0, 'POST'));
-        $categoryObject->setVar('color', Request::getString('color', '', 'POST'));
-        $categoryObject->setVar('online', ((1 === Request::getInt('online', 0, 'POST')) ? '1' : '0'));
+        // Shared hydrate/upload/insert logic (also used by the frontend save handler).
+        $result         = $categoryHandler->saveFromRequest($helper);
+        $categoryObject = $result['object'];
         //Permissions
         //===============================================================
 
@@ -208,17 +171,17 @@ switch ($op) {
 
         //===============================================================
 
-        if ($categoryHandler->insert($categoryObject)) {
-            redirect_header('category.php?op=list', 2, AM_QUOTES_FORMOK);
+        if ($result['ok']) {
+            redirect_header('category.php?op=list', 2, _AM_QUOTES_FORMOK);
         }
 
-        echo $categoryObject->getHtmlErrors();
-        $form = $categoryObject->getForm();
+        echo $result['errors'];
+        $form = $result['object']->getForm();
         $form->display();
         break;
     case 'edit':
-        $adminObject->addItemButton(AM_QUOTES_ADD_CATEGORY, 'category.php?op=new', 'add');
-        $adminObject->addItemButton(AM_QUOTES_CATEGORY_LIST, 'category.php', 'list');
+        $adminObject->addItemButton(_AM_QUOTES_ADD_CATEGORY, 'category.php?op=new', 'add');
+        $adminObject->addItemButton(_AM_QUOTES_CATEGORY_LIST, 'category.php', 'list');
         $adminObject->displayButton('left');
         $categoryObject = $categoryHandler->get(Request::getInt('id', 0, 'GET'));
         $form           = $categoryObject->getForm();
@@ -244,35 +207,43 @@ switch ($op) {
                 }
             }
             if ($deleted > 0) {
-                redirect_header('category.php', 3, AM_QUOTES_FORMDELOK);
+                redirect_header('category.php', 3, _AM_QUOTES_FORMDELOK);
             } else {
                 redirect_header('category.php', 3, _ERRORS);
             }
         } else {
             if ([] !== $deleteIds) {
-                xoops_confirm(['ok' => 1, 'ids' => \implode(',', $deleteIds), 'op' => 'delete'], Request::getUrl('REQUEST_URI', '', 'SERVER'), sprintf(AM_QUOTES_FORMSUREDEL, \implode(', ', $deleteIds)));
+                xoops_confirm(['ok' => 1, 'ids' => \implode(',', $deleteIds), 'op' => 'delete'], Request::getUrl('REQUEST_URI', '', 'SERVER'), sprintf(_AM_QUOTES_FORMSUREDEL, \implode(', ', $deleteIds)));
                 break;
             }
             $categoryObject = $categoryHandler->get(Request::getInt('id', 0, 'GET'));
             if (!\is_object($categoryObject)) {
                 redirect_header('category.php', 3, _ERRORS);
             }
-            xoops_confirm(['ok' => 1, 'id' => Request::getInt('id', 0, 'GET'), 'op' => 'delete'], Request::getUrl('REQUEST_URI', '', 'SERVER'), sprintf(AM_QUOTES_FORMSUREDEL, $categoryObject->getVar('title')));
+            xoops_confirm(['ok' => 1, 'id' => Request::getInt('id', 0, 'GET'), 'op' => 'delete'], Request::getUrl('REQUEST_URI', '', 'SERVER'), sprintf(_AM_QUOTES_FORMSUREDEL, $categoryObject->getVar('title')));
         }
         break;
     case 'clone':
-        $id_field = Request::getInt('id', 0, 'GET');
-
-        if ($utility::cloneRecord('quotes_category', 'id', $id_field)) {
-            redirect_header('category.php', 3, AM_QUOTES_CLONED_OK);
+        // State-changing action: require a POST confirmation with a valid CSRF token.
+        if (1 === Request::getInt('ok', 0, 'POST')) {
+            if (!$GLOBALS['xoopsSecurity']->check()) {
+                redirect_header('category.php', 3, implode(', ', $GLOBALS['xoopsSecurity']->getErrors()));
+            }
+            $id_field = Request::getInt('id', 0, 'POST');
+            if ($utility::cloneRecord('quotes_category', 'id', $id_field)) {
+                redirect_header('category.php', 3, _AM_QUOTES_CLONED_OK);
+            } else {
+                redirect_header('category.php', 3, _AM_QUOTES_CLONED_FAILED);
+            }
         } else {
-            redirect_header('category.php', 3, AM_QUOTES_CLONED_FAILED);
+            $id_field = Request::getInt('id', 0, 'GET');
+            xoops_confirm(['ok' => 1, 'id' => $id_field, 'op' => 'clone'], Request::getUrl('REQUEST_URI', '', 'SERVER'), sprintf(_AM_QUOTES_FORMSURECLONE, $id_field));
         }
 
         break;
     case 'list':
     default:
-        $adminObject->addItemButton(AM_QUOTES_ADD_CATEGORY, 'category.php?op=new', 'add');
+        $adminObject->addItemButton(_AM_QUOTES_ADD_CATEGORY, 'category.php?op=new', 'add');
         $adminObject->displayButton('left');
         $start                   = Request::getInt('start', 0, 'GET');
         $categoryPaginationLimit = $helper->getConfig('userpager');
@@ -287,7 +258,7 @@ switch ($op) {
         /*
         //
         //
-                            <th class='center width5'>".AM_QUOTES_FORM_ACTION."</th>
+                            <th class='center width5'>"._AM_QUOTES_FORM_ACTION."</th>
         //                    </tr>";
         //            $class = "odd";
         */
@@ -328,33 +299,33 @@ switch ($op) {
             foreach (array_keys($categoryTempArray) as $i) {
                 //        $field = explode(':', $fields[$i]);
 
-                $GLOBALS['xoopsTpl']->assign('selectorid', AM_QUOTES_CATEGORY_ID);
+                $GLOBALS['xoopsTpl']->assign('selectorid', _AM_QUOTES_CATEGORY_ID);
                 $categoryArray['id'] = $categoryTempArray[$i]->getVar('id');
 
-                $GLOBALS['xoopsTpl']->assign('selectorpid', AM_QUOTES_CATEGORY_PID);
+                $GLOBALS['xoopsTpl']->assign('selectorpid', _AM_QUOTES_CATEGORY_PID);
                 $categoryArray['pid'] = $categoryTempArray[$i]->getVar('pid');
 
-                $GLOBALS['xoopsTpl']->assign('selectortitle', AM_QUOTES_CATEGORY_TITLE);
+                $GLOBALS['xoopsTpl']->assign('selectortitle', _AM_QUOTES_CATEGORY_TITLE);
                 $categoryArray['title'] = $categoryTempArray[$i]->getVar('title');
                 $categoryArray['title'] = $utility::truncateHtml($categoryArray['title'], $helper->getConfig('truncatelength'));
 
-                $GLOBALS['xoopsTpl']->assign('selectordescription', AM_QUOTES_CATEGORY_DESCRIPTION);
+                $GLOBALS['xoopsTpl']->assign('selectordescription', _AM_QUOTES_CATEGORY_DESCRIPTION);
                 $categoryArray['description'] = $categoryTempArray[$i]->getVar('description');
                 $categoryArray['description'] = $utility::truncateHtml($categoryArray['description'], $helper->getConfig('truncatelength'));
 
-                $GLOBALS['xoopsTpl']->assign('selectorimage', AM_QUOTES_CATEGORY_IMAGE);
+                $GLOBALS['xoopsTpl']->assign('selectorimage', _AM_QUOTES_CATEGORY_IMAGE);
                 $categoryImage          = (string)$categoryTempArray[$i]->getVar('image');
-                $categoryArray['image'] = '' !== $categoryImage ? "<img src='" . $uploadUrl . \htmlspecialchars($categoryImage, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "' alt='' style='max-width:100px'>" : '';
+                $categoryArray['image'] = '' !== $categoryImage ? "<img src='" . $uploadUrl . \Xoops\Helpers\Utility\HtmlBuilder::escape($categoryImage) . "' alt='' style='max-width:100px'>" : '';
 
-                $selectorweight = $utility::selectSorting(AM_QUOTES_CATEGORY_WEIGHT, 'weight', $helper);
+                $selectorweight = $utility::selectSorting(_AM_QUOTES_CATEGORY_WEIGHT, 'weight', $helper);
                 $GLOBALS['xoopsTpl']->assign('selectorweight', $selectorweight);
                 $categoryArray['weight'] = $categoryTempArray[$i]->getVar('weight');
 
-                $selectorcolor = $utility::selectSorting(AM_QUOTES_CATEGORY_COLOR, 'color', $helper);
+                $selectorcolor = $utility::selectSorting(_AM_QUOTES_CATEGORY_COLOR, 'color', $helper);
                 $GLOBALS['xoopsTpl']->assign('selectorcolor', $selectorcolor);
                 $categoryArray['color'] = $categoryTempArray[$i]->getVar('color');
 
-                $selectoronline = $utility::selectSorting(AM_QUOTES_CATEGORY_ONLINE, 'online', $helper);
+                $selectoronline = $utility::selectSorting(_AM_QUOTES_CATEGORY_ONLINE, 'online', $helper);
                 $GLOBALS['xoopsTpl']->assign('selectoronline', $selectoronline);
                 $categoryArray['online']      = $categoryTempArray[$i]->getVar('online');
                 $categoryId                    = (int)$categoryArray['id'];
@@ -397,7 +368,7 @@ switch ($op) {
 
             //                    <tr>
 
-            //                     <th class='center width5'>".AM_QUOTES_FORM_ACTION."XXX</th>
+            //                     <th class='center width5'>"._AM_QUOTES_FORM_ACTION."XXX</th>
             //                    </tr><tr><td class='errorMsg' colspan='9'>There are noXXX category</td></tr>";
             //            echo "</table><br><br>";
 

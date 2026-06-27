@@ -34,7 +34,7 @@ $helper->loadLanguage('feedback');
 
 // get path to icons
 $pathIcon32    = Admin::menuIconPath('');
-$pathModIcon32 = XOOPS_URL . '/modules/' . $moduleDirName . '/assets/images/icons/32/';
+$pathModIcon32 = \Xoops\Helpers\Service\Url::module($moduleDirName, 'assets/images/icons/32/');
 if (is_object($helper->getModule()) && false !== $helper->getModule()->getInfo('modicons32')) {
     $pathModIcon32 = $helper->url($helper->getModule()->getInfo('modicons32'));
 }
@@ -42,37 +42,37 @@ if (is_object($helper->getModule()) && false !== $helper->getModule()->getInfo('
 $adminObject = Admin::getInstance();
 
 $adminmenu[] = [
-    'title' => MI_QUOTES_ADMENU1,
+    'title' => _MI_QUOTES_ADMENU1,
     'link'  => 'admin/index.php',
     'icon'  => "{$pathIcon32}/home.png",
 ];
 
 $adminmenu[] = [
-    'title' => MI_QUOTES_ADMENU2,
+    'title' => _MI_QUOTES_ADMENU2,
     'link'  => 'admin/quote.php',
     'icon'  => "{$pathIcon32}/insert_table_row.png",
 ];
 
 $adminmenu[] = [
-    'title' => MI_QUOTES_ADMENU3,
+    'title' => _MI_QUOTES_ADMENU3,
     'link'  => 'admin/category.php',
     'icon'  => "{$pathIcon32}/category.png",
 ];
 
 $adminmenu[] = [
-    'title' => MI_QUOTES_ADMENU4,
+    'title' => _MI_QUOTES_ADMENU4,
     'link'  => 'admin/author.php',
     'icon'  => "{$pathIcon32}/user-icon.png",
 ];
 
 $adminmenu[] = [
-    'title' => MI_QUOTES_ADMENU8,
+    'title' => _MI_QUOTES_ADMENU8,
     'link'  => 'admin/permissions.php',
     'icon'  => "{$pathIcon32}/permissions.png",
 ];
 
 $adminmenu[] = [
-    'title' => MI_QUOTES_ADMENU5,
+    'title' => _MI_QUOTES_ADMENU5,
     'link'  => 'admin/feedback.php',
     'icon'  => "{$pathIcon32}/mail_foward.png",
 ];
@@ -85,14 +85,14 @@ $adminmenu[] = [
 
 if (is_object($helper->getModule()) && $helper->getConfig('displayDeveloperTools')) {
     $adminmenu[] = [
-        'title' => MI_QUOTES_ADMENU6,
+        'title' => _MI_QUOTES_ADMENU6,
         'link'  => 'admin/migrate.php',
         'icon'  => "{$pathIcon32}/database_go.png",
     ];
 }
 
 $adminmenu[] = [
-    'title' => MI_QUOTES_ADMENU7,
+    'title' => _MI_QUOTES_ADMENU7,
     'link'  => 'admin/about.php',
     'icon'  => "{$pathIcon32}/about.png",
 ];

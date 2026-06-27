@@ -15,19 +15,19 @@
         <dl>
             <{if $author.created|default:'' != ''}>
                 <div>
-                    <dt><{$smarty.const.MD_QUOTES_AUTHOR_CREATED|default:'Created'|escape}></dt>
+                    <dt><{$smarty.const._MD_QUOTES_AUTHOR_CREATED|default:'Created'|escape}></dt>
                     <dd><{$author.created|escape}></dd>
                 </div>
             <{/if}>
             <{if $author.updated|default:'' != ''}>
                 <div class="quotes-detail-actions-row">
-                    <dt><{$smarty.const.MD_QUOTES_AUTHOR_UPDATED|default:'Updated'|escape}></dt>
+                    <dt><{$smarty.const._MD_QUOTES_AUTHOR_UPDATED|default:'Updated'|escape}></dt>
                     <dd>
                         <span><{$author.updated|escape}></span>
-                        <{if $xoops_isadmin === true}>
+                        <{if $author.can_edit}>
                             <span class="quotes-detail-inline-actions">
                                 <a href="author.php?op=edit&amp;id=<{$author.id}>" title="<{$smarty.const._EDIT|escape}>"><{$smarty.const._EDIT|escape}></a>
-                                <a href="admin/author.php?op=delete&amp;id=<{$author.id}>" title="<{$smarty.const._DELETE|escape}>"><{$smarty.const._DELETE|escape}></a>
+                                <{if $xoops_isadmin === true}><a href="admin/author.php?op=delete&amp;id=<{$author.id}>" title="<{$smarty.const._DELETE|escape}>"><{$smarty.const._DELETE|escape}></a><{/if}>
                             </span>
                         <{/if}>
                     </dd>
@@ -40,7 +40,7 @@
 <{if $author_quote|default:false}>
     <section class="quotes-section quotes-author-quotes">
         <div class="quotes-section-heading">
-            <h2><{$smarty.const.MD_QUOTES_QUOTE|default:'Quote'|escape}></h2>
+            <h2><{$smarty.const._MD_QUOTES_QUOTE|default:'Quote'|escape}></h2>
             <{if $author_quote_nav.count|default:0 > 1}>
                 <span class="quotes-quote-count"><{$author_quote_nav.index}> / <{$author_quote_nav.count}></span>
             <{/if}>
@@ -67,7 +67,9 @@
     </section>
 <{/if}>
 
-<{if $pagenav|default:'' != ''}>
+<{if $pagination|default:'' != ''}>
+    <nav class="quotes-pagination"><{render_pagination total=$pagination.total limit=$pagination.limit start=$pagination.start urlPattern=$pagination.url window=2}></nav>
+<{elseif $pagenav|default:'' != ''}>
     <nav class="quotes-pagination"><{$pagenav}></nav>
 <{/if}>
 

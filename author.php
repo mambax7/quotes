@@ -31,9 +31,9 @@ use XoopsModules\Quotes\Utility;
 /** @var Utility $utility */
 require __DIR__ . '/header.php';
 
-$op = Request::getCmd('op', 'list', 'GET');
+$op = Request::getString('op', 'list', 'REQUEST');
 
-if ('edit' !== $op) {
+if (!\in_array($op, ['edit', 'save'], true)) {
     if ('view' === $op) {
         $GLOBALS['xoopsOption']['template_main'] = 'quotes_author.tpl';
     } else {
@@ -70,8 +70,36 @@ $id = Request::getInt('id', 0, 'GET');
 
 switch ($op) {
     case 'edit':
-        $authorObject = $authorHandler->get(Request::getInt('id', 0, 'GET'));
-        $form         = $authorObject->getForm();
+        $editId       = Request::getInt('id', 0, 'GET');
+        $authorObject = $authorHandler->get($editId);
+        if ($editId > 0) {
+            if (!quotes_user_can_edit_author($authorObject)) {
+                redirect_header(\Xoops\Helpers\Service\Url::module('quotes', 'author.php'), 3, _NOPERM);
+            }
+        } elseif (!quotes_user_can_submit()) {
+            redirect_header(\Xoops\Helpers\Service\Url::module('quotes', 'author.php'), 3, _NOPERM);
+        }
+        $form = $authorObject->getForm();
+        $form->display();
+        break;
+    case 'save':
+        if (!$GLOBALS['xoopsSecurity']->check()) {
+            redirect_header(\Xoops\Helpers\Service\Url::module('quotes', 'author.php'), 3, implode(', ', $GLOBALS['xoopsSecurity']->getErrors()));
+        }
+        $saveId = Request::getInt('id', 0, 'POST');
+        if ($saveId > 0) {
+            if (!quotes_user_can_edit_author($authorHandler->get($saveId))) {
+                redirect_header(\Xoops\Helpers\Service\Url::module('quotes', 'author.php'), 3, _NOPERM);
+            }
+        } elseif (!quotes_user_can_submit()) {
+            redirect_header(\Xoops\Helpers\Service\Url::module('quotes', 'author.php'), 3, _NOPERM);
+        }
+        $result = $authorHandler->saveFromRequest($helper, $helper->isUserAdmin());
+        if ($result['ok']) {
+            redirect_header(\Xoops\Helpers\Service\Url::module('quotes', 'author.php', ['op' => 'view', 'id' => (int)$result['object']->getVar('id')]), 2, _AM_QUOTES_FORMOK);
+        }
+        echo $result['errors'];
+        $form = $result['object']->getForm();
         $form->display();
         break;
     case 'view':
@@ -81,7 +109,7 @@ switch ($op) {
         //id
         $authorObject = $authorHandler->get($myid);
         if (!\is_object($authorObject)) {
-            redirect_header(QUOTES_URL . '/author.php', 3, _NOPERM);
+            redirect_header(\Xoops\Helpers\Service\Url::module('quotes', 'author.php'), 3, _NOPERM);
             exit;
         }
 
@@ -100,7 +128,8 @@ switch ($op) {
         $author['photo_url'] = quotes_author_photo_url((string)$author['photo']);
         $author['created'] = formatTimestamp($authorObject->getVar('created'), 's');
         $author['updated'] = formatTimestamp($authorObject->getVar('updated'), 's');
-        $author['url']     = QUOTES_URL . '/author.php?op=view&id=' . $author['id'];
+        $author['url']     = \Xoops\Helpers\Service\Url::module('quotes', 'author.php', ['op' => 'view', 'id' => $author['id']]);
+        $author['can_edit'] = quotes_user_can_edit_author($authorObject);
 
         $quoteStart    = \max(0, Request::getInt('qstart', 0, 'GET'));
         $quoteCriteria = new \CriteriaCompo();
@@ -118,15 +147,15 @@ switch ($op) {
             $authorQuote = [
                 'id'    => (int)$quoteObject->getVar('id'),
                 'quote' => quotes_render_rich_text((string)$quoteObject->getVar('quote', 'n')),
-                'url'   => QUOTES_URL . '/quote.php?op=view&id=' . (int)$quoteObject->getVar('id'),
+                'url'   => \Xoops\Helpers\Service\Url::module('quotes', 'quote.php', ['op' => 'view', 'id' => (int)$quoteObject->getVar('id')]),
             ];
             break;
         }
 
         $GLOBALS['xoopsTpl']->assign('author_quote', $authorQuote);
         $GLOBALS['xoopsTpl']->assign('author_quote_nav', [
-            'prev'  => $quoteStart > 0 ? QUOTES_URL . '/author.php?op=view&id=' . $author['id'] . '&qstart=' . ($quoteStart - 1) : '',
-            'next'  => ($quoteStart + 1) < $quoteCount ? QUOTES_URL . '/author.php?op=view&id=' . $author['id'] . '&qstart=' . ($quoteStart + 1) : '',
+            'prev'  => $quoteStart > 0 ? \Xoops\Helpers\Service\Url::module('quotes', 'author.php', ['op' => 'view', 'id' => $author['id'], 'qstart' => $quoteStart - 1]) : '',
+            'next'  => ($quoteStart + 1) < $quoteCount ? \Xoops\Helpers\Service\Url::module('quotes', 'author.php', ['op' => 'view', 'id' => $author['id'], 'qstart' => $quoteStart + 1]) : '',
             'count' => $quoteCount,
             'index' => $quoteCount > 0 ? $quoteStart + 1 : 0,
         ]);
@@ -139,7 +168,7 @@ switch ($op) {
 
         // Display Navigation
         if ($authorCount > $authorPaginationLimit) {
-            $GLOBALS['xoopsTpl']->assign('xoops_mpageurl', QUOTES_URL . '/author.php');
+            $GLOBALS['xoopsTpl']->assign('xoops_mpageurl', \Xoops\Helpers\Service\Url::module('quotes', 'author.php'));
             xoops_load('XoopsPageNav');
             $pagenav = new \XoopsPageNav($authorCount, $authorPaginationLimit, $start, 'op=view&id');
             $GLOBALS['xoopsTpl']->assign('pagenav', $pagenav->renderNav(4));
@@ -165,17 +194,22 @@ switch ($op) {
                 $author['photo_url'] = quotes_author_photo_url((string)$author['photo']);
                 $author['created'] = formatTimestamp($authorArray[$i]->getVar('created'), 's');
                 $author['updated'] = formatTimestamp($authorArray[$i]->getVar('updated'), 's');
-                $author['url']     = QUOTES_URL . '/author.php?op=view&id=' . $author['id'];
+                $author['url']     = \Xoops\Helpers\Service\Url::module('quotes', 'author.php', ['op' => 'view', 'id' => $author['id']]);
+                $author['can_edit'] = quotes_user_can_edit_author($authorArray[$i]);
                 $GLOBALS['xoopsTpl']->append('author', $author);
                 $keywords[] = $authorArray[$i]->getVar('name');
                 unset($author);
             }
             // Display Navigation
             if ($authorCount > $authorPaginationLimit) {
-                $GLOBALS['xoopsTpl']->assign('xoops_mpageurl', QUOTES_URL . '/author.php');
-                xoops_load('XoopsPageNav');
-                $pagenav = new \XoopsPageNav($authorCount, $authorPaginationLimit, $start, 'start');
-                $GLOBALS['xoopsTpl']->assign('pagenav', $pagenav->renderNav(4));
+                $GLOBALS['xoopsTpl']->assign('xoops_mpageurl', \Xoops\Helpers\Service\Url::module('quotes', 'author.php'));
+                // SHOWCASE: data-driven pagination via xoops/smartyextensions render_pagination (S1, BS5, windowed).
+                $GLOBALS['xoopsTpl']->assign('pagination', [
+                    'total' => $authorCount,
+                    'limit' => $authorPaginationLimit,
+                    'start' => $start,
+                    'url'   => \Xoops\Helpers\Service\Url::module('quotes', 'author.php') . '?start={start}',
+                ]);
             }
         }
 }
@@ -185,10 +219,10 @@ if (isset($keywords)) {
     $utility::metaKeywords($helper->getConfig('keywords') . ', ' . implode(', ', $keywords));
 }
 //description
-$utility::metaDescription(MD_QUOTES_AUTHOR_DESC);
+$utility::metaDescription(_MD_QUOTES_AUTHOR_DESC);
 
-$GLOBALS['xoopsTpl']->assign('xoops_mpageurl', QUOTES_URL . '/author.php');
-$GLOBALS['xoopsTpl']->assign('quotes_url', QUOTES_URL);
+$GLOBALS['xoopsTpl']->assign('xoops_mpageurl', \Xoops\Helpers\Service\Url::module('quotes', 'author.php'));
+$GLOBALS['xoopsTpl']->assign('quotes_url', \Xoops\Helpers\Service\Url::module('quotes'));
 $GLOBALS['xoopsTpl']->assign('adv', $helper->getConfig('advertise'));
 
 $GLOBALS['xoopsTpl']->assign('bookmarks', $helper->getConfig('bookmarks'));
@@ -205,5 +239,5 @@ function quotes_author_photo_url(string $photo): string
         return '';
     }
 
-    return '' !== $photo ? QUOTES_UPLOAD_URL . '/author/' . \rawurlencode($photo) : '';
+    return '' !== $photo ? \Xoops\Helpers\Service\Url::moduleUpload('quotes', 'author/' . \rawurlencode($photo)) : '';
 }

@@ -1,17 +1,20 @@
 <?php declare(strict_types=1);
 
-use XoopsModules\Mtools;
+use XoopsModules\Mtools\Module\ConsumerRuntime;
 
 if (!function_exists('quotes_mtools_dependency_error')) {
+    /**
+     * Thin, mtools-absence-safe shim. All version-check and message logic lives in
+     * {@see ConsumerRuntime}; this only guards the case where mtools is missing
+     * entirely (a class inside mtools cannot report its own non-existence).
+     */
     function quotes_mtools_dependency_error(): string
     {
-        if (!class_exists(Mtools\Bootstrap::class)) {
+        if (!class_exists(ConsumerRuntime::class)) {
             return 'The mtools module files are missing. Install mtools before installing or running Quotes.';
         }
 
-        $status = Mtools\Bootstrap::checkRuntime('1.0.0', '1.1.0');
-
-        return $status['ok'] ? '' : Mtools\Bootstrap::statusMessage($status);
+        return ConsumerRuntime::dependencyError('1.0.0', '1.2.0');
     }
 }
 

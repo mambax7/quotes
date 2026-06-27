@@ -2,21 +2,21 @@
 
 <section class="quotes-intro">
     <div>
-        <h2><{$smarty.const.MD_QUOTES_INDEX|default:'Quotes'|escape}></h2>
-        <p><{$smarty.const.MD_QUOTES_INDEX_DESC|default:'Browse memorable quotes by author and category.'|escape}></p>
+        <h2><{$smarty.const._MD_QUOTES_INDEX|default:'Quotes'|escape}></h2>
+        <p><{$smarty.const._MD_QUOTES_INDEX_DESC|default:'Browse memorable quotes by author and category.'|escape}></p>
     </div>
-    <div class="quotes-stats" aria-label="<{$smarty.const.MD_QUOTES_TITLE|default:'Quotes'|escape}>">
+    <div class="quotes-stats" aria-label="<{$smarty.const._MD_QUOTES_TITLE|default:'Quotes'|escape}>">
         <a href="<{$quotes_url|escape:'html'}>/quote.php">
             <strong><{$quotes_stats.quotes|default:0}></strong>
-            <span><{$smarty.const.MD_QUOTES_QUOTE|default:'Quotes'|escape}></span>
+            <span><{$smarty.const._MD_QUOTES_QUOTE|default:'Quotes'|escape}></span>
         </a>
         <a href="<{$quotes_url|escape:'html'}>/category.php">
             <strong><{$quotes_stats.categories|default:0}></strong>
-            <span><{$smarty.const.MD_QUOTES_CATEGORY|default:'Categories'|escape}></span>
+            <span><{$smarty.const._MD_QUOTES_CATEGORY|default:'Categories'|escape}></span>
         </a>
         <a href="<{$quotes_url|escape:'html'}>/author.php">
             <strong><{$quotes_stats.authors|default:0}></strong>
-            <span><{$smarty.const.MD_QUOTES_AUTHOR|default:'Authors'|escape}></span>
+            <span><{$smarty.const._MD_QUOTES_AUTHOR|default:'Authors'|escape}></span>
         </a>
     </div>
 </section>
@@ -24,8 +24,8 @@
 <{if $latest_quotes|default:false}>
     <section class="quotes-section">
         <div class="quotes-section-heading">
-            <h2><{$smarty.const.MD_QUOTES_QUOTE|default:'Latest quotes'|escape}></h2>
-            <a href="<{$quotes_url|escape:'html'}>/quote.php"><{$smarty.const.MD_QUOTES_QUOTE|default:'View all quotes'|escape}></a>
+            <h2><{$smarty.const._MD_QUOTES_QUOTE|default:'Latest quotes'|escape}></h2>
+            <a href="<{$quotes_url|escape:'html'}>/quote.php"><{$smarty.const._MD_QUOTES_QUOTE|default:'View all quotes'|escape}></a>
         </div>
         <div class="quotes-grid quotes-grid-quotes">
             <{foreach item=item from=$latest_quotes}>

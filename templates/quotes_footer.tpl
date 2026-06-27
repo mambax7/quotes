@@ -31,7 +31,7 @@
     <div class="quotes-footer">
         <span><{$copyright|default:''}></span>
         <{if $xoops_isadmin}>
-            <a href="<{$admin|escape:'html'}>"><{$smarty.const.MD_QUOTES_ADMIN|default:'Admin'|escape}></a>
+            <a href="<{$admin|escape:'html'}>"><{$smarty.const._MD_QUOTES_ADMIN|default:'Admin'|escape}></a>
         <{/if}>
     </div>
     <{include file='db:system_notification_select.tpl'}>

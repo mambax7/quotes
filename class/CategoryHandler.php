@@ -55,4 +55,58 @@ class CategoryHandler extends \XoopsPersistableObjectHandler
 
         return $obj;
     }
+
+    /**
+     * Hydrate a Category from the POSTed form fields, handle the image upload, and persist it.
+     *
+     * Shared by the admin and frontend save handlers so the field/upload logic lives in
+     * ONE place. Callers MUST perform authorisation and CSRF validation BEFORE calling this,
+     * and are responsible for the post-save redirect and any permission persistence.
+     *
+     * @param Helper $helper module helper (provides upload mimetypes/maxsize config)
+     *
+     * @return array{ok: bool, object: \XoopsObject, errors: string}
+     */
+    public function saveFromRequest(Helper $helper): array
+    {
+        $id     = \Xmf\Request::getInt('id', 0, 'POST');
+        $object = $id > 0 ? $this->get($id) : $this->create();
+        if (!\is_object($object)) {
+            $object = $this->create();
+        }
+
+        $object->setVar('pid', \Xmf\Request::getInt('pid', 0, 'POST'));
+        $object->setVar('title', \Xmf\Request::getString('title', '', 'POST'));
+        $object->setVar('description', \Xmf\Request::getText('description', '', 'POST'));
+
+        require_once \XOOPS_ROOT_PATH . '/class/uploader.php';
+        $uploadDir = \Xoops\Helpers\Service\Path::moduleUpload('quotes', 'category') . '/';
+        $uploader  = new \XoopsMediaUploader(
+            $uploadDir,
+            $helper->getConfig('mimetypes'),
+            $helper->getConfig('maxsize'),
+            null,
+            null
+        );
+        $uploadFields = \Xmf\Request::getArray('xoops_upload_file', [], 'POST');
+        $uploadField  = (string)($uploadFields[0] ?? '');
+        if ('' !== $uploadField && $uploader->fetchMedia($uploadField)) {
+            $uploader->setPrefix('image_');
+            $uploader->fetchMedia($uploadField);
+            if (!$uploader->upload()) {
+                return ['ok' => false, 'object' => $object, 'errors' => \implode(' ', (array)$uploader->getErrors(false))];
+            }
+            $object->setVar('image', $uploader->getSavedFileName());
+        } else {
+            $object->setVar('image', \Xmf\Request::getString('image', '', 'POST'));
+        }
+
+        $object->setVar('weight', \Xmf\Request::getInt('weight', 0, 'POST'));
+        $object->setVar('color', \Xmf\Request::getString('color', '', 'POST'));
+        $object->setVar('online', ((1 === \Xmf\Request::getInt('online', 0, 'POST')) ? '1' : '0'));
+
+        $ok = (bool)$this->insert($object);
+
+        return ['ok' => $ok, 'object' => $object, 'errors' => $ok ? '' : $object->getHtmlErrors()];
+    }
 }

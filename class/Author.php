@@ -56,6 +56,7 @@ class Author extends \XoopsObject
         $this->initVar('country', \XOBJ_DTYPE_TXTBOX);
         $this->initVar('bio', \XOBJ_DTYPE_OTHER);
         $this->initVar('photo', \XOBJ_DTYPE_TXTBOX);
+        $this->initVar('uid', \XOBJ_DTYPE_INT);
         $this->initVar('created', \XOBJ_DTYPE_INT);
         $this->initVar('updated', \XOBJ_DTYPE_INT);
     }

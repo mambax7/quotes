@@ -2,7 +2,7 @@
 
 <section class="quotes-section">
     <div class="quotes-section-heading">
-        <h2><{$smarty.const.MD_QUOTES_AUTHOR|default:'Authors'|escape}></h2>
+        <h2><{$smarty.const._MD_QUOTES_AUTHOR|default:'Authors'|escape}></h2>
     </div>
 
     <{if $author|default:false}>
@@ -23,21 +23,23 @@
                             <{/if}>
                         </div>
                     </a>
-                    <{if $xoops_isadmin === true}>
+                    <{if $authoritem.can_edit}>
                         <div class="quotes-card-actions">
                             <a href="author.php?op=edit&amp;id=<{$authoritem.id}>" title="<{$smarty.const._EDIT|escape}>"><{$smarty.const._EDIT|escape}></a>
-                            <a href="admin/author.php?op=delete&amp;id=<{$authoritem.id}>" title="<{$smarty.const._DELETE|escape}>"><{$smarty.const._DELETE|escape}></a>
+                            <{if $xoops_isadmin === true}><a href="admin/author.php?op=delete&amp;id=<{$authoritem.id}>" title="<{$smarty.const._DELETE|escape}>"><{$smarty.const._DELETE|escape}></a><{/if}>
                         </div>
                     <{/if}>
                 </article>
             <{/foreach}>
         </div>
     <{else}>
-        <div class="quotes-empty"><{$smarty.const.MD_QUOTES_AUTHOR_DESC|default:'No authors are available yet.'|escape}></div>
+        <div class="quotes-empty"><{$smarty.const._MD_QUOTES_AUTHOR_DESC|default:'No authors are available yet.'|escape}></div>
     <{/if}>
 </section>
 
-<{if $pagenav|default:'' != ''}>
+<{if $pagination|default:'' != ''}>
+    <nav class="quotes-pagination"><{render_pagination total=$pagination.total limit=$pagination.limit start=$pagination.start urlPattern=$pagination.url window=2}></nav>
+<{elseif $pagenav|default:'' != ''}>
     <nav class="quotes-pagination"><{$pagenav}></nav>
 <{/if}>
 

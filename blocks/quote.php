@@ -56,16 +56,16 @@ function showQuotesQuote(array $options): array
                 'quote'    => quotes_block_plain($quoteText),
                 'full'     => $quoteText,
                 'author'   => \is_object($authorObject) ? (string)$authorObject->getVar('name') : '',
-                'author_url' => $authorId > 0 ? \XOOPS_URL . '/modules/quotes/author.php?op=view&id=' . $authorId : '',
+                'author_url' => $authorId > 0 ? \Xoops\Helpers\Service\Url::module('quotes', 'author.php', ['op' => 'view', 'id' => $authorId]) : '',
                 'category' => \is_object($categoryObject) ? (string)$categoryObject->getVar('title') : '',
                 'date'     => \formatTimestamp((int)$quoteObject->getVar('created'), 's'),
-                'url'      => \XOOPS_URL . '/modules/quotes/quote.php?op=view&id=' . (int)$quoteObject->getVar('id'),
+                'url'      => \Xoops\Helpers\Service\Url::module('quotes', 'quote.php', ['op' => 'view', 'id' => (int)$quoteObject->getVar('id')]),
             ];
         }
 
         return [
             'items' => $items,
-            'url'   => \XOOPS_URL . '/modules/quotes/quote.php',
+            'url'   => \Xoops\Helpers\Service\Url::module('quotes', 'quote.php'),
         ];
     } catch (\Throwable) {
         return ['items' => []];
@@ -78,8 +78,8 @@ function editQuotesQuote(array $options): string
     $titleLength = \max(20, (int)($options[2] ?? 140));
     $selectedIds = quotes_block_selected_ids($options);
 
-    $form = quotes_block_input_row(\defined('MB_QUOTES_DISPLAY') ? \MB_QUOTES_DISPLAY : 'Items to display', 'options[1]', (string)$limit);
-    $form .= quotes_block_input_row(\defined('MB_QUOTES_TITLELENGTH') ? \MB_QUOTES_TITLELENGTH : 'Text length', 'options[2]', (string)$titleLength);
+    $form = quotes_block_input_row(\defined('_MB_QUOTES_DISPLAY') ? \_MB_QUOTES_DISPLAY : 'Items to display', 'options[1]', (string)$limit);
+    $form .= quotes_block_input_row(\defined('_MB_QUOTES_TITLELENGTH') ? \_MB_QUOTES_TITLELENGTH : 'Text length', 'options[2]', (string)$titleLength);
     $form .= "<input type='hidden' name='options[0]' value='1'>";
 
     if (!\class_exists(Helper::class)) {
@@ -94,9 +94,9 @@ function editQuotesQuote(array $options): string
         $criteria->setOrder('ASC');
         $quoteArray = $quoteHandler->getAll($criteria);
 
-        $form .= "<label>" . quotes_block_escape(\defined('MB_QUOTES_CATTODISPLAY') ? \MB_QUOTES_CATTODISPLAY : 'Items to display') . "</label><br>";
+        $form .= "<label>" . quotes_block_escape(\defined('_MB_QUOTES_CATTODISPLAY') ? \_MB_QUOTES_CATTODISPLAY : 'Items to display') . "</label><br>";
         $form .= "<select name='options[]' multiple='multiple' size='6'>";
-        $form .= "<option value='0'" . ([] === $selectedIds ? " selected='selected'" : '') . '>' . quotes_block_escape(\defined('MB_QUOTES_ALLCAT') ? \MB_QUOTES_ALLCAT : 'All') . '</option>';
+        $form .= "<option value='0'" . ([] === $selectedIds ? " selected='selected'" : '') . '>' . quotes_block_escape(\defined('_MB_QUOTES_ALLCAT') ? \_MB_QUOTES_ALLCAT : 'All') . '</option>';
         foreach ($quoteArray as $quoteObject) {
             $id       = (int)$quoteObject->getVar('id');
             $selected = \in_array($id, $selectedIds, true) ? " selected='selected'" : '';
@@ -141,5 +141,5 @@ function quotes_block_input_row(string $label, string $name, string $value): str
 
 function quotes_block_escape(string $value): string
 {
-    return \htmlspecialchars($value, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8');
+    return \Xoops\Helpers\Utility\HtmlBuilder::escape($value);
 }

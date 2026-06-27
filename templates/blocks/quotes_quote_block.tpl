@@ -15,6 +15,6 @@
                 </div>
             </article>
         <{/foreach}>
-        <a class="quotes-block-more" href="<{$block.url|escape:'html'}>"><{$smarty.const.MB_QUOTES_QUOTE|default:'More quotes'|escape}></a>
+        <a class="quotes-block-more" href="<{$block.url|escape:'html'}>"><{$smarty.const._MB_QUOTES_QUOTE|default:'More quotes'|escape}></a>
     </div>
 <{/if}>

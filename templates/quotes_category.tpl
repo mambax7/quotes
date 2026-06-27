@@ -16,13 +16,13 @@
         <{/if}>
         <dl>
             <div class="quotes-detail-actions-row">
-                <dt><{$smarty.const.MD_QUOTES_CATEGORY_WEIGHT|default:'Weight'|escape}></dt>
+                <dt><{$smarty.const._MD_QUOTES_CATEGORY_WEIGHT|default:'Weight'|escape}></dt>
                 <dd>
                     <span><{$category.weight|default:0}></span>
                     <{if $xoops_isadmin === true}>
                         <span class="quotes-detail-inline-actions">
                             <a href="category.php?op=edit&amp;id=<{$category.id}>" title="<{$smarty.const._EDIT|escape}>"><{$smarty.const._EDIT|escape}></a>
-                            <a href="admin/category.php?op=delete&amp;id=<{$category.id}>" title="<{$smarty.const._DELETE|escape}>"><{$smarty.const._DELETE|escape}></a>
+                            <{if $xoops_isadmin === true}><a href="admin/category.php?op=delete&amp;id=<{$category.id}>" title="<{$smarty.const._DELETE|escape}>"><{$smarty.const._DELETE|escape}></a><{/if}>
                         </span>
                     <{/if}>
                 </dd>
@@ -34,8 +34,8 @@
 <{if $category_quotes|default:false}>
     <section class="quotes-section">
         <div class="quotes-section-heading">
-            <h2><{$smarty.const.MD_QUOTES_QUOTE|default:'Quotes'|escape}></h2>
-            <a href="<{$quotes_url|escape:'html'}>/quote.php"><{$smarty.const.MD_QUOTES_QUOTE|default:'Quote'|escape}></a>
+            <h2><{$smarty.const._MD_QUOTES_QUOTE|default:'Quotes'|escape}></h2>
+            <a href="<{$quotes_url|escape:'html'}>/quote.php"><{$smarty.const._MD_QUOTES_QUOTE|default:'Quote'|escape}></a>
         </div>
         <div class="quotes-grid quotes-grid-quotes">
             <{foreach item=quoteitem from=$category_quotes}>
@@ -67,7 +67,9 @@
     </section>
 <{/if}>
 
-<{if $pagenav|default:'' != ''}>
+<{if $pagination|default:'' != ''}>
+    <nav class="quotes-pagination"><{render_pagination total=$pagination.total limit=$pagination.limit start=$pagination.start urlPattern=$pagination.url window=2}></nav>
+<{elseif $pagenav|default:'' != ''}>
     <nav class="quotes-pagination"><{$pagenav}></nav>
 <{/if}>
 

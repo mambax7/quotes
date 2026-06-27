@@ -27,7 +27,7 @@ require_once __DIR__ . '/admin_header.php';
 xoops_cp_header();
 require XOOPS_ROOT_PATH . '/class/xoopsform/grouppermform.php';
 if ('' !== Request::getString('submit', '', 'POST')) {
-    redirect_header(XOOPS_URL . '/modules/' . $GLOBALS['xoopsModule']->dirname() . '/admin/permissions.php', 1, AM_QUOTES_PERMISSIONS_GPERMUPDATED);
+    redirect_header(\Xoops\Helpers\Service\Url::module((string)$GLOBALS['xoopsModule']->dirname(), 'admin/permissions.php'), 1, _AM_QUOTES_PERMISSIONS_GPERMUPDATED);
 }
 // Check admin have access to this page
 /*$group = $GLOBALS['xoopsUser']->getGroups ();
@@ -48,10 +48,10 @@ echo "
         <tr>
             <td>
                 <select name='permission' onChange='document.fselperm.submit()'>
-                    <option value='1'" . $selected[0] . '>' . AM_QUOTES_PERMISSIONS_GLOBAL . "</option>
-                    <option value='2'" . $selected[1] . '>' . AM_QUOTES_PERMISSIONS_APPROVE . "</option>
-                    <option value='3'" . $selected[2] . '>' . AM_QUOTES_PERMISSIONS_SUBMIT . "</option>
-                    <option value='4'" . $selected[3] . '>' . AM_QUOTES_PERMISSIONS_VIEW . '</option>
+                    <option value='1'" . $selected[0] . '>' . _AM_QUOTES_PERMISSIONS_GLOBAL . "</option>
+                    <option value='2'" . $selected[1] . '>' . _AM_QUOTES_PERMISSIONS_APPROVE . "</option>
+                    <option value='3'" . $selected[2] . '>' . _AM_QUOTES_PERMISSIONS_SUBMIT . "</option>
+                    <option value='4'" . $selected[3] . '>' . _AM_QUOTES_PERMISSIONS_VIEW . '</option>
                 </select>
             </td>
         </tr>
@@ -61,29 +61,30 @@ echo "
 $module_id = $GLOBALS['xoopsModule']->getVar('mid');
 switch ($permission) {
     case 1:
-        $formTitle   = AM_QUOTES_PERMISSIONS_GLOBAL;
+        $formTitle   = _AM_QUOTES_PERMISSIONS_GLOBAL;
         $permName    = 'quotes_ac';
-        $permDesc    = AM_QUOTES_PERMISSIONS_GLOBAL_DESC;
+        $permDesc    = _AM_QUOTES_PERMISSIONS_GLOBAL_DESC;
         $globalPerms = [
-            '4'  => AM_QUOTES_PERMISSIONS_GLOBAL_4,
-            '8'  => AM_QUOTES_PERMISSIONS_GLOBAL_8,
-            '16' => AM_QUOTES_PERMISSIONS_GLOBAL_16,
+            '4'  => _AM_QUOTES_PERMISSIONS_GLOBAL_4,
+            '8'  => _AM_QUOTES_PERMISSIONS_GLOBAL_8,
+            '16' => _AM_QUOTES_PERMISSIONS_GLOBAL_16,
+            '32' => _AM_QUOTES_PERMISSIONS_GLOBAL_32,
         ];
         break;
     case 2:
-        $formTitle = AM_QUOTES_PERMISSIONS_APPROVE;
+        $formTitle = _AM_QUOTES_PERMISSIONS_APPROVE;
         $permName  = 'quotes_approve';
-        $permDesc  = AM_QUOTES_PERMISSIONS_APPROVE_DESC;
+        $permDesc  = _AM_QUOTES_PERMISSIONS_APPROVE_DESC;
         break;
     case 3:
-        $formTitle = AM_QUOTES_PERMISSIONS_SUBMIT;
+        $formTitle = _AM_QUOTES_PERMISSIONS_SUBMIT;
         $permName  = 'quotes_submit';
-        $permDesc  = AM_QUOTES_PERMISSIONS_SUBMIT_DESC;
+        $permDesc  = _AM_QUOTES_PERMISSIONS_SUBMIT_DESC;
         break;
     case 4:
-        $formTitle = AM_QUOTES_PERMISSIONS_VIEW;
+        $formTitle = _AM_QUOTES_PERMISSIONS_VIEW;
         $permName  = 'quotes_view';
-        $permDesc  = AM_QUOTES_PERMISSIONS_VIEW_DESC;
+        $permDesc  = _AM_QUOTES_PERMISSIONS_VIEW_DESC;
         break;
 }
 
@@ -109,7 +110,7 @@ if (1 == $permission) {
         echo $permform->render();
         echo '<br><br>';
     } else {
-        redirect_header('category.php?op=new', 3, AM_QUOTES_PERMISSIONS_NOPERMSSET);
+        redirect_header('category.php?op=new', 3, _AM_QUOTES_PERMISSIONS_NOPERMSSET);
         //exit ();
     }
 }
