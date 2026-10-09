@@ -63,8 +63,8 @@ define('_MI_QUOTES_GLOBAL_NOTIFY', 'Allow Facebook comments in the form');
 define('_MI_QUOTES_GLOBAL_NOTIFY_DESC', 'Allow Facebook comments in the form');
 define('_MI_QUOTES_CATEGORY_NOTIFY', 'Allow Facebook comments in the form');
 define('_MI_QUOTES_CATEGORY_NOTIFY_DESC', 'Allow Facebook comments in the form');
-define('_MI_QUOTES_FILE_NOTIFY', 'Allow Facebook comments in the form');
-define('_MI_QUOTES_FILE_NOTIFY_DESC', 'Allow Facebook comments in the form');
+define('_MI_QUOTES_FILE_NOTIFY', 'Quotes');
+define('_MI_QUOTES_FILE_NOTIFY_DESC', 'Notifications for an individual quote');
 define('_MI_QUOTES_GLOBAL_NEWCATEGORY_NOTIFY', 'Allow Facebook comments in the form');
 define('_MI_QUOTES_GLOBAL_NEWCATEGORY_NOTIFY_CAPTION', 'Allow Facebook comments in the form');
 define('_MI_QUOTES_GLOBAL_NEWCATEGORY_NOTIFY_DESC', 'Allow Facebook comments in the form');
@@ -93,10 +93,10 @@ define('_MI_QUOTES_CATEGORY_NEWFILE_NOTIFY', 'Allow Facebook comments in the for
 define('_MI_QUOTES_CATEGORY_NEWFILE_NOTIFY_CAPTION', 'Allow Facebook comments in the form');
 define('_MI_QUOTES_CATEGORY_NEWFILE_NOTIFY_DESC', 'Allow Facebook comments in the form');
 define('_MI_QUOTES_CATEGORY_NEWFILE_NOTIFY_SUBJECT', 'Allow Facebook comments in the form');
-define('_MI_QUOTES_FILE_APPROVE_NOTIFY', 'Allow Facebook comments in the form');
-define('_MI_QUOTES_FILE_APPROVE_NOTIFY_CAPTION', 'Allow Facebook comments in the form');
-define('_MI_QUOTES_FILE_APPROVE_NOTIFY_DESC', 'Allow Facebook comments in the form');
-define('_MI_QUOTES_FILE_APPROVE_NOTIFY_SUBJECT', 'Allow Facebook comments in the form');
+define('_MI_QUOTES_FILE_APPROVE_NOTIFY', 'Quote approved');
+define('_MI_QUOTES_FILE_APPROVE_NOTIFY_CAPTION', 'Notify me when this quote is approved');
+define('_MI_QUOTES_FILE_APPROVE_NOTIFY_DESC', 'Receive a notification when this quote is approved.');
+define('_MI_QUOTES_FILE_APPROVE_NOTIFY_SUBJECT', 'Quote approved');
 
 // Help
 define('_MI_QUOTES_DIRNAME', basename(dirname(__DIR__, 2)));
